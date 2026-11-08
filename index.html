@@ -76,6 +76,8 @@ textarea{resize:vertical;min-height:90px}
 .folderbox{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:6px 8px;font-size:13px}
 .folderbox .hint{flex-basis:100%;font-size:12px}
 .folderbox button{margin-left:auto}
+.fbshot{border:1px dashed var(--line);border-radius:8px;padding:6px;background:#fff;max-height:220px;overflow:auto;text-align:center}
+.fbshot img{max-width:100%;display:block;margin:auto}
 .hintbar{font-size:13px;color:var(--muted);min-height:18px}
 .hintbar b{color:var(--ink)}
 aside.insp h3{font-family:'Barlow Condensed';font-size:20px;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -132,7 +134,8 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 <header>
   <div class="logo"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="9" transform="rotate(-35 16 16)" fill="#8b5a2b" stroke="#fff" stroke-width="1.5"/><path d="M11 21 21 11M13 15l4 4M15 13l4 4M11 17l4 4" stroke="#fff" stroke-width="1.6"/></svg><span>Playbook Builder</span></div>
   <div class="status" id="status">Lädt…</div>
-  <button class="hbtn" id="helpBtn" title="Hilfe">?</button>
+  <button class="hbtn" data-a="feedback" title="Fehler melden, Verbesserungen und Wünsche schicken">✉ Feedback</button>
+  <button class="hbtn" data-a="help" title="Hilfe">?</button>
 </header>
 <div id="bannerWrap"></div>
 <div class="app" id="app">
@@ -1282,6 +1285,70 @@ $('#fileIn').addEventListener('change',async e=>{
   const ta=$('#jsonIn');if(ta){ta.value=txt;const n=$('#pickName');if(n)n.textContent=f.name}else doImport(txt);
 });
 
+/* ---------- feedback ---------- */
+const FEEDBACK_EMAIL='info.playbook@web.de';
+function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const el=document.createElement('script');el.src=src;el.onload=res;el.onerror=rej;document.head.appendChild(el)})}
+async function captureScreen(){
+  try{   // real screenshot of the app window
+    await Promise.race([loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),new Promise((_,r)=>setTimeout(r,6000))]);
+    const c=await window.html2canvas(document.body,{backgroundColor:'#efece4',scale:Math.min(1.5,window.devicePixelRatio||1),logging:false,
+      width:document.documentElement.clientWidth,height:Math.min(document.body.scrollHeight,2400),windowWidth:document.documentElement.clientWidth});
+    return await new Promise(r=>c.toBlob(r,'image/png'));
+  }catch(e){
+    try{const pb=curPb(),pl=curPlay();if(pb&&pl)return await toPNG(singleSVG(pb,pl),1.5)}catch(e2){}   // fallback: the current play
+    return null;
+  }
+}
+async function feedbackDialog(){
+  toast('Screenshot wird erstellt…');
+  let shot=await captureScreen();let url=shot?URL.createObjectURL(shot):'';
+  const pb=curPb(),pl=curPlay();
+  const r=modal('Feedback senden',`
+    <p class="hint" style="margin-top:0">Danke! Fehler, Verbesserungen und Wünsche gehen direkt an <b>${esc(FEEDBACK_EMAIL)}</b>.</p>
+    <label>Worum geht es?</label>
+    <div class="choice" style="grid-template-columns:1fr 1fr 1fr">
+      <label><input type="radio" name="fbType" value="Fehler" checked><span>🐞 Fehler</span></label>
+      <label><input type="radio" name="fbType" value="Verbesserung"><span>🔧 Verbesserung</span></label>
+      <label><input type="radio" name="fbType" value="Wunsch"><span>💡 Wunsch</span></label></div>
+    <label>Beschreibung</label>
+    <textarea id="fbText" placeholder="Was ist passiert bzw. was wünschst du dir? Bei Fehlern: Was hast du gemacht, was hast du erwartet?"></textarea>
+    <label style="display:flex;justify-content:space-between;align-items:center">Screenshot
+      <span><label class="btn sm" style="margin:0;display:inline-flex">Eigenes Bild…<input type="file" id="fbFile" accept="image/*" hidden></label>
+      <button type="button" class="btn sm" id="fbNoShot">entfernen</button></span></label>
+    <div id="fbShot" class="fbshot">${url?`<img src="${url}" alt="Screenshot">`:'<span class="hint">Kein Screenshot – du kannst ein eigenes Bild wählen oder mit Strg+V einfügen.</span>'}</div>`,
+    [{label:'Abbrechen',value:null},
+     {label:'Screenshot speichern',keep:true,onClick:()=>{if(shot)saveFile('Feedback_Screenshot.png',shot);else toast('Kein Screenshot vorhanden.')}},
+     {label:'✉ Per E-Mail senden',value:'send',cls:'primary',validate:el=>{if(!el.querySelector('#fbText').value.trim()){toast('Bitte kurz beschreiben, worum es geht.');return false}return true}}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  const setShot=b=>{shot=b;if(url)URL.revokeObjectURL(url);url=b?URL.createObjectURL(b):'';const box=back.querySelector('#fbShot');
+    box.innerHTML=url?`<img src="${url}" alt="Screenshot">`:'<span class="hint">Kein Screenshot.</span>'};
+  back.querySelector('#fbFile').addEventListener('change',e=>{const f=e.target.files[0];if(f)setShot(f)});
+  back.querySelector('#fbNoShot').addEventListener('click',()=>setShot(null));
+  back.addEventListener('paste',e=>{const it=[...(e.clipboardData||{}).items||[]].find(i=>i.type.startsWith('image/'));if(it){e.preventDefault();setShot(it.getAsFile())}});
+  // copy the screenshot on the send click itself (needs the user's click)
+  state.fbCopied=false;state.fbCopyP=null;
+  back.querySelector('.mbtns .primary').addEventListener('click',()=>{
+    if(!shot||!back.querySelector('#fbText').value.trim())return;
+    state.fbCopyP=(async()=>{try{const png=shot.type==='image/png'?shot:toPngBlob(shot);
+      await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);state.fbCopied=true}catch(e){state.fbCopied=false}})();
+  },true);
+  const res=await r;if(res.value!=='send'){if(url)URL.revokeObjectURL(url);return}
+  const type=res.el.querySelector('[name=fbType]:checked').value,text=res.el.querySelector('#fbText').value.trim();
+  if(state.fbCopyP)await state.fbCopyP;
+  const info=[`Art: ${type}`,'',text,'','—',
+    `Playbook: ${pb?pb.name+' ('+(pb.type==='defense'?'Defense':'Offense')+', '+VAR[pb.variant].name+')':'–'}`,
+    `Play: ${pl?pl.name:'–'}`,`Browser: ${navigator.userAgent}`,`Bildschirm: ${window.innerWidth}×${window.innerHeight}`,
+    `Datum: ${new Date().toLocaleString('de-DE')}`].join('\n');
+  const body=(shot?(state.fbCopied?'📎 Screenshot ist kopiert – bitte hier mit Strg+V (Mac: Cmd+V) einfügen.\n\n':'📎 Bitte den gespeicherten Screenshot anhängen.\n\n'):'')+info;
+  if(shot&&!state.fbCopied)await saveFile('Feedback_Screenshot.png',shot);
+  const href=`mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent('Playbook Builder – '+type)}&body=${encodeURIComponent(body)}`;
+  const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+  modal('Fast geschafft',`<p>Dein E-Mail-Programm sollte sich jetzt mit einer fertigen Nachricht öffnen.</p>
+    ${shot?(state.fbCopied?'<p>📎 Der Screenshot ist in der Zwischenablage – füge ihn in der Mail mit <b>Strg+V</b> (Mac: <b>Cmd+V</b>) ein.</p>':'<p>📎 Der Screenshot wurde als Datei gespeichert – bitte an die Mail anhängen.</p>'):''}
+    <p class="hint">Falls sich nichts öffnet: Schreib einfach an <b>${esc(FEEDBACK_EMAIL)}</b>.</p>`,[{label:'OK',value:null,cls:'primary'}]);
+  if(url)setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+function toPngBlob(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(),'image/png')};img.onerror=rej;img.src=u})}
 function helpDialog(){
   modal('So funktioniert’s',`<ul>
     <li><b>Playbook anlegen:</b> Offense oder Defense, Flag 5er oder Tackle 11er.</li>
@@ -1323,6 +1390,8 @@ document.addEventListener('click',async e=>{
   const act=a.dataset.a;const p=selPlayer();
   switch(act){
     case 'newPb':return newPbDialog();
+    case 'help':return helpDialog();
+    case 'feedback':return feedbackDialog();
     case 'folderOn':return Folder.connect();
     case 'folderReconnect':return Folder.reconnect();
     case 'folderOff':return Folder.disconnect();
