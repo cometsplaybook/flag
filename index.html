@@ -5,21 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Playbook Builder</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#4169e1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Playbook">
 <style>
 :root{
+  --cond:'Arial Narrow','Roboto Condensed','Helvetica Neue',Arial,sans-serif;
   --bg:#efece4; --panel:#fffdf8; --ink:#1b1f1d; --muted:#6b6f68; --line:#ddd8cc;
   --turf:#1f6b3f; --turf2:#17552f; --navy:#4169e1; --accent:#e8590c; --accent2:#fff1e6; --sel:#f59e0b;
   --radius:10px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{font-family:Barlow,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:15px}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--navy);color:#fff;position:sticky;top:0;z-index:20}
-.logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.logo{font-family:var(--cond);font-stretch:condensed;font-weight:800;font-size:24px;letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .logo svg{width:28px;height:28px}
 .status{margin-left:auto;font-size:13px;background:rgba(255,255,255,.14);padding:5px 10px;border-radius:99px;white-space:nowrap}
 .status.warn{background:#b45309}
@@ -46,7 +49,7 @@ textarea{resize:vertical;min-height:90px}
 .play{display:grid;grid-template-columns:22px 64px 1fr auto;gap:8px;align-items:center;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}
 .play:hover{border-color:#bdb6a6}
 .play.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent2)}
-.play .num{font-family:'Barlow Condensed';font-weight:800;font-size:18px;text-align:center}
+.play .num{font-family:var(--cond);font-stretch:condensed;font-weight:800;font-size:18px;text-align:center}
 .play svg{width:64px;height:auto;border-radius:4px;display:block;border:1px solid var(--line)}
 .play .nm{font-weight:600;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
 .play .ct{font-size:12px;color:var(--muted)}
@@ -73,6 +76,7 @@ textarea{resize:vertical;min-height:90px}
 .picklist label{display:flex!important;gap:6px;align-items:center;font-weight:400!important;margin:0!important;padding:4px 0;border-bottom:1px solid #f1eee6;cursor:pointer}
 .picklist label:last-child{border-bottom:0}
 .picklist small{color:var(--muted)}
+.picklist small.tagnew{color:#15803d;font-weight:700}.picklist small.tagupd{color:#c2410c;font-weight:700}
 .folderbox{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:6px 8px;font-size:13px}
 .folderbox .hint{flex-basis:100%;font-size:12px}
 .folderbox button{margin-left:auto}
@@ -81,17 +85,32 @@ textarea{resize:vertical;min-height:90px}
 #laser{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:70;display:none}
 body.lasering,body.lasering *{cursor:none!important}
 .laserbtn.on{background:#dc2626;border-color:#dc2626;color:#fff}
+#printRoot{display:none}
+@media print{
+  @page{size:A4;margin:0}
+  body.printing>*:not(#printRoot){display:none!important}
+  body.printing{background:#fff}
+  body.printing #printRoot{display:block}
+  .ppage{width:210mm;height:296mm;page-break-after:always;break-after:page;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:10mm;box-sizing:border-box}
+  .ppage:last-child{page-break-after:auto;break-after:auto}
+  .ppage svg{width:190mm;height:auto;max-height:276mm}
+  .ppage.real{padding:0}.ppage.real svg{width:210mm;height:297mm;max-height:none}
+}
+.mback.busy{z-index:200}
+.hrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.hrow svg{width:110px;border:1px solid var(--line);border-radius:4px}.hrow .hint{display:block;font-size:12px}
 .trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .trow .hint{display:block;font-size:12px}
+#tagFilter{width:100%;padding:5px 8px;font-size:13px}
 #playSearch{width:100%;padding:6px 9px;border:1px solid var(--line);border-radius:8px;font-size:14px}
 body.presenting header,body.presenting #side,body.presenting #insp,body.presenting .toolbar,body.presenting .hintbar,body.presenting #bannerWrap{display:none!important}
 body.presenting .app{display:block;padding:64px 8px 8px;min-height:100vh}
 body.presenting .fieldwrap{border:0;background:transparent;padding:0}
 body.presenting #field{width:100%!important;height:calc(100vh - 80px);box-shadow:none}
-#presentBar .btn{color:var(--ink)}#presentBar .btn.on{color:#fff}#presentBar select{width:auto;color:var(--ink);padding:4px 8px}
+#presentBar .btn{color:var(--ink)}#presentBar .btn.on,#presentBar .btn.primary{color:#fff}#presentBar select{width:auto;color:var(--ink);padding:4px 8px}
 #presentBar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--navy);color:#fff}
 #presentBar .ptitle{flex:1;display:flex;gap:10px;align-items:baseline;min-width:0;overflow:hidden;white-space:nowrap}
-#presentBar .ptitle b{font-family:'Barlow Condensed';font-size:22px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis}
+#presentBar .ptitle b{font-family:var(--cond);font-stretch:condensed;font-size:22px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis}
 #presentBar .ptitle span{opacity:.8;font-size:14px}
 #presentBar .sep{width:1px;height:24px;background:rgba(255,255,255,.3)}
 #presNotesBox{position:fixed;left:16px;bottom:16px;max-width:min(560px,90vw);z-index:41;background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px;line-height:1.4;white-space:pre-wrap;box-shadow:0 6px 20px rgba(0,0,0,.15)}
@@ -103,7 +122,7 @@ body.presenting #field{width:100%!important;height:calc(100vh - 80px);box-shadow
 }
 .hintbar{font-size:13px;color:var(--muted);min-height:18px}
 .hintbar b{color:var(--ink)}
-aside.insp h3{font-family:'Barlow Condensed';font-size:20px;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+aside.insp h3{font-family:var(--cond);font-stretch:condensed;font-size:20px;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
 aside.insp h4{margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
 aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:8px 0 3px}
 .row{display:flex;gap:6px;flex-wrap:wrap}
@@ -122,12 +141,12 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 .tpl button:hover{border-color:var(--accent);color:var(--accent)}
 .hint{font-size:13px;color:var(--muted);line-height:1.4}
 .welcome{max-width:520px;margin:40px auto;text-align:center}
-.welcome h2{font-family:'Barlow Condensed';font-size:34px;text-transform:uppercase;margin:0 0 8px}
+.welcome h2{font-family:var(--cond);font-stretch:condensed;font-size:34px;text-transform:uppercase;margin:0 0 8px}
 .welcome p{color:var(--muted);line-height:1.5}
 /* modal */
 .mback{position:fixed;inset:0;background:rgba(20,24,22,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal{background:var(--panel);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
-.modal h3{margin:0 0 12px;font-family:'Barlow Condensed';font-size:24px;text-transform:uppercase}
+.modal h3{margin:0 0 12px;font-family:var(--cond);font-stretch:condensed;font-size:24px;text-transform:uppercase}
 .modal .mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
 .modal label{display:block;font-weight:600;font-size:14px;margin:10px 0 4px}
 .choice{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -180,6 +199,10 @@ const r1=n=>Math.round(n*10)/10;
 const FONT='Arial, Helvetica, sans-serif';
 const INK='#1b1f1d';
 const PAL=['#dc2626','#2563eb','#d97706','#7c3aed','#0d9488','#db2777','#65a30d','#0891b2'];
+const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // running on its own (GitHub Pages / file), not inside Claude
+if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
+  m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
+  document.head.appendChild(m)}
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -252,7 +275,7 @@ const CATS={
 };
 
 /* ---------- state ---------- */
-const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,q:'',present:false,animOpt:0,mode:'select',drawing:null,cursor:null,drag:null,
+const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,q:'',tagF:'',multi:[],clip:null,animRate:1,quiz:false,quizShown:false,present:false,animOpt:0,mode:'select',drawing:null,cursor:null,drag:null,
   undo:[],redo:[],anim:null,snap:true,style:'light',editSnap:null};
 state.zoom=70;
 try{const s=JSON.parse(localStorage.getItem('pbb-ui')||'{}');if(s.style)state.style=s.style;if(s.snap===false)state.snap=false;if(s.zoom)state.zoom=s.zoom;}catch(e){}
@@ -531,6 +554,23 @@ const Folder={handle:null,pending:null,files:{},
     }catch(e){console.warn(e);toast('Speichern im Ordner fehlgeschlagen – bitte Ordner neu verbinden.');this.pending=this.handle;this.handle=null;renderAll()}
   }
 };
+/* ---------- install as an app (only when hosted on its own, e.g. GitHub Pages) ---------- */
+const PWA=HOSTED&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1');
+const STANDALONE=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+const IOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let installEvt=null;
+if(PWA){
+  const add=(rel,href)=>{const l=document.createElement('link');l.rel=rel;l.href=href;document.head.appendChild(l)};
+  add('manifest','manifest.webmanifest');add('apple-touch-icon','icon-180.png');add('icon','icon-192.png');
+  if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(e=>console.warn('offline mode not available',e))});
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;renderSide()});
+  window.addEventListener('appinstalled',()=>{installEvt=null;renderSide();toast('App installiert 🎉')});
+}
+function installBtn(){return PWA&&!STANDALONE&&(installEvt||IOS)?`<button class="btn sm primary" data-a="install" style="grid-column:1/-1" title="Wie eine App auf dem Gerät – funktioniert auch ohne Internet">📲 Als App installieren</button>`:''}
+async function installApp(){
+  if(installEvt){installEvt.prompt();try{await installEvt.userChoice}catch(e){}installEvt=null;return renderSide()}
+  modal('Als App installieren',`<p>So kommt der Playbook Builder auf deinen Home-Bildschirm:</p><ol><li>Öffne diese Seite in <b>Safari</b>.</li><li>Tippe unten auf <b>Teilen</b> (Quadrat mit Pfeil nach oben).</li><li>Wähle <b>„Zum Home-Bildschirm“</b>.</li></ol><p class="hint">Danach startet die App wie jede andere – auch ohne Internet. Deine Playbooks bleiben auf diesem Gerät.</p>`,[{label:'Alles klar',value:null,cls:'primary'}]);
+}
 function trashBtn(){const n=Trash.items.length;return `<button class="btn sm" data-a="trash" style="grid-column:1/-1" title="Gelöschte Plays und Playbooks wiederherstellen">🗑 Papierkorb${n?` (${n})`:''}</button>`}
 function folderUI(){
   if(!Folder.supported())return '';
@@ -547,7 +587,9 @@ function updateStatus(){
   el.textContent=saving?'Speichert…':(Store.mode==='cloud'?'✓ Privat in deinem Konto gespeichert':'✓ Lokal in diesem Browser gespeichert');
 }
 function showBanner(){
-  $('#bannerWrap').innerHTML=Store.note?`<div style="padding:10px 12px 0"><div class="banner">${esc(Store.note)}</div></div>`:'';
+  const due=backupDue();
+  $('#bannerWrap').innerHTML=(Store.note?`<div style="padding:10px 12px 0"><div class="banner">${esc(Store.note)}</div></div>`:'')+
+    (due?`<div style="padding:10px 12px 0"><div class="banner" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">💾 <span style="flex:1;min-width:200px">${esc(due)} Speichere alle Playbooks in eine Datei – dann bist du sicher, auch wenn Browserdaten gelöscht werden.</span><button class="btn sm primary" data-a="backupAll">Jetzt sichern</button><button class="btn sm" data-a="backupLater">Später</button></div></div>`:'');
   updateStatus();
 }
 
@@ -670,7 +712,7 @@ function routeMarkup(p,base,faded,force,o){
   return s;
 }
 function playerMarkup(p,pos,opp,o){
-  const col=adapt(p.color||(opp?OPP_COLOR:INK));const sel=o.sel===p.id;const [x,y]=pos;
+  const col=adapt(p.color||(opp?OPP_COLOR:INK));const sel=o.sel===p.id||!!(o.multi&&o.multi.includes(p.id));const [x,y]=pos;
   const lbl=esc(p.label||'');const fs=(p.label||'').length<=2?10:8;
   const halo=FIELD_BG[o.style]||FIELD_BG.light;
   let g=`<g class="pl" data-p="${p.id}" data-opp="${opp?1:0}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})${o.flip?' scale(1,-1)':''}">`;
@@ -682,7 +724,7 @@ function playerMarkup(p,pos,opp,o){
   else if(p.shape==='tri')g+=`<polygon points="0,12 -12.5,-9 12.5,-9" fill="${fill}" ${st} stroke-linejoin="round"/>`+txt(tc,fs-1,-2.5);
   else if(p.shape==='text')g+=`<text dy=".35em" text-anchor="middle" font-family="${FONT}" font-size="${(p.label||'').length<=2?15:12}" font-weight="800" fill="${col}" stroke="${halo}" stroke-width="3.5" paint-order="stroke">${lbl||'X'}</text>`;
   else g+=`<circle r="11" fill="${fill}" ${st}/>`+txt(tc,fs);
-  if(p.read&&!opp)g+=`<g transform="translate(11,-11)"><circle r="7" fill="${INK}" stroke="#fff" stroke-width="1"/><text dy=".35em" text-anchor="middle" font-family="${FONT}" font-size="9" font-weight="700" fill="#fff">${p.read}</text></g>`;
+  if(p.read&&!opp&&!o.hide)g+=`<g transform="translate(11,-11)"><circle r="7" fill="${INK}" stroke="#fff" stroke-width="1"/><text dy=".35em" text-anchor="middle" font-family="${FONT}" font-size="9" font-weight="700" fill="#fff">${p.read}</text></g>`;
   return g+'</g>';
 }
 function playMarkup(pb,pl,o={}){
@@ -692,15 +734,16 @@ function playMarkup(pb,pl,o={}){
   const flip=!!pl.flipV;o={...o,flip};RSTYLE=o.style||state.style;
   let s=fieldMarkup(v,o.style||state.style,flip,!!o.interactive);
   const marks=pl.marks||[];
-  marks.filter(m=>m.type==='zone').forEach(m=>{s+=markMarkup(m,v,o)});
+  if(!o.hide)marks.filter(m=>m.type==='zone').forEach(m=>{s+=markMarkup(m,v,o)});
   if(o.interactive&&!o.anim)s+=`<rect data-los="1" x="0" y="${los-4}" width="${dims(v).fw}" height="8" fill="#000" fill-opacity="0" style="cursor:ns-resize"/>`;
   const showOpp=pl.showOpp&&pl.opp&&pl.opp.length;
   // layer order: routes (opponent, own) -> opponent players -> own players
   if(showOpp){s+='<g opacity=".5">';pl.opp.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,'#9ca3af')});s+='</g>';}
-  pl.players.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,null,o)});
+  if(!o.hide)pl.players.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,null,o)});
   if(showOpp)pl.opp.forEach(p=>{s+=playerMarkup(p,pos(p),true,o)});
   pl.players.forEach(p=>{s+=playerMarkup(p,pos(p),false,o)});
-  marks.filter(m=>m.type!=='zone').forEach(m=>{s+=markMarkup(m,v,o)});
+  if(!o.hide)marks.filter(m=>m.type!=='zone').forEach(m=>{s+=markMarkup(m,v,o)});
+  if(o.ball){const k=o.bs||1;s+=`<g transform="translate(${o.ball[0].toFixed(1)},${o.ball[1].toFixed(1)})" pointer-events="none"><ellipse rx="${(3.2*k).toFixed(1)}" ry="${(5*k).toFixed(1)}" fill="#8b4a1f" stroke="#fff" stroke-width="1"/><path d="M0 ${(-2.4*k).toFixed(1)}V${(2.4*k).toFixed(1)}" stroke="#fff" stroke-width=".9"/></g>`}
   if(o.interactive&&!o.anim){
     const {fw}=dims(v);
     s+=`<g data-los="1" style="cursor:ns-resize"><rect x="${fw+2}" y="${los-14}" width="30" height="28" fill="#000" fill-opacity="0"/><rect x="${fw+6}" y="${los-11}" width="22" height="22" rx="11" fill="#2563eb"/><path d="M${fw+17} ${los-7}l-4 4.5h8zM${fw+17} ${los+7}l-4-4.5h8z" fill="#fff"/></g>`;
@@ -743,15 +786,18 @@ function thumbFor(pb,pl){
   if(c&&c.k===k)return c.svg;
   const svg=svgFor(pb,pl,{style:'light'});thumbCache.set(pl.id,{k,svg});return svg;
 }
-function playMatches(pl,q){if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes].some(x=>(x||'').toLowerCase().includes(q))}
+const TAGS=['1st Down','2nd & long','3rd & short','3rd & long','Red Zone','Goal Line','2-Minute','PAT','vs. Man','vs. Zone','vs. Blitz'];
+function usedTags(pb){const set=new Set();pb.plays.forEach(pl=>(pl.tags||[]).forEach(t=>set.add(t)));return [...TAGS.filter(t=>set.has(t)),...[...set].filter(t=>!TAGS.includes(t)).sort()]}
+function playMatches(pl,q){if(state.tagF&&!(pl.tags||[]).includes(state.tagF))return false;if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes,...(pl.tags||[])].some(x=>(x||'').toLowerCase().includes(q))}
 function playListHTML(pb){const r=playItems(pb);return r.items.join('')+r.tail}
 function playItems(pb){
-  const q=state.q.trim();const list=pb.plays.map((pl,i)=>[pl,i]).filter(([pl])=>playMatches(pl,q));
+  if(state.tagF&&!usedTags(pb).includes(state.tagF))state.tagF='';
+  const q=state.q.trim();const list=pb.plays.map((pl,i)=>[pl,i]).filter(([pl])=>playMatches(pl,q));const filt=q||state.tagF;
   return {items:list.map(([pl,i])=>`<div class="play" data-play="${pl.id}">
       <div class="num">${i+1}</div>${thumbFor(pb,pl)}
       <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(pl.name||'Ohne Namen')}</div><div class="ct">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</div></div>
-      <div class="mv">${q?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`),
-    tail:(pb.plays.length?(q?`<div class="hint">${list.length} von ${pb.plays.length} Plays${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>')};
+      <div class="mv">${filt?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`),
+    tail:(pb.plays.length?(filt?`<div class="hint">${list.length} von ${pb.plays.length} Plays${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>')};
 }
 function renderSide(){
   const el=$('#side');const pb=curPb();
@@ -760,11 +806,12 @@ function renderSide(){
   if(pb){
     h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span></div>`;
     if(pb.plays.length>4)h+=`<input type="search" id="playSearch" placeholder="🔍 Plays suchen (Name, Kategorie, Formation)…" value="${esc(state.q)}">`;
+    {const ut=usedTags(pb);if(ut.length)h+=`<select id="tagFilter" title="Nach Situation filtern"><option value="">Alle Situationen</option>${ut.map(t=>`<option value="${esc(t)}"${state.tagF===t?' selected':''}>${esc(t)}</option>`).join('')}</select>`}
     var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
       <button class="btn primary" data-a="newPlay">＋ Neues Play</button>
       <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
-      <button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
-  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
+      <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
+  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
   const items=pb&&LI?LI.items:[];
   const nlx=el.querySelector('.plays');
   if(h===el._h&&el.firstChild&&nlx&&el._items&&el._items.length===items.length){
@@ -799,12 +846,13 @@ function renderCenter(){
     <button class="btn sm ${m==='route'?'on':''}"${D} data-mode="route" title="Route zeichnen (R)">↗ Route</button>
     <button class="btn sm ${m==='motion'?'on':''}"${D} data-mode="motion" title="Motion vor dem Snap (M)">⇢ Motion</button>
     <button class="btn sm ${m==='add'?'on':''}"${D} data-mode="add" title="Spieler hinzufügen (P)">＋ Spieler</button>
+    <button class="btn sm ${state.multiMode?'on':''}"${D} data-a="multiMode" title="Mehrere Spieler auswählen und gemeinsam verschieben (am PC auch: Umschalt-Klick)">☑ Mehrere</button>
     <span class="sep"></span>
     <button class="btn sm" data-a="undo" ${state.undo.length&&!L?'':'disabled'} title="Rückgängig (Strg+Z)">↶</button>
     <button class="btn sm" data-a="redo" ${state.redo.length&&!L?'':'disabled'} title="Wiederholen (Strg+Y)">↷</button>
     <span class="sep"></span>
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer zum Präsentieren (L) – Esc beendet">🔴 Laser</button>
-    <button class="btn sm ${state.anim?'on':''}" data-a="anim">${state.anim?(state.anim.done?'↺ Zurück':'■ Stopp'):'▶ Abspielen'}</button>${animOptSel(pl)}
+    ${animCtl(pl)}
     <button class="btn sm" data-a="present" title="Präsentationsmodus (Vollbild, Pfeiltasten)">▣ Präsentieren</button>
     <span class="sep"></span>
     <select id="formSel" class="sm"${D} title="Eigene Formation laden"><option value="">${pb.type==='defense'?'Defense':'Offense'}-Formation…</option>${(()=>{const cf=customForms(pb);const ks=Object.keys(cf);
@@ -832,11 +880,12 @@ function renderField(){
   const svg=$('#field');const pb=curPb(),pl=curPlay();if(!svg||!pb||!pl)return;
   const {fw,fh}=dims(VP(pb,pl));
   svg.setAttribute('viewBox',`-34 0 ${fw+68} ${fh}`);
-  svg.innerHTML=playMarkup(pb,pl,{interactive:true,sel:state.sel,selRoute:state.selRoute,anim:state.anim&&state.anim.pos,style:state.style});
+  const mu=state.multi.length>1?state.multi:null;const a=state.anim;
+  svg.innerHTML=playMarkup(pb,pl,{interactive:true,sel:mu?null:state.sel,multi:mu,selRoute:state.selRoute,anim:a&&a.pos,ball:a&&a.ball,bs:a&&a.bs,style:state.style,hide:state.present&&state.quiz&&!state.quizShown});
   const hb=$('#hintbar');if(hb)hb.innerHTML=hintText();
 }
 function hintText(){
-  if(state.anim)return state.anim.done?'Alle Spieler stehen am Ende ihrer Route. <b>↺ Zurück</b> stellt die Aufstellung wieder her.':'Animation läuft…';
+  if(state.anim)return state.anim.done?'Alle Spieler stehen am Ende ihrer Route. <b>↺ Zurück</b> stellt die Aufstellung wieder her.':state.anim.playing?'Animation läuft…':'Pausiert – mit <b>⏮ ⏭</b> gehst du in Einzelschritten vor und zurück.';
   if(state.drawing)return `<b>${{route:'Route',motion:'Motion',alt:'Alternative'}[state.drawing.kind]} zeichnen:</b> Tippe Punkte aufs Feld. <button class="btn sm primary" data-a="drawDone">✓ Fertig</button> <button class="btn sm" data-a="drawCancel">✕ Abbrechen</button> <span class="hint">(oder letzten Punkt erneut antippen / Enter)</span>`;
   if(state.mode==='route')return '<b>Route:</b> Tippe einen eigenen Spieler an, dann Punkte aufs Feld.';
   if(state.mode==='motion')return '<b>Motion:</b> Tippe einen eigenen Spieler an, dann Punkte für die Bewegung vor dem Snap.';
@@ -878,7 +927,19 @@ function renderInsp(){
       <label>Notizen / Coaching Points</label><textarea>${esc(pl.notes)}</textarea></fieldset>
       <h4>Aktionen</h4>
       <div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="png">Als PNG</button></div>
-      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>`;
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>`;
+    return}
+  state.multi=state.multi.filter(id=>findP(id));
+  if(state.multi.length>1){
+    const own=state.multi.filter(id=>!isOpp(id)).length;
+    el.innerHTML=`<h3>${state.multi.length} Spieler <button class="btn sm" data-a="multiClear">← Play</button></h3>
+      <p class="hint" style="margin-top:0">Zieh einen der markierten Spieler – alle bewegen sich gemeinsam.</p>
+      <h4>Ausrichten</h4>
+      <div class="row"><button class="btn sm" data-a="alignY" title="Alle auf die Höhe des zuletzt gewählten Spielers">⬌ Auf eine Höhe</button><button class="btn sm" data-a="alignX" title="Alle genau über-/untereinander">⬍ Untereinander</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="distX" title="Gleiche Abstände zwischen dem linken und dem rechten Spieler">↔ Gleichmäßig verteilen</button></div>
+      ${state.clip&&own?`<h4>Kopierte Linie</h4><div class="row"><button class="btn sm" data-a="pasteRoute">Bei allen einfügen</button><button class="btn sm" data-a="pasteRouteM">Gespiegelt einfügen</button></div>`:''}
+      <h4>&nbsp;</h4><button class="btn sm danger" data-a="multiDel">${state.multi.length} Spieler entfernen</button>`;
     return}
   const mk=findMark(state.sel);
   if(mk){
@@ -903,6 +964,9 @@ function renderInsp(){
       <label>Kategorie</label><input type="text" data-f="cat" list="catList" value="${esc(pl.cat)}" placeholder="z. B. ${CATS[pb.type][0]}">
       <datalist id="catList">${CATS[pb.type].map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
       <label>Formation</label><input type="text" data-f="formation" value="${esc(pl.formation)}">
+      <label>Situationen <span class="hint" style="font-weight:400">– für Filter und Call-Sheet</span></label>
+      <div class="chips">${[...new Set([...TAGS,...usedTags(pb),...(pl.tags||[])])].map(t=>`<button data-tag="${esc(t)}" class="${(pl.tags||[]).includes(t)?'on':''}">${esc(t)}</button>`).join('')}</div>
+      <input type="text" id="tagNew" maxlength="24" placeholder="＋ eigene Situation (Enter)" style="margin-top:2px">
       <label>Notizen / Coaching Points</label><textarea data-f="notes" placeholder="Reads, Anpassungen, Schlüsselwörter…">${esc(pl.notes)}</textarea>
       ${pl.opp.length?`<label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-a="toggleOpp" ${pl.showOpp?'checked':''}> Gegner anzeigen</label>`:''}
       <h4>Zeichnen</h4>
@@ -913,7 +977,8 @@ function renderInsp(){
       <h4>Aktionen</h4>
       <div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="mirror">Spiegeln ⇋</button><button class="btn sm" data-a="flipV">Spiegeln ⇅</button></div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>
-      <div class="row" style="margin-top:6px"><button class="btn sm danger" data-a="delPlay">Play löschen</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="history" title="Frühere Stände dieses Plays">🕘 Verlauf</button><button class="btn sm danger" data-a="delPlay">Play löschen</button></div>
       <p class="hint" style="margin-top:14px">Tipp: Spiel ein Play einmal fertig, dann über <b>Duplizieren</b> und <b>Spiegeln</b> schnell Varianten bauen.</p>`;
     return;
   }
@@ -933,6 +998,7 @@ function renderInsp(){
     <div class="tpl">${(pb.type==='defense'?DEF_T:OFF_T).map((t,i)=>`<button data-tpl="${i}">${esc(t.n)}</button>`).join('')}</div>
     <h4>Selbst zeichnen</h4>
     <div class="row"><button class="btn sm" data-a="drawRoute">↗ Route</button><button class="btn sm" data-a="drawMotion">⇢ Motion</button></div>
+    ${state.clip?`<div class="row" style="margin-top:6px"><button class="btn sm" data-a="pasteRoute" title="Strg+V">⧉ Kopierte Linie einfügen</button><button class="btn sm" data-a="pasteRouteM" title="links ↔ rechts gespiegelt">⧉ gespiegelt</button></div>`:''}
     <div class="row" style="margin-top:6px"><button class="btn sm" data-a="drawBlitz">⚡ Blitz zeichnen</button><button class="btn sm" data-a="drawAlt" title="Weitere Option für diesen Spieler, z. B. Blitz oder Drop">＋ Alternative zeichnen</button></div>`;
     const list=routeList(p);
     if(list.length){
@@ -945,11 +1011,16 @@ function renderInsp(){
         ${cur.k==='motion'?'':`<div class="row"><div><label>Tempo</label><select data-rf="speed">${[[0.6,'langsam'],[1,'normal'],[1.5,'schnell'],[2,'sehr schnell']].map(([v,n])=>`<option value="${v}"${(r.speed||1)==v?' selected':''}>${n}</option>`).join('')}</select></div>
         <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
-        <div class="row" style="margin-top:6px"><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
+        <div class="row" style="margin-top:6px"><button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
   } else h+=`<p class="hint" style="margin-top:12px">Gegner-Spieler kannst du verschieben und gestalten, damit die Aufstellung zu deinem Play passt.</p>`;
   h+=`<h4>&nbsp;</h4><button class="btn sm danger" data-a="delPlayer">Spieler entfernen</button>`;
   el.innerHTML=h;
+}
+function toggleTag(t){
+  const pb=curPb(),pl=curPlay();if(!pl||pl.locked||!t)return;t=t.trim().slice(0,24);if(!t)return;
+  commit();const a=pl.tags||(pl.tags=[]);const i=a.indexOf(t);if(i>=0)a.splice(i,1);else if(a.length<12)a.push(t);
+  Store.savePlay(pb,pl);renderInsp();renderSide();
 }
 function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar()}
 function renderPresentBar(){
@@ -962,12 +1033,13 @@ function renderPresentBar(){
     <div class="ptitle"><b>${i+1}. ${esc(pl.name)}</b><span>${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</span></div>
     <button class="btn sm" data-a="presNext" ${i<pb.plays.length-1?'':'disabled'} title="Nächstes Play (→)">▶</button>
     <span class="sep"></span>
-    <button class="btn sm ${state.anim?'on':''}" data-a="anim" title="Abspielen (Leertaste)">${state.anim?(state.anim.done?'↺ Zurück':'■ Stopp'):'▶ Abspielen'}</button>${animOptSel(pl)}
+    ${animCtl(pl)}
+    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button><button class="btn sm" data-a="quizRand" title="Zufälliges Play">🔀</button>`:''}
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L)">🔴 Laser</button>
     ${pl.notes?`<button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen ein/aus (N)">📝 Notizen</button>`:''}
     <button class="btn sm" data-a="presExit" title="Beenden (Esc)">✕ Beenden</button>`;
   let nb=$('#presNotesBox');
-  if(state.presNotes&&pl.notes){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}nb.textContent=pl.notes}else if(nb)nb.remove();
+  if(state.presNotes&&pl.notes&&!(state.quiz&&!state.quizShown)){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}nb.textContent=pl.notes}else if(nb)nb.remove();
 }
 function setPresent(on){
   state.present=on;document.body.classList.toggle('presenting',on);
@@ -981,6 +1053,7 @@ function presStep(d){const pb=curPb(),pl=curPlay();if(!pb||!pl)return;const i=pb
 /* ---------- undo / mutation ---------- */
 function commit(){
   const pl=curPlay();if(!pl)return;
+  Hist.push(pl);
   state.undo.push(JSON.stringify(pl));if(state.undo.length>80)state.undo.shift();state.redo=[];
 }
 function changed(opts={}){
@@ -997,8 +1070,8 @@ function restore(json){
 }
 function undo(){const pl=curPlay();if(!state.undo.length||!pl)return;state.redo.push(JSON.stringify(pl));restore(state.undo.pop())}
 function redo(){const pl=curPlay();if(!state.redo.length||!pl)return;state.undo.push(JSON.stringify(pl));restore(state.redo.pop())}
-function selectPlay(id){state.playId=id;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
-function selectPb(id){state.q='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
+function selectPlay(id){state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
+function selectPb(id){state.q='';state.tagF='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.multi=[];state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
 
 /* ---------- field interaction ---------- */
 function toField(e){
@@ -1060,9 +1133,16 @@ function onDown(e){
       if(state.sel!==m.id){state.sel=m.id;renderField();renderInsp();}
       state.drag={type:'m',mid:m.id,moved:false,sx:q[0],sy:q[1],ox:m.x,oy:m.y};svg.setPointerCapture(e.pointerId);return}
     if(t&&t.dataset.p){const id=t.dataset.p;const p=findP(id);
+      if(e.shiftKey||e.ctrlKey||e.metaKey||state.multiMode){   // add to / remove from the group
+        const m=state.multi.length?state.multi.slice():(state.sel&&findP(state.sel)?[state.sel]:[]);
+        const i=m.indexOf(id);if(i>=0)m.splice(i,1);else m.push(id);
+        state.multi=m.length>1?m:[];state.sel=m.length?m[m.length-1]:null;state.selRoute=null;renderField();renderInsp();return}
+      if(state.multi.length>1&&state.multi.includes(id)){
+        state.drag={type:'p',pid:id,moved:false,sx:q[0],sy:q[1],ox:p.x,oy:p.y,group:state.multi.map(i=>{const g=findP(i);return g&&{id:i,ox:g.x,oy:g.y}}).filter(Boolean)};svg.setPointerCapture(e.pointerId);return}
+      if(state.multi.length){state.multi=[];state.sel=null}
       if(state.sel!==id){state.sel=id;state.selRoute=null;renderField();renderInsp();}
       state.drag={type:'p',pid:id,moved:false,sx:q[0],sy:q[1],ox:p.x,oy:p.y};svg.setPointerCapture(e.pointerId);return}
-    if(state.sel){state.sel=null;renderField();renderInsp();}
+    if(state.sel||state.multi.length){state.sel=null;state.multi=[];renderField();renderInsp();}
     return;
   }
   if(state.mode==='route'||state.mode==='motion'){
@@ -1109,7 +1189,9 @@ function onMove(e){
   if(d.type==='m'){const m=findMark(d.mid);if(!m)return;m.x=r1(d.ox+(q[0]-d.sx)/S);m.y=r1(d.oy+(q[1]-d.sy)/S);renderField();return}
   const p=findP(d.pid);if(!p)return;
   let [x,y]=toYd(q);[x,y]=clampYd(x,y);
-  if(d.type==='p'){p.x=snapV(x);p.y=snapV(y);}
+  if(d.type==='p'){const nx=snapV(x),ny=snapV(y);
+    if(d.group){const dx=nx-d.ox,dy=ny-d.oy;d.group.forEach(g=>{const o=findP(g.id);if(o){const c=clampYd(g.ox+dx,g.oy+dy);o.x=r1(c[0]);o.y=r1(c[1])}})}
+    else{p.x=nx;p.y=ny}}
   else{const r=d.k==='alt'?(p.alts||[])[d.j]:p[d.k];const arr=r&&r.pts;if(arr&&arr[d.i]){arr[d.i]={x:r1(snapV(x)-p.x),y:r1(snapV(y)-p.y)}}}
   renderField();
 }
@@ -1154,33 +1236,142 @@ function applyTemplate(i){
 }
 
 /* ---------- animation ---------- */
-function startAnim(){
-  const pb=curPb(),pl=curPlay();const v=VP(pb,pl);const {los,cx}=dims(v);
+function animCtl(pl){
+  const a=state.anim;
+  const rate=`<select id="animRate" class="sm" title="Tempo der Animation">${[[0.25,'¼×'],[0.5,'½×'],[1,'1×'],[1.5,'1,5×'],[2,'2×']].map(([v,n])=>`<option value="${v}"${state.animRate===v?' selected':''}>${n}</option>`).join('')}</select>`;
+  if(!a)return `<button class="btn sm" data-a="anim" title="Abspielen (Leertaste im Präsentationsmodus)">▶ Abspielen</button>${animOptSel(pl)}${rate}`;
+  return `${a.done?'':`<button class="btn sm" data-a="animPause">${a.playing?'⏸ Pause':'▶ Weiter'}</button>`}<button class="btn sm" data-a="animBack" title="Schritt zurück">⏮</button><button class="btn sm" data-a="animFwd" title="Schritt vor">⏭</button><button class="btn sm on" data-a="anim">${a.done?'↺ Zurück':'■ Stopp'}</button>${rate}`;
+}
+// model of one play's animation: who runs where and when; reused for the live animation and for video/GIF
+function animModel(pb,pl,opt){
+  const v=VP(pb,pl);const {los,cx}=dims(v);
   const all=[...pl.players,...(pl.showOpp?pl.opp:[])];
-  const opt=state.animOpt||0;   // 0 = main routes, n = alternative n (players without it run their main route)
   const vm=55,vr=75; // svg units per second
   const tr={};let mMax=0,T2=0;
   all.forEach(p=>{const b=[cx+p.x*S,los+p.y*S];
     const mot=[b,...absPts(p,p.motion&&p.motion.pts,b)];const me=mot[mot.length-1];
-    const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:p.route;
+    const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:p.route;   // players without that alternative run their main route
     const rt=[me,...absPts(p,r&&r.pts,b)];
     const ml=lenOf(mot),rl=lenOf(rt),f=(r&&r.speed)||1,d=(r&&r.delay)||0;
     mMax=Math.max(mMax,ml);if(rl)T2=Math.max(T2,d+rl/(vr*f));tr[p.id]={mot,rt,ml,rl,f,d}});
-  if(!mMax&&!T2){toast('Keine Routen zum Abspielen.');return}
+  if(!mMax&&!T2)return null;
   const T1=mMax/vm,gap=mMax?0.35:0;
-  const t0=performance.now();state.sel=null;state.drawing=null;
-  state.anim={pos:{},raf:0};renderCenter();renderInsp();
+  const M={tr,T1,gap,T2,vm,vr,total:T1+gap+T2,ball:null};
+  // the ball: centre -> QB at the snap, then thrown to read 1
+  const off=pb.type==='offense'?pl.players:(pl.showOpp?pl.opp:[]);const L=p=>(p.label||'').toUpperCase();
+  const qb=off.find(p=>L(p)==='QB'),c=off.find(p=>L(p)==='C'),tg=off.find(p=>p.read===1&&p!==qb&&tr[p.id]&&tr[p.id].rl>0);
+  if(qb){M.ball={qb:qb.id,c:c?c.id:null};
+    if(tg){const k=tr[tg.id];const ta=Math.max(0.8,k.d+0.75*k.rl/(vr*k.f));const tp=routePos(M,k,ta),qp=routePos(M,tr[qb.id],ta);
+      const fd=Math.max(0.25,Math.min(1.2,Math.hypot(tp[0]-qp[0],tp[1]-qp[1])/230));
+      Object.assign(M.ball,{to:tg.id,rel:Math.max(0.3,ta-fd),arr:Math.max(0.3,ta-fd)+fd});M.total=Math.max(M.total,T1+gap+M.ball.arr)}}
+  return M;
+}
+function routePos(M,k,t2){return along(k.rt,Math.max(0,Math.min((t2-k.d)*M.vr*k.f,k.rl)))}
+function animAt(M,t){
+  const pos={};const t2=t-M.T1-M.gap;
+  for(const id in M.tr){const k=M.tr[id];pos[id]=t<M.T1+M.gap?along(k.mot,Math.min(t*M.vm,k.ml)):routePos(M,k,t2)}
+  let ball=null,bs=1;const B=M.ball;const mix=(a,b,u)=>[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u];
+  if(B){const q=pos[B.qb],cp=B.c&&pos[B.c];
+    const hold=p=>[p[0]+9,p[1]+7];   // carried next to the player so the label stays readable
+    if(t2<0)ball=hold(cp||q);
+    else if(t2<0.18&&cp)ball=hold(mix(cp,q,t2/0.18));
+    else if(!B.to||t2<B.rel)ball=hold(q);
+    else if(t2<B.arr){const u=(t2-B.rel)/(B.arr-B.rel);ball=mix(hold(routePos(M,M.tr[B.qb],B.rel)),hold(routePos(M,M.tr[B.to],B.arr)),u);bs=1+0.7*Math.sin(Math.PI*u)}
+    else ball=hold(pos[B.to]);}
+  return {pos,ball,bs};
+}
+function animUI(){renderCenter();renderPresentBar()}
+function animFrame(t){const a=state.anim;if(!a)return;const f=animAt(a.M,t);a.pos=f.pos;a.ball=f.ball;a.bs=f.bs;renderField()}
+function startAnim(){
+  const pb=curPb(),pl=curPlay();const M=animModel(pb,pl,state.animOpt||0);
+  if(!M){toast('Keine Routen zum Abspielen.');return}
+  state.sel=null;state.multi=[];state.drawing=null;state.quizShown=true;
+  state.anim={M,t:0,playing:true,done:false,rate:state.animRate||1,pos:{},ball:null,bs:1,raf:0,last:performance.now()};
+  animFrame(0);animUI();renderInsp();
   const step=now=>{
-    if(!state.anim)return;const t=(now-t0)/1000;
-    for(const id in tr){const k=tr[id];const t2=t-T1-gap;
-      state.anim.pos[id]=t<T1+gap?along(k.mot,Math.min(t*vm,k.ml)):along(k.rt,Math.max(0,Math.min((t2-k.d)*vr*k.f,k.rl)));}
-    renderField();
-    if(t>T1+gap+T2+0.05){state.anim.done=true;renderCenter();return}   // stay at the end until sent back
-    state.anim.raf=requestAnimationFrame(step);
+    const a=state.anim;if(!a)return;const dt=Math.min(0.1,(now-a.last)/1000);a.last=now;
+    if(a.playing){a.t=Math.min(M.total+0.05,a.t+dt*a.rate);animFrame(a.t);
+      if(a.t>=M.total+0.05){a.done=true;a.playing=false;animUI()}}   // stay at the end until sent back
+    a.raf=requestAnimationFrame(step);
   };
   state.anim.raf=requestAnimationFrame(step);
 }
-function stopAnim(silent){if(!state.anim)return;cancelAnimationFrame(state.anim.raf);state.anim=null;if(!silent){renderCenter()}}
+function animPause(){const a=state.anim;if(!a)return;if(a.done)return;a.playing=!a.playing;a.last=performance.now();animUI();renderField()}
+function animStepBy(d){const a=state.anim;if(!a)return;a.playing=false;a.t=Math.max(0,Math.min(a.M.total+0.05,a.t+d));a.done=a.t>=a.M.total+0.05;animFrame(a.t);animUI()}
+
+/* ---------- 11. animation as video or GIF ---------- */
+function busyBox(text){const el=document.createElement('div');el.className='mback busy';el.innerHTML=`<div class="modal" style="max-width:340px;text-align:center"><h3>Bitte warten</h3><p id="busyText">${esc(text)}</p></div>`;document.body.appendChild(el);
+  return {set(t){el.querySelector('#busyText').textContent=t},close(){el.remove()}}}
+function svgImage(svg){return new Promise((res,rej)=>{const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));const img=new Image();
+  img.onload=()=>{URL.revokeObjectURL(url);res(img)};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('Bild konnte nicht erzeugt werden'))};img.src=url})}
+async function exportAnim(kind){
+  const pb=curPb(),pl=curPlay();if(!pb||!pl||state.exporting)return;
+  const M=animModel(pb,pl,state.animOpt||0);if(!M)return toast('Keine Routen zum Abspielen.');
+  stopAnim(true);renderCenter();
+  const {fw,fh}=dims(VP(pb,pl));const W=kind==='gif'?480:960,head=kind==='gif'?24:44,fhp=Math.round(fh*W/fw/2)*2,H=fhp+head;
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d',{willReadFrequently:kind==='gif'});
+  const title=`${pb.plays.indexOf(pl)+1}. ${pl.name||''}`,style=state.style;
+  const draw=async t=>{const f=animAt(M,Math.max(0,Math.min(M.total,t)));
+    const img=await svgImage(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${fhp}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{anim:f.pos,ball:f.ball,bs:f.bs,style})}</svg>`);
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.drawImage(img,0,head,W,fhp);
+    ctx.fillStyle=INK;ctx.font=`700 ${Math.round(head*0.52)}px Arial, Helvetica, sans-serif`;ctx.textBaseline='middle';ctx.fillText(title,10,head/2+1,W-20)};
+  state.exporting=true;const busy=busyBox(kind==='gif'?'GIF wird erstellt…':'Video wird aufgenommen…');
+  try{
+    const name=fname(pl.name||'play');
+    if(kind==='gif'){
+      const dt=0.08,n=Math.ceil(M.total/dt)+1;const samples=[];
+      for(const t of [0,M.total*0.35,M.total*0.7,M.total]){await draw(t);samples.push(ctx.getImageData(0,0,W,H).data)}
+      const g=gifWriter(W,H,samples);
+      for(let i=0;i<n;i++){await draw(i*dt);g.frame(ctx.getImageData(0,0,W,H).data,i===0?70:i===n-1?180:8);
+        if(i%5===0){busy.set(`GIF wird erstellt… ${Math.round(i/n*100)} %`);await new Promise(r=>setTimeout(r,0))}}
+      await saveFile(name+'.gif',new Blob([g.end()],{type:'image/gif'}));
+    } else {
+      const mime=window.MediaRecorder&&cv.captureStream?['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm'].find(m=>MediaRecorder.isTypeSupported(m)):null;
+      if(!mime){toast('Dieser Browser kann kein Video aufnehmen – bitte „Als GIF“ nehmen.');return}
+      await draw(0);const rec=new MediaRecorder(cv.captureStream(30),{mimeType:mime,videoBitsPerSecond:3e6});const chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+      rec.start();const t0=performance.now(),lead=0.7,tail=1.2,dur=M.total+lead+tail;
+      for(;;){const el=(performance.now()-t0)/1000;await draw(el-lead);busy.set(`Video wird aufgenommen… ${Math.min(100,Math.round(el/dur*100))} %`);if(el>dur)break;await new Promise(r=>setTimeout(r,16))}
+      await new Promise(r=>{rec.onstop=r;rec.stop()});
+      const type=mime.split(';')[0];await saveFile(name+(type==='video/mp4'?'.mp4':'.webm'),new Blob(chunks,{type}));
+    }
+  }catch(e){console.warn(e);toast('Export fehlgeschlagen'+(e&&e.message?': '+e.message:''))}
+  finally{state.exporting=false;busy.close()}
+}
+// small GIF89a encoder: palette = the 255 most frequent colours of the play, unchanged pixels are transparent so files stay small
+function gifWriter(W,H,samples){
+  const cnt=new Map();samples.forEach(d=>{for(let j=0;j<d.length;j+=4){const k=(d[j]>>3)<<10|(d[j+1]>>3)<<5|(d[j+2]>>3);cnt.set(k,(cnt.get(k)||0)+1)}});
+  const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,255).map(e=>e[0]);
+  const pal=top.map(k=>[((k>>10)&31)*8+4,((k>>5)&31)*8+4,(k&31)*8+4]);
+  const near=new Map(top.map((k,i)=>[k,i]));
+  const find=(r,g,b)=>{const k=(r>>3)<<10|(g>>3)<<5|(b>>3);let v=near.get(k);if(v!==undefined)return v;
+    let best=0,bd=1e9;for(let i=0;i<pal.length;i++){const p=pal[i],d=(p[0]-r)*(p[0]-r)+(p[1]-g)*(p[1]-g)+(p[2]-b)*(p[2]-b);if(d<bd){bd=d;best=i}}near.set(k,best);return best};
+  const out=[];const w16=v=>{out.push(v&255,(v>>8)&255)};
+  'GIF89a'.split('').forEach(c=>out.push(c.charCodeAt(0)));w16(W);w16(H);out.push(0xF7,0,0);
+  for(let i=0;i<256;i++){const c=pal[i]||[0,0,0];out.push(c[0],c[1],c[2])}
+  out.push(0x21,0xFF,0x0B);'NETSCAPE2.0'.split('').forEach(c=>out.push(c.charCodeAt(0)));out.push(3,1,0,0,0);
+  let prev=null;const N=W*H;
+  return {
+    frame(rgba,delay){
+      const idx=new Uint8Array(N),px=new Uint8Array(N);
+      for(let i=0,j=0;i<N;i++,j+=4){const c=find(rgba[j],rgba[j+1],rgba[j+2]);idx[i]=c;px[i]=prev&&prev[i]===c?255:c}
+      const first=!prev;prev=idx;
+      out.push(0x21,0xF9,4,first?0x04:0x05);w16(delay);out.push(255,0);
+      out.push(0x2C);w16(0);w16(0);w16(W);w16(H);out.push(0,8);
+      // LZW
+      const buf=[];let cur=0,bits=0,size=9,next=258,dict=new Map();
+      const emit=c=>{cur|=c<<bits;bits+=size;while(bits>=8){buf.push(cur&255);cur>>>=8;bits-=8}};
+      emit(256);let pre=px[0];
+      for(let i=1;i<N;i++){const k=px[i],key=pre<<8|k,v=dict.get(key);
+        if(v!==undefined)pre=v;
+        else{emit(pre);if(next===4096){emit(256);next=258;size=9;dict=new Map()}else{if(next>=(1<<size))size++;dict.set(key,next++)}pre=k}}
+      emit(pre);emit(257);if(bits>0)buf.push(cur&255);
+      for(let i=0;i<buf.length;i+=255){const n=Math.min(255,buf.length-i);out.push(n);for(let j=0;j<n;j++)out.push(buf[i+j])}
+      out.push(0);
+    },
+    end(){out.push(0x3B);return new Uint8Array(out)}
+  };
+}
+function stopAnim(silent){if(!state.anim)return;cancelAnimationFrame(state.anim.raf);state.anim=null;if(!silent){renderCenter();renderPresentBar()}}
 
 /* ---------- modal / toast ---------- */
 function modal(title,body,buttons){
@@ -1329,13 +1520,71 @@ function sheetSVG(pb,layout,style,sel){
   });
   return s+'</svg>';
 }
+function callSheetSVG(pb,sel){
+  const groups=[];const add=(t,pl)=>{let g=groups.find(x=>x.t===t);if(!g)groups.push(g={t,pl:[]});g.pl.push(pl)};
+  const order=usedTags(pb);order.forEach(t=>sel.forEach(pl=>{if((pl.tags||[]).includes(t))add(t,pl)}));
+  sel.forEach(pl=>{if(!(pl.tags||[]).length)add('Ohne Situation',pl)});
+  const W=1000,pad=28,gap=16,cols=3,cw=(W-2*pad-(cols-1)*gap)/cols,rh=24,hh=30,top=70;
+  const colY=Array(cols).fill(top);let body='';
+  groups.forEach(g=>{const c=colY.indexOf(Math.min(...colY));const x=pad+c*(cw+gap);let y=colY[c];const h=hh+g.pl.length*rh;
+    body+=`<rect x="${x}" y="${y}" width="${cw}" height="${h}" fill="#fff" stroke="${INK}" stroke-width="1.2"/><rect x="${x}" y="${y}" width="${cw}" height="${hh}" fill="${INK}"/>
+      <text x="${x+10}" y="${y+21}" font-family="${FONT}" font-size="16" font-weight="700" fill="#fff">${esc(g.t)}</text>`;
+    g.pl.forEach((pl,i)=>{const ry=y+hh+i*rh;
+      body+=(i?`<line x1="${x}" y1="${ry}" x2="${x+cw}" y2="${ry}" stroke="#ccc" stroke-width=".8"/>`:'')+
+        `<text x="${x+10}" y="${ry+17}" font-family="${FONT}" font-size="14" font-weight="700" fill="${INK}">${pb.plays.indexOf(pl)+1}</text>
+         <text x="${x+40}" y="${ry+17}" font-family="${FONT}" font-size="14" fill="${INK}">${esc((pl.name||'').slice(0,24))}</text>
+         <text x="${x+cw-8}" y="${ry+17}" text-anchor="end" font-family="${FONT}" font-size="11" fill="#666">${esc((pl.formation||'').slice(0,16))}</text>`});
+    colY[c]=y+h+gap});
+  const H=Math.max(...colY)+pad-gap;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#fff"/>
+    <text x="${pad}" y="42" font-family="${FONT}" font-size="26" font-weight="700" fill="${INK}">Call-Sheet · ${esc(pb.name)}</text>
+    <text x="${W-pad}" y="42" text-anchor="end" font-family="${FONT}" font-size="13" fill="#666">${new Date().toLocaleDateString('de-DE')}</text>${body}</svg>`;
+}
+// wristband cards in real size on A4 pages (units: millimetres), with cut marks
+function wristPages(pb,sel,style,wmm,hmm,cols,rows){
+  if(style==='light')style='print';
+  const {fw,fh}=dims(VAR[pb.variant]);const per=cols*rows,PW=210,PH=297,m=10,g=6;
+  const nx=Math.max(1,Math.floor((PW-2*m+g)/(wmm+g))),ny=Math.max(1,Math.floor((PH-2*m+g)/(hmm+g))),perPage=nx*ny;
+  const cards=[];for(let i=0;i<sel.length;i+=per)cards.push(sel.slice(i,i+per));
+  const pages=[];
+  for(let pi=0;pi<cards.length;pi+=perPage){
+    let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${PW}mm" height="${PH}mm" viewBox="0 0 ${PW} ${PH}"><rect width="${PW}" height="${PH}" fill="#fff"/>`;
+    const ox=(PW-(nx*wmm+(nx-1)*g))/2;
+    cards.slice(pi,pi+perPage).forEach((card,ci)=>{
+      const X=ox+(ci%nx)*(wmm+g),Y=m+Math.floor(ci/nx)*(hmm+g);const cw=wmm/cols,ch=hmm/rows;
+      [[X,Y,-1,-1],[X+wmm,Y,1,-1],[X,Y+hmm,-1,1],[X+wmm,Y+hmm,1,1]].forEach(([x,y,dx,dy])=>{   // cut marks
+        s+=`<path d="M${x+dx*1} ${y}H${x+dx*4}M${x} ${y+dy*1}V${y+dy*4}" stroke="#000" stroke-width=".15" fill="none"/>`});
+      card.forEach((pl,i)=>{const x=X+(i%cols)*cw,y=Y+Math.floor(i/cols)*ch;const no=pb.plays.indexOf(pl)+1;const nb=Math.max(3.2,Math.min(5.5,ch*0.2));
+        s+=`<svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" viewBox="0 0 ${fw} ${fh}" preserveAspectRatio="xMidYMid meet">${playMarkup(pb,pl,{style})}</svg>
+          <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(nb*1.5).toFixed(2)}" height="${nb.toFixed(2)}" fill="${INK}"/><text x="${(x+nb*0.75).toFixed(2)}" y="${(y+nb*0.76).toFixed(2)}" text-anchor="middle" font-family="${FONT}" font-size="${(nb*0.74).toFixed(2)}" font-weight="700" fill="#fff">${no}</text>
+          <text x="${(x+cw-0.8).toFixed(2)}" y="${(y+ch-1).toFixed(2)}" text-anchor="end" font-family="${FONT}" font-size="${Math.max(1.7,Math.min(2.6,cw*0.075)).toFixed(2)}" font-weight="700" fill="${INK}" stroke="#fff" stroke-width=".6" paint-order="stroke">${esc((pl.name||'').slice(0,22))}</text>
+          <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" fill="none" stroke="${INK}" stroke-width=".2"/>`});
+      s+=`<rect x="${X}" y="${Y}" width="${wmm}" height="${hmm}" fill="none" stroke="${INK}" stroke-width=".35"/>`});
+    pages.push(s+'</svg>');
+  }
+  return pages;
+}
+function printPages(svgs,real){   // real=true: pages are already A4 in millimetres
+  let root=$('#printRoot');if(root)root.remove();root=document.createElement('div');root.id='printRoot';
+  root.innerHTML=svgs.map(v=>`<div class="ppage${real?' real':''}">${v}</div>`).join('');document.body.appendChild(root);
+  document.body.classList.add('printing');
+  const done=()=>{document.body.classList.remove('printing');root.remove();window.removeEventListener('afterprint',done)};
+  window.addEventListener('afterprint',done);
+  setTimeout(()=>{try{window.print()}catch(e){toast('Drucken ist in dieser Ansicht nicht möglich – bitte als PNG speichern.')}setTimeout(()=>{if(document.body.classList.contains('printing')&&!window.matchMedia('print').matches)done()},60000)},80);
+}
 async function sheetDialog(){
   const pb=curPb();if(!pb.plays.length)return toast('Keine Plays vorhanden.');
   const r=await modal('Playbook / Wristband',`
     <div class="choice"><label><input type="radio" name="lay" value="sheet" checked><span>Playbook<small>3 Spalten mit Namen – zum Ausdrucken</small></span></label>
-    <label><input type="radio" name="lay" value="wrist"><span>Wristband<small>Kompakte Karten mit großen Nummern</small></span></label></div>
+    <label><input type="radio" name="lay" value="wrist"><span>Wristband<small>Kompakte Karten mit großen Nummern</small></span></label>
+    <label style="grid-column:1/-1"><input type="radio" name="lay" value="call"><span>Call-Sheet<small>Tabelle für den Spieltag, sortiert nach Situation</small></span></label></div>
+    <div id="wristOpts" hidden><label>Wristband-Größe</label>
+      <select id="wSize"><option value="free">Ein Bild in freier Größe (wie bisher)</option><option value="115x55">Erwachsene – ca. 11,5 × 5,5 cm</option><option value="95x45">Jugend – ca. 9,5 × 4,5 cm</option><option value="custom">Eigene Größe …</option></select>
+      <div id="wReal" hidden><div class="row" style="margin-top:6px"><div style="flex:1"><label>Breite (cm)</label><input type="text" id="wW" value="11,5" inputmode="decimal"></div><div style="flex:1"><label>Höhe (cm)</label><input type="text" id="wH" value="5,5" inputmode="decimal"></div>
+        <div style="flex:1"><label>Plays pro Karte</label><select id="wGrid"><option value="2x2">4 (2×2)</option><option value="3x2">6 (3×2)</option><option value="4x2" selected>8 (4×2)</option><option value="4x3">12 (4×3)</option><option value="5x3">15 (5×3)</option></select></div></div>
+      <p class="hint" style="margin:4px 0 0">Miss das Sichtfenster deines Wristbands nach – die Karten werden auf A4 in Originalgröße mit Schnittmarken angeordnet. Beim Drucken „Tatsächliche Größe / 100 %“ wählen.</p></div></div>
     <label>Feld</label><div class="choice"><label><input type="radio" name="sty" value="light" checked><span>Hell<small>spart Druckertinte</small></span></label><label><input type="radio" name="sty" value="grass"><span>Rasen</span></label><label><input type="radio" name="sty" value="dark"><span>Dunkel</span></label></div>
-    <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label></div>
+    <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label><label style="grid-column:1/-1"><input type="radio" name="fmt" value="print"><span>Drucken / als PDF speichern<small>A4, mehrere Seiten</small></span></label></div>
     <label style="display:flex;justify-content:space-between;align-items:center">Welche Plays? <span><button type="button" class="btn sm" data-pick="all">Alle</button> <button type="button" class="btn sm" data-pick="none">Keine</button></span></label>
     <div class="picklist">${pb.plays.map((pl,i)=>`<label><input type="checkbox" name="pick" value="${pl.id}" checked> <b>${i+1}.</b> ${esc(pl.name||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
     <p class="hint" id="pickCount" style="margin:4px 0 0">${pb.plays.length} von ${pb.plays.length} ausgewählt</p>`,
@@ -1343,8 +1592,20 @@ async function sheetDialog(){
   if(r.value!=='ok')return;
   const lay=r.el.querySelector('[name=lay]:checked').value,sty=r.el.querySelector('[name=sty]:checked').value,fmt=r.el.querySelector('[name=fmt]:checked').value;
   const ids=[...r.el.querySelectorAll('[name=pick]:checked')].map(x=>x.value);const sel=pb.plays.filter(x=>ids.includes(x.id));
-  const svg=sheetSVG(pb,lay,sty,sel);const name=fname(pb.name)+(lay==='wrist'?'_Wristband':'_Playbook');
-  try{if(fmt==='svg')await saveFile(name+'.svg',svg);else{toast('Bild wird erstellt…');await saveFile(name+'.png',await toPNG(svg,2))}}catch(e){toast(e.message)}
+  const num=id=>parseFloat(String(r.el.querySelector(id).value).replace(',','.'));
+  const wsize=r.el.querySelector('#wSize').value;
+  try{
+    let pages,real=false,name=fname(pb.name)+({wrist:'_Wristband',call:'_Call-Sheet'}[lay]||'_Playbook');
+    if(lay==='wrist'&&wsize!=='free'){
+      const w=Math.max(30,Math.min(190,num('#wW')*10||115)),h=Math.max(20,Math.min(277,num('#wH')*10||55));const [c,rw]=r.el.querySelector('#wGrid').value.split('x').map(Number);
+      pages=wristPages(pb,sel,sty,w,h,c,rw);real=true;
+    } else if(lay==='call')pages=[callSheetSVG(pb,sel)];
+    else if(fmt==='print'&&lay==='sheet'){pages=[];for(let i=0;i<sel.length;i+=12)pages.push(sheetSVG(pb,lay,sty,sel.slice(i,i+12)))}
+    else pages=[sheetSVG(pb,lay,sty,sel)];
+    if(fmt==='print')return printPages(pages,real);
+    for(let i=0;i<pages.length;i++){const n=name+(pages.length>1?`_Seite${i+1}`:'');
+      if(fmt==='svg')await saveFile(n+'.svg',pages[i]);else{toast('Bild wird erstellt…');await saveFile(n+'.png',await toPNG(pages[i],real?3.125:2))}}
+  }catch(e){toast(e.message)}
 }
 function exportJSON(obj,title,file){
   const txt=JSON.stringify(obj);
@@ -1397,6 +1658,7 @@ function cleanPlay(pl,keep){
   return {id:cId(pl.id,'pl',keep),name:cStr(pl.name,80)||'Play',cat:cStr(pl.cat,40),formation:cStr(pl.formation,40),notes:cStr(pl.notes,4000),
     players:cArr(pl.players,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),opp:cArr(pl.opp,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),
     oppForm:cStr(pl.oppForm,40),showOpp:pl.showOpp!==false,flipV:!!pl.flipV,losShift:cNum(pl.losShift,0,-30,30),locked:!!pl.locked,
+    tags:[...new Set(cArr(pl.tags,12).map(t=>cStr(t,24).trim()).filter(Boolean))],
     marks:cArr(pl.marks,80).map(m=>cleanMark(m,keep)).filter(Boolean),updated:cNum(pl.updated,Date.now(),0,1e14)};
 }
 function cleanPb(src,keep){
@@ -1457,17 +1719,29 @@ function importFlagPlay(j){
   if(!made)return importError('In der FlagPlay-Datei wurden keine Plays gefunden.');
   selectPb(made.id);toast(`${count} Plays aus FlagPlay importiert`+(skipped?` (${skipped} Elemente übersprungen)`:''));
 }
-function doImport(text){
+async function doImport(text){
   if(typeof text!=='string'||!text.trim())return importError('Die Datei ist leer.');
   if(text.length>20e6)return importError('Die Datei ist zu groß (über 20 MB) – das ist keine Playbook-Datei.');
   let j;try{j=JSON.parse(text)}catch(e){return importError('Die Datei ist keine Playbook-Datei oder beschädigt (kein gültiges JSON).')}
   try{
     if(j&&!j.app&&Array.isArray(j.plays)&&Array.isArray(j.playbooks))return importFlagPlay(j);
-    if(!j||typeof j!=='object'||j.app!=='playbook-builder')return importError('Das ist keine Datei aus dem Playbook Builder. Erwartet wird eine Datei, die über „Playbook teilen“ oder „Teilen“ gespeichert wurde.');
-    if(j.playbook){
-      const pb=cleanPb(j.playbook,false);if(!pb.fieldV&&j.fieldV===FLAG_V)pb.fieldV=FLAG_V;migrateFlag(pb);
-      state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast(`Playbook „${pb.name}“ mit ${pb.plays.length} Plays importiert`);
-    } else if(j.play){
+    if(!j||typeof j!=='object'||j.app!=='playbook-builder')return importError('Das ist keine Datei aus dem Playbook Builder. Erwartet wird eine Datei, die über „Playbook teilen“, „Teilen“ oder „Alles sichern“ gespeichert wurde.');
+    const prep=src=>{const pb=cleanPb(src,true);if(!pb.fieldV&&(j.fieldV===FLAG_V||src.fieldV===FLAG_V))pb.fieldV=FLAG_V;migrateFlag(pb);return pb};
+    if(Array.isArray(j.playbooks)){   // backup of everything
+      const list=j.playbooks.slice(0,200).map(prep);if(!list.length)return importError('Die Sicherung enthält keine Playbooks.');
+      const known=list.filter(pb=>state.pbs.some(x=>x.id===pb.id)).length;
+      const r=await modal('Sicherung einspielen',`<p>Die Datei enthält <b>${list.length} ${list.length===1?'Playbook':'Playbooks'}</b> mit zusammen ${list.reduce((n,pb)=>n+pb.plays.length,0)} Plays.</p>
+        <ul><li>${known} davon hast du schon – dort werden nur <b>neuere</b> Plays übernommen und fehlende ergänzt.</li><li>${list.length-known} ${list.length-known===1?'kommt':'kommen'} neu dazu.</li></ul><p class="hint">Es wird nichts gelöscht.</p>`,
+        [{label:'Abbrechen',value:null},{label:'Einspielen',value:'ok',cls:'primary'}]);
+      if(r.value!=='ok')return;
+      let add=0,upd=0;list.forEach(pb=>{const ex=state.pbs.find(x=>x.id===pb.id);
+        if(!ex){state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));add+=pb.plays.length}
+        else{const m=mergePlays(ex,pb.plays);add+=m.add;upd+=m.upd}});
+      if(!curPb()&&state.pbs[0])selectPb(state.pbs[0].id);else renderAll();
+      return toast(`Sicherung eingespielt: ${add} neue, ${upd} aktualisierte Plays`);
+    }
+    if(j.playbook)return importPbDialog(prep(j.playbook));
+    if(j.play){
       const pb=curPb();
       if(!pb)return importError('Lege zuerst ein Playbook an, in das das Play kommen soll.');
       if(!VAR[j.variant])return importError('Unbekannte Spielvariante in der Datei.');
@@ -1475,6 +1749,42 @@ function doImport(text){
       const pl=cleanPlay(j.play,false);if(pb.variant==='flag5'&&j.fieldV!==FLAG_V)scalePlayX(pl,FLAG_K);pb.plays.push(pl);Store.savePlay(pb,pl);Store.savePb(pb);selectPlay(pl.id);toast('Play importiert');
     } else importError('In der Datei wurden keine Plays gefunden.');
   }catch(e){console.warn(e);importError((e&&e.message)||'Die Datei konnte nicht gelesen werden.')}
+}
+// newer version of a play wins, unknown plays are added, nothing is removed
+function mergePlays(pb,plays){
+  let add=0,upd=0,same=0;
+  plays.forEach(pl=>{const i=pb.plays.findIndex(x=>x.id===pl.id);
+    if(i<0){pb.plays.push(pl);Store.savePlay(pb,pl);add++}
+    else if((pl.updated||0)>(pb.plays[i].updated||0)&&!pb.plays[i].locked){Hist.push(pb.plays[i],true);pb.plays[i]=pl;Store.savePlay(pb,pl);upd++}
+    else same++});
+  Store.savePb(pb);return {add,upd,same};
+}
+function freshIds(pl){const c=cleanPlay(pl,false);return c}
+async function importPbDialog(inc){
+  const ex=state.pbs.find(x=>x.id===inc.id);const cur=curPb();
+  const fits=cur&&cur!==ex&&cur.variant===inc.variant&&cur.type===inc.type;
+  const stat=pl=>{if(!ex)return '';const o=ex.plays.find(x=>x.id===pl.id);
+    return !o?'<small class="tagnew">neu</small>':(pl.updated||0)>(o.updated||0)?'<small class="tagupd">geändert</small>':'<small>schon vorhanden</small>'};
+  const r=await modal('Playbook importieren',`
+    <p style="margin-top:0"><b>${esc(inc.name)}</b> · ${inc.type==='defense'?'Defense':'Offense'} · ${VAR[inc.variant].name} · ${inc.plays.length} Plays</p>
+    <div class="choice" style="grid-template-columns:1fr">
+      ${ex?`<label><input type="radio" name="imode" value="update" checked><span>Mein Playbook „${esc(ex.name)}“ aktualisieren<small>Neue Plays kommen dazu, geänderte ersetzen die ältere Fassung. Nichts wird gelöscht.</small></span></label>`:''}
+      <label><input type="radio" name="imode" value="new" ${ex?'':'checked'}><span>Als ${ex?'zusätzliches':'neues'} Playbook anlegen${ex?'<small>Eine unabhängige Kopie neben deinem vorhandenen.</small>':''}</span></label>
+      ${fits?`<label><input type="radio" name="imode" value="into"><span>Ausgewählte Plays in „${esc(cur.name)}“ einfügen<small>Als Kopien am Ende deines aktuellen Playbooks.</small></span></label>`:''}
+    </div>
+    <label style="display:flex;justify-content:space-between;align-items:center">Welche Plays? <span><button type="button" class="btn sm" data-pick="all">Alle</button> <button type="button" class="btn sm" data-pick="none">Keine</button></span></label>
+    <div class="picklist">${inc.plays.map((pl,i)=>`<label><input type="checkbox" name="pick" value="${i}" checked> <b>${i+1}.</b> ${esc(pl.name||'Ohne Namen')} ${stat(pl)}</label>`).join('')}</div>
+    <p class="hint" id="pickCount" style="margin:4px 0 0">${inc.plays.length} von ${inc.plays.length} ausgewählt</p>`,
+    [{label:'Abbrechen',value:null},{label:'Importieren',value:'ok',cls:'primary',validate:el=>{if(inc.plays.length&&!el.querySelector('[name=pick]:checked')){toast('Bitte mindestens ein Play auswählen.');return false}return true}}]);
+  if(r.value!=='ok')return;
+  const mode=r.el.querySelector('[name=imode]:checked').value;
+  const idx=[...r.el.querySelectorAll('[name=pick]:checked')].map(x=>+x.value);const plays=inc.plays.filter((_,i)=>idx.includes(i));
+  if(mode==='update'){const m=mergePlays(ex,plays);selectPb(ex.id);return toast(`„${ex.name}“ aktualisiert: ${m.add} neu, ${m.upd} geändert, ${m.same} unverändert`)}
+  if(mode==='into'){plays.forEach(pl=>{const c=cleanPlay(pl,false);cur.plays.push(c);Store.savePlay(cur,c)});Store.savePb(cur);renderAll();return toast(`${plays.length} Plays in „${cur.name}“ eingefügt`)}
+  let pb={...inc,plays};
+  if(ex){const lay=inc.plays.findIndex(x=>x.id===inc.layoutPlayId);pb=cleanPb({...inc,plays},false);pb.name=inc.name+' (Import)';if(inc.fieldV)pb.fieldV=inc.fieldV;void lay}
+  else if(pb.layoutPlayId&&!plays.some(x=>x.id===pb.layoutPlayId))delete pb.layoutPlayId;
+  state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast(`Playbook „${pb.name}“ mit ${pb.plays.length} Plays importiert`);
 }
 function importError(msg){modal('Import nicht möglich',`<p>${esc(msg)}</p><p class="hint">Es wurde nichts verändert.</p>`,[{label:'OK',value:null,cls:'primary'}])}
 document.addEventListener('change',async e=>{
@@ -1487,7 +1797,11 @@ document.addEventListener('change',async e=>{
 // play picker in the export dialog
 function pickCount(){const all=document.querySelectorAll('[name=pick]'),on=document.querySelectorAll('[name=pick]:checked'),c=$('#pickCount');if(c)c.textContent=`${on.length} von ${all.length} ausgewählt`}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;document.querySelectorAll('[name=pick]').forEach(x=>x.checked=b.dataset.pick==='all');pickCount()});
-document.addEventListener('change',e=>{if(e.target.name==='pick')pickCount()});
+document.addEventListener('change',e=>{if(e.target.name==='pick')pickCount();
+  const t=e.target,mb=t.closest&&t.closest('.mback');if(!mb||!mb.querySelector('#wristOpts'))return;
+  if(t.name==='lay')mb.querySelector('#wristOpts').hidden=t.value!=='wrist';
+  if(t.id==='wSize'){mb.querySelector('#wReal').hidden=t.value==='free';const m=/^(\d+)x(\d+)$/.exec(t.value);if(m){mb.querySelector('#wW').value=String(m[1]/10).replace('.',',');mb.querySelector('#wH').value=String(m[2]/10).replace('.',',')}}
+});
 // drag & drop a .json file anywhere on the page
 document.addEventListener('dragover',e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes('Files'))e.preventDefault()});
 document.addEventListener('drop',async e=>{const f=e.dataTransfer&&e.dataTransfer.files[0];if(!f)return;e.preventDefault();
@@ -1497,22 +1811,90 @@ $('#fileIn').addEventListener('change',async e=>{
   const ta=$('#jsonIn');if(ta){ta.value=txt;const n=$('#pickName');if(n)n.textContent=f.name}else doImport(txt);
 });
 
+/* ---------- unexpected errors: tell the user, keep the data ---------- */
+let crashAt=0;
+function crash(err){
+  const msg=String((err&&(err.stack||err.message))||err||'');
+  if(!msg||/ResizeObserver|Script error|AbortError|NotAllowedError|The user aborted|play\(\) request/i.test(msg))return;
+  console.error(err);
+  try{if(state.anim){cancelAnimationFrame(state.anim.raf);state.anim=null}state.drag=null;state.drawing=null;flushAll()}catch(e){}
+  if(Date.now()-crashAt<30000||$('.mback'))return;crashAt=Date.now();
+  modal('Etwas ist schiefgelaufen',`<p>In der App ist ein unerwarteter Fehler aufgetreten. Deine Playbooks sind gespeichert.</p>
+    <p class="hint">Du kannst weiterarbeiten. Wenn sich etwas seltsam verhält, lade die Seite neu. Mit „Fehler melden“ hilfst du, das Problem zu beheben.</p>
+    <details><summary class="hint">Technische Details</summary><pre style="white-space:pre-wrap;font-size:11px;max-height:120px;overflow:auto">${esc(msg.slice(0,600))}</pre></details>`,
+    [{label:'Neu laden',value:'reload'},{label:'Fehler melden',value:'report'},{label:'Weiterarbeiten',value:null,cls:'primary'}]).then(r=>{
+      if(r.value==='reload')location.reload();
+      if(r.value==='report')feedbackDialog('Automatisch erkannter Fehler:\n'+msg.slice(0,500)+'\n\nWas ich gerade gemacht habe: ');
+      try{renderAll()}catch(e){}});
+}
+window.addEventListener('error',e=>crash(e.error||e.message));
+window.addEventListener('unhandledrejection',e=>{const r=e.reason;if(r instanceof TypeError||r instanceof ReferenceError||r instanceof RangeError)crash(r)});
+
+/* ---------- several tabs: take over what another tab saved ---------- */
+window.addEventListener('storage',e=>{
+  if(e.key===TRASH_KEY){Trash.load();renderSide();return}
+  if(e.key!==LSK||Store.mode!=='local'||!e.newValue)return;
+  let j;try{j=JSON.parse(e.newValue)}catch(err){return}
+  if(!j||!Array.isArray(j.pbs))return;
+  clearTimeout(W.timers.get('local'));W.timers.delete('local');W.fns.delete('local');   // do not write our older state over it
+  state.pbs=j.pbs;state.drag=null;state.drawing=null;state.undo=[];state.redo=[];state.multi=[];
+  const pb=curPb()||state.pbs[0];state.pbId=pb?pb.id:null;
+  if(!pb||!pb.plays.find(x=>x.id===state.playId))state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;
+  if(state.sel&&!selPlayer()&&!findMark(state.sel))state.sel=null;
+  if(state.anim)stopAnim(true);
+  renderAll();
+  if(Date.now()-(state.tabToast||0)>8000){state.tabToast=Date.now();toast('In einem anderen Tab geändert – hier übernommen')}
+});
+
+/* ---------- backup of everything + reminder ---------- */
+async function backupAll(){
+  if(!state.pbs.length)return toast('Noch keine Playbooks vorhanden.');
+  const d=new Date(),ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const ok=await saveFile(`Playbook-Sicherung_${ds}.json`,JSON.stringify({app:'playbook-builder',v:1,fieldV:FLAG_V,backup:true,at:Date.now(),playbooks:state.pbs}));
+  if(ok){try{localStorage.setItem('pbb-lastBackup',String(Date.now()))}catch(e){}showBanner();toast('Sicherung gespeichert – heb die Datei gut auf')}
+}
+function backupDue(){
+  if(Store.mode!=='local'||Folder.handle||!state.pbs.some(pb=>pb.plays.length))return null;
+  let last=0,snooze=0;try{last=+localStorage.getItem('pbb-lastBackup')||0;snooze=+localStorage.getItem('pbb-backupSnooze')||0}catch(e){return null}
+  if(Date.now()<snooze)return null;
+  if(!last)return 'Du hast noch keine Sicherung deiner Playbooks. Sie liegen nur in diesem Browser.';
+  const days=Math.floor((Date.now()-last)/864e5);return days>=14?`Deine letzte Sicherung ist ${days} Tage her.`:null;
+}
+
+/* ---------- version history per play (last 10 states, kept on this device) ---------- */
+const Hist={mem:new Map(),at:{},
+  async list(id){try{return (await IDB.get('h:'+id))||[]}catch(e){return this.mem.get(id)||[]}},
+  async push(pl,force){
+    const now=Date.now();if(!force&&now-(this.at[pl.id]||0)<10*60000)return;this.at[pl.id]=now;
+    const json=JSON.stringify(pl);const l=await this.list(pl.id);if(l[0]&&l[0].json===json)return;
+    l.unshift({at:now,json});l.length=Math.min(l.length,10);
+    try{await IDB.set('h:'+pl.id,l)}catch(e){this.mem.set(pl.id,l)}
+  }
+};
+async function historyDialog(){
+  const pb=curPb(),pl=curPlay();if(!pb||!pl)return;
+  const l=await Hist.list(pl.id);
+  const rows=l.map((h,i)=>{let prev='';try{prev=svgFor(pb,cleanPlay(JSON.parse(h.json),true),{style:'light'})}catch(e){}
+    return `<div class="hrow">${prev}<div><b>${new Date(h.at).toLocaleDateString('de-DE')}, ${new Date(h.at).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</b><span class="hint">Stand vor den Änderungen ab diesem Zeitpunkt</span></div>
+      <button class="btn sm primary" data-hrest="${i}">Wiederherstellen</button></div>`}).join('');
+  const r=modal('Verlauf – '+esc(pl.name),l.length?`<p class="hint" style="margin-top:0">Frühere Stände dieses Plays (höchstens 10, nur auf diesem Gerät). Der aktuelle Stand wird beim Wiederherstellen ebenfalls aufgehoben.</p>${rows}`
+    :'<p class="hint">Noch keine früheren Stände. Sobald du ein Play änderst, wird der Stand davor hier aufgehoben.</p>',[{label:'Schließen',value:null,cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('click',async e=>{const b=e.target.closest('[data-hrest]');if(!b)return;
+    const h=l[+b.dataset.hrest];let old;try{old=cleanPlay(JSON.parse(h.json),true)}catch(err){return toast('Dieser Stand ist beschädigt.')}
+    if(pl.locked){toast('🔒 Play ist gesperrt.');return}
+    await Hist.push(pl,true);commit();old.id=pl.id;const i=pb.plays.indexOf(pl);if(i<0)return;pb.plays[i]=old;
+    state.sel=null;Store.savePlay(pb,old);back.remove();renderAll();toast('Früherer Stand wiederhergestellt');});
+  await r;
+}
+
 /* ---------- feedback ---------- */
 const FEEDBACK_EMAIL='info.playbook@web.de';
-function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const el=document.createElement('script');el.src=src;el.onload=res;el.onerror=rej;document.head.appendChild(el)})}
-async function captureScreen(){
-  try{   // real screenshot of the app window
-    await Promise.race([loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),new Promise((_,r)=>setTimeout(r,6000))]);
-    const c=await window.html2canvas(document.body,{backgroundColor:'#efece4',scale:Math.min(1.5,window.devicePixelRatio||1),logging:false,
-      width:document.documentElement.clientWidth,height:Math.min(document.body.scrollHeight,2400),windowWidth:document.documentElement.clientWidth});
-    return await new Promise(r=>c.toBlob(r,'image/png'));
-  }catch(e){
-    try{const pb=curPb(),pl=curPlay();if(pb&&pl)return await toPNG(singleSVG(pb,pl),1.5)}catch(e2){}   // fallback: the current play
-    return null;
-  }
+async function captureScreen(){   // picture of the current play (no third-party screenshot library)
+  try{const pb=curPb(),pl=curPlay();if(pb&&pl)return await toPNG(singleSVG(pb,pl),1.5)}catch(e){}
+  return null;
 }
-async function feedbackDialog(){
-  toast('Screenshot wird erstellt…');
+async function feedbackDialog(pre){
   let shot=await captureScreen();let url=shot?URL.createObjectURL(shot):'';
   const pb=curPb(),pl=curPlay();
   const r=modal('Feedback senden',`
@@ -1523,13 +1905,13 @@ async function feedbackDialog(){
       <label><input type="radio" name="fbType" value="Verbesserung"><span>🔧 Verbesserung</span></label>
       <label><input type="radio" name="fbType" value="Wunsch"><span>💡 Wunsch</span></label></div>
     <label>Beschreibung</label>
-    <textarea id="fbText" placeholder="Was ist passiert bzw. was wünschst du dir? Bei Fehlern: Was hast du gemacht, was hast du erwartet?"></textarea>
-    <label style="display:flex;justify-content:space-between;align-items:center">Screenshot
+    <textarea id="fbText" placeholder="Was ist passiert bzw. was wünschst du dir? Bei Fehlern: Was hast du gemacht, was hast du erwartet?">${esc(pre||'')}</textarea>
+    <label style="display:flex;justify-content:space-between;align-items:center">Bild vom aktuellen Play
       <span><label class="btn sm" style="margin:0;display:inline-flex">Eigenes Bild…<input type="file" id="fbFile" accept="image/*" hidden></label>
       <button type="button" class="btn sm" id="fbNoShot">entfernen</button></span></label>
     <div id="fbShot" class="fbshot">${url?`<img src="${url}" alt="Screenshot">`:'<span class="hint">Kein Screenshot – du kannst ein eigenes Bild wählen oder mit Strg+V einfügen.</span>'}</div>`,
     [{label:'Abbrechen',value:null},
-     {label:'Screenshot speichern',keep:true,onClick:()=>{if(shot)saveFile('Feedback_Screenshot.png',shot);else toast('Kein Screenshot vorhanden.')}},
+     {label:'Bild speichern',keep:true,onClick:()=>{if(shot)saveFile('Feedback_Screenshot.png',shot);else toast('Kein Screenshot vorhanden.')}},
      {label:'✉ Per E-Mail senden',value:'send',cls:'primary',validate:el=>{if(!el.querySelector('#fbText').value.trim()){toast('Bitte kurz beschreiben, worum es geht.');return false}return true}}]);
   const back=[...document.querySelectorAll('.mback')].pop();
   const setShot=b=>{shot=b;if(url)URL.revokeObjectURL(url);url=b?URL.createObjectURL(b):'';const box=back.querySelector('#fbShot');
@@ -1591,11 +1973,15 @@ function helpDialog(){
     <li><b>Route / Auftrag:</b> Spieler antippen und rechts eine Vorlage wählen (Slant, Post, Blitz, Deep ⅓ …) – oder mit <b>↗ Route</b> selbst zeichnen.</li>
     <li><b>Motion</b> (gestrichelt) läuft in der Animation vor dem Snap.</li>
     <li><b>Gegner</b> einblenden, um Plays gegen eine Front oder Coverage zu zeigen. In Defense-Playbooks kannst du mit <b>Mann</b> Deckungen zum nächsten Gegner ziehen.</li>
-    <li><b>▶ Abspielen</b> animiert alle Routen.</li>
-    <li><b>Playbook / Wristband</b> exportiert die ausgewählten Plays als PNG oder SVG.</li>
+    <li><b>▶ Abspielen</b> animiert alle Routen – mit Pause, Einzelschritt (⏮ ⏭) und Tempo. Der Ball geht vom QB zum Spieler mit Read 1. Unter „Aktionen“ speicherst du die Animation als <b>Video oder GIF</b>.</li>
+    <li><b>☑ Mehrere</b> (oder Umschalt-Klick): mehrere Spieler markieren, gemeinsam ziehen, ausrichten. <b>⧉ Kopieren</b> überträgt eine Route auf andere Spieler (Strg+C / Strg+V).</li>
+    <li><b>Situationen</b> (z. B. „3rd &amp; long“, „Red Zone“) am Play vergeben – danach filtern und als <b>Call-Sheet</b> drucken.</li>
+    <li><b>Playbook / Wristband</b> exportiert die ausgewählten Plays als PNG oder SVG oder druckt sie – Wristbands auch in Originalgröße mit Schnittmarken.</li>
     <li><b>Teilen:</b> Playbook als Datei exportieren – andere importieren es in ihre eigene Kopie.</li>
     <li><b>📁 Ordner verbinden</b> (Chrome/Edge am PC): Playbooks werden automatisch als Dateien in einem Ordner auf deinem Gerät gespeichert – bleiben auch erhalten, wenn Browserdaten gelöscht werden.</li>
     <li><b>▣ Präsentieren:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
+    <li><b>🎓 Lernen</b> (im Präsentationsmodus): Die eigenen Aufgaben sind verdeckt, bis du mit „Aufdecken“ oder Taste A auflöst.</li>
+    <li><b>💾 Alles sichern</b> speichert alle Playbooks in eine Datei. <b>🕘 Verlauf</b> holt frühere Stände eines Plays zurück.</li>
     <li><b>🗑 Papierkorb:</b> Gelöschtes bleibt 30 Tage und lässt sich wiederherstellen.</li>
     <li><b>🔴 Laser</b> (Taste L): roter Laserpunkt zum Präsentieren – solange er an ist, wird nichts verändert. Esc beendet.</li>
     <li>Tastatur: V/R/M/P = Werkzeuge, Entf = Spieler löschen, Strg+Z / Strg+Y, Enter = Zeichnen beenden.</li></ul>
@@ -1624,6 +2010,7 @@ document.addEventListener('click',async e=>{
   const msw=e.target.closest('[data-mcolor]');
   if(msw){const m=findMark(state.sel);if(m){commit();m.color=msw.dataset.mcolor;changed({insp:true})}return}
   const tp=e.target.closest('[data-tpl]');if(tp){applyTemplate(+tp.dataset.tpl);return}
+  const tg=e.target.closest('[data-tag]');if(tg){toggleTag(tg.dataset.tag);return}
   const a=e.target.closest('[data-a]');if(!a)return;
   const act=a.dataset.a;const p=selPlayer();
   switch(act){
@@ -1639,6 +2026,9 @@ document.addEventListener('click',async e=>{
     case 'drawCancel':{const p=curPlay()&&curPlay().players.find(x=>x.id===state.drawing&&state.drawing.pid);state.drawing=null;state.cursor=null;undo();state.mode='select';return renderCenter()}
     case 'laser':return Laser.toggle();
     case 'feedback':return feedbackDialog();
+    case 'backupAll':return backupAll();
+    case 'backupLater':try{localStorage.setItem('pbb-backupSnooze',String(Date.now()+3*864e5))}catch(e){}return showBanner();
+    case 'history':return historyDialog();
     case 'folderOn':return Folder.connect();
     case 'folderReconnect':return Folder.reconnect();
     case 'folderOff':return Folder.disconnect();
@@ -1680,6 +2070,21 @@ document.addEventListener('click',async e=>{
     case 'popPoint':{const key=curRouteKey(p);const r=getRoute(p,key);if(!r)return;commit();r.pts.pop();if(!r.pts.length){if(key.k==='alt')p.alts.splice(key.j,1);else p[key.k]=null;state.selRoute=null}return changed({insp:true})}
     case 'delSelRoute':{const key=curRouteKey(p);if(!key)return;commit();if(key.k==='alt')p.alts.splice(key.j,1);else p[key.k]=null;state.selRoute=null;return changed({insp:true})}
     case 'delPlayer':return deletePlayer();
+    case 'multiMode':state.multiMode=!state.multiMode;if(state.multiMode){state.mode='select';toast('Spieler nacheinander antippen – dann gemeinsam ziehen oder rechts ausrichten')}return renderCenter();
+    case 'multiClear':state.multi=[];state.sel=null;renderField();return renderInsp();
+    case 'alignY':case 'alignX':case 'distX':case 'multiDel':return multiAct(act);
+    case 'copyRoute':return copyRoute();
+    case 'pasteRoute':return pasteRoute(false);
+    case 'pasteRouteM':return pasteRoute(true);
+    case 'animPause':return animPause();
+    case 'animFwd':return animStepBy(0.2);
+    case 'animBack':return animStepBy(-0.2);
+    case 'video':return exportAnim('video');
+    case 'gif':return exportAnim('gif');
+    case 'quiz':state.quiz=!state.quiz;state.quizShown=false;renderField();return renderPresentBar();
+    case 'quizShow':state.quizShown=!state.quizShown;renderField();return renderPresentBar();
+    case 'quizRand':{const pb=curPb();if(pb.plays.length>1){let i;do{i=Math.floor(Math.random()*pb.plays.length)}while(pb.plays[i].id===state.playId);selectPlay(pb.plays[i].id)}return}
+    case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
     case 'tplAlt':state.tplAlt=true;return renderInsp();
     case 'tplReplace':state.tplAlt=false;return renderInsp();
@@ -1697,6 +2102,22 @@ document.addEventListener('click',async e=>{
     case 'delMark':{const pl=curPlay();commit();pl.marks=(pl.marks||[]).filter(m=>m.id!==state.sel);state.sel=null;return changed({insp:true})}
   }
 });
+function copyRoute(){const p=selPlayer();const key=p&&!isOpp(p.id)&&curRouteKey(p);const r=key&&getRoute(p,key);if(!r||!r.pts.length)return false;
+  state.clip={k:key.k==='motion'?'motion':'route',r:clone(r)};toast('Linie kopiert – anderen Spieler wählen und einfügen');renderInsp();return true}
+function pasteRoute(mirror){
+  if(!state.clip)return;const ids=(state.multi.length>1?state.multi:[state.sel]).filter(id=>id&&findP(id)&&!isOpp(id));if(!ids.length)return toast('Wähle zuerst einen eigenen Spieler.');
+  commit();ids.forEach(id=>{const p=findP(id);const r=clone(state.clip.r);if(mirror)r.pts.forEach(q=>{q.x=-q.x});
+    if(state.clip.k==='motion')p.motion=r;else if(state.tplAlt&&p.route&&p.route.pts.length&&ids.length===1){(p.alts=p.alts||[]).push(r);state.selRoute={k:'alt',j:p.alts.length-1}}else p.route=r});
+  changed({insp:true});toast(ids.length>1?`Bei ${ids.length} Spielern eingefügt`:'Eingefügt');
+}
+function multiAct(act){
+  const ps=state.multi.map(findP).filter(Boolean);if(ps.length<2)return;const ref=ps[ps.length-1];commit();
+  if(act==='alignY')ps.forEach(p=>{p.y=ref.y});
+  if(act==='alignX')ps.forEach(p=>{p.x=ref.x});
+  if(act==='distX'){const a=ps.slice().sort((x,y)=>x.x-y.x);const l=a[0].x,r=a[a.length-1].x;a.forEach((p,i)=>{p.x=r1(l+(r-l)*i/(a.length-1))})}
+  if(act==='multiDel'){const pl=curPlay(),ids=state.multi;pl.players=pl.players.filter(p=>!ids.includes(p.id));pl.opp=pl.opp.filter(p=>!ids.includes(p.id));state.multi=[];state.sel=null}
+  changed({insp:true});
+}
 function deletePlayer(){
   const pl=curPlay();if(!state.sel)return;commit();
   pl.players=pl.players.filter(p=>p.id!==state.sel);pl.opp=pl.opp.filter(p=>p.id!==state.sel);pl.marks=(pl.marks||[]).filter(m=>m.id!==state.sel);state.sel=null;state.drawing=null;changed({insp:true});
@@ -1704,6 +2125,8 @@ function deletePlayer(){
 document.addEventListener('change',e=>{
   const t=e.target;
   if(t.id==='pbSel')return selectPb(t.value);
+  if(t.id==='tagFilter'){state.tagF=t.value;return renderSide()}
+  if(t.id==='animRate'){state.animRate=+t.value||1;if(state.anim)state.anim.rate=state.animRate;return}
   if(t.id==='formSel'&&t.value)return loadFormation(t.value);
   if(t.id==='oppSel')return loadOpp(t.value);
   if(t.dataset.pf==='shape'||t.dataset.pf==='read'){const p=selPlayer();commit();p[t.dataset.pf]=t.dataset.pf==='read'?+t.value:t.value;return changed({})}
@@ -1736,14 +2159,16 @@ document.addEventListener('pointerup',onUp);
 document.addEventListener('pointercancel',onUp);
 document.addEventListener('dblclick',e=>{if(e.target.closest('#field')&&state.drawing)finishDrawing()});
 document.addEventListener('keydown',e=>{
+  if(e.target.id==='tagNew'&&e.key==='Enter'){e.preventDefault();const v=e.target.value;e.target.value='';toggleTag(v);const n=$('#tagNew');if(n)n.focus({preventScroll:true});return}
   if($('.mback'))return;
   const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
   if(e.key==='Escape'&&Laser.on){Laser.toggle(false);return}
   if(state.present){const k=e.key;
     if(k==='ArrowRight'||k==='PageDown'){e.preventDefault();return presStep(1)}
     if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();return presStep(-1)}
-    if(k===' '){e.preventDefault();return state.anim?stopAnim():startAnim()}
+    if(k===' '){e.preventDefault();return !state.anim?startAnim():state.anim.done?stopAnim():animPause()}
     if(k.toLowerCase()==='n'){state.presNotes=!state.presNotes;return renderPresentBar()}
+    if(state.quiz&&(k.toLowerCase()==='a'||k==='Enter')){state.quizShown=!state.quizShown;renderField();return renderPresentBar()}
     if(k==='Escape'){return setPresent(false)}}
   if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key.toLowerCase()==='l'){Laser.toggle();return}
   if(!curPlay())return;
@@ -1751,10 +2176,13 @@ document.addEventListener('keydown',e=>{
   const k=e.key.toLowerCase();
   if((e.ctrlKey||e.metaKey)&&k==='z'){e.preventDefault();return e.shiftKey?redo():undo()}
   if((e.ctrlKey||e.metaKey)&&k==='y'){e.preventDefault();return redo()}
+  if((e.ctrlKey||e.metaKey)&&k==='c'&&!String(getSelection()||'')){if(copyRoute())e.preventDefault();return}
+  if((e.ctrlKey||e.metaKey)&&k==='v'&&state.clip&&(state.sel||state.multi.length)){e.preventDefault();return pasteRoute(e.shiftKey)}
   if(e.ctrlKey||e.metaKey||e.altKey)return;
   if(k==='enter'&&state.drawing){e.preventDefault();return finishDrawing()}
   if(k==='escape'){if(state.drawing){const p=curPlay().players.find(x=>x.id===state.drawing.pid);if(p&&drawArr(p).length)return finishDrawing();state.drawing=null;state.cursor=null;undo();return}
     state.sel=null;state.mode='select';renderCenter();return renderInsp()}
+  if((k==='delete'||k==='backspace')&&state.multi.length>1){e.preventDefault();return multiAct('multiDel')}
   if((k==='delete'||k==='backspace')&&state.sel){e.preventDefault();return deletePlayer()}
   const map={v:'select',r:'route',m:'motion',p:'add'};
   if(map[k]){const b=document.querySelector(`[data-mode="${map[k]}"]`);if(b)b.click()}
