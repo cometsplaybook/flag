@@ -59,7 +59,7 @@ textarea{resize:vertical;min-height:90px}
 .toolbar .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
 .toolbar select{width:auto}
 .fieldwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px;display:flex;justify-content:center;align-items:flex-start;flex:1}
-#field{width:100%;touch-action:none;user-select:none;-webkit-user-select:none;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+#field{width:100%;touch-action:pinch-zoom;user-select:none;-webkit-user-select:none;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 #field.m-route,#field.m-motion,#field.m-add{cursor:crosshair}
 #field .pl{cursor:grab}
 #field [data-h]{cursor:move}
@@ -78,6 +78,29 @@ textarea{resize:vertical;min-height:90px}
 .folderbox button{margin-left:auto}
 .fbshot{border:1px dashed var(--line);border-radius:8px;padding:6px;background:#fff;max-height:220px;overflow:auto;text-align:center}
 .fbshot img{max-width:100%;display:block;margin:auto}
+#laser{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:70;display:none}
+body.lasering,body.lasering *{cursor:none!important}
+.laserbtn.on{background:#dc2626;border-color:#dc2626;color:#fff}
+.trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.trow .hint{display:block;font-size:12px}
+#playSearch{width:100%;padding:6px 9px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+body.presenting header,body.presenting #side,body.presenting #insp,body.presenting .toolbar,body.presenting .hintbar,body.presenting #bannerWrap{display:none!important}
+body.presenting .app{display:block;padding:64px 8px 8px;min-height:100vh}
+body.presenting .fieldwrap{border:0;background:transparent;padding:0}
+body.presenting #field{width:100%!important;height:calc(100vh - 80px);box-shadow:none}
+#presentBar .btn{color:var(--ink)}#presentBar .btn.on{color:#fff}#presentBar select{width:auto;color:var(--ink);padding:4px 8px}
+#presentBar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--navy);color:#fff}
+#presentBar .ptitle{flex:1;display:flex;gap:10px;align-items:baseline;min-width:0;overflow:hidden;white-space:nowrap}
+#presentBar .ptitle b{font-family:'Barlow Condensed';font-size:22px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis}
+#presentBar .ptitle span{opacity:.8;font-size:14px}
+#presentBar .sep{width:1px;height:24px;background:rgba(255,255,255,.3)}
+#presNotesBox{position:fixed;left:16px;bottom:16px;max-width:min(560px,90vw);z-index:41;background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px;line-height:1.4;white-space:pre-wrap;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+@media (pointer:coarse){
+  .btn{min-height:38px}.btn.sm{min-height:34px}
+  .tpl button{padding:10px 2px}
+  .sw button{width:34px;height:34px}
+  .play .mv button{font-size:16px;padding:4px 8px}
+}
 .hintbar{font-size:13px;color:var(--muted);min-height:18px}
 .hintbar b{color:var(--ink)}
 aside.insp h3{font-family:'Barlow Condensed';font-size:20px;text-transform:uppercase;margin:0 0 10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -158,6 +181,7 @@ const FONT='Arial, Helvetica, sans-serif';
 const INK='#1b1f1d';
 const PAL=['#dc2626','#2563eb','#d97706','#7c3aed','#0d9488','#db2777','#65a30d','#0891b2'];
 const S=10; // svg units per yard
+const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
 /* ---------- configuration ---------- */
 const VAR={
@@ -228,7 +252,7 @@ const CATS={
 };
 
 /* ---------- state ---------- */
-const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,mode:'select',drawing:null,cursor:null,drag:null,
+const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,q:'',present:false,animOpt:0,mode:'select',drawing:null,cursor:null,drag:null,
   undo:[],redo:[],anim:null,snap:true,style:'light',editSnap:null};
 state.zoom=70;
 try{const s=JSON.parse(localStorage.getItem('pbb-ui')||'{}');if(s.style)state.style=s.style;if(s.snap===false)state.snap=false;if(s.zoom)state.zoom=s.zoom;}catch(e){}
@@ -276,6 +300,43 @@ function scalePlayX(pl,k){
 function migrateFlag(pb){
   if(pb.variant!=='flag5'||pb.fieldV===FLAG_V)return false;
   pb.plays.forEach(pl=>scalePlayX(pl,FLAG_K));pb.fieldV=FLAG_V;return true;
+}
+/* ---------- trash: deleted plays and playbooks are kept for 30 days ---------- */
+const TRASH_KEY='pbb-trash',TRASH_DAYS=30;
+const Trash={items:[],
+  load(){try{this.items=JSON.parse(localStorage.getItem(TRASH_KEY)||'[]')}catch(e){this.items=[]}if(!Array.isArray(this.items))this.items=[];this.purge()},
+  save(){try{localStorage.setItem(TRASH_KEY,JSON.stringify(this.items))}catch(e){}if(Folder.handle)schedule('folder',()=>Folder.flush(),1000)},
+  purge(){const lim=Date.now()-TRASH_DAYS*864e5;this.items=this.items.filter(i=>i&&i.at>lim)},
+  add(item){item.id=uid('t');item.at=Date.now();this.items.unshift(item);this.purge();this.save()},
+  merge(list){(list||[]).forEach(i=>{if(i&&i.id&&!this.items.find(x=>x.id===i.id))this.items.push(i)});this.items.sort((a,b)=>b.at-a.at);this.purge();try{localStorage.setItem(TRASH_KEY,JSON.stringify(this.items))}catch(e){}}
+};
+async function trashDialog(){
+  Trash.purge();
+  const daysLeft=i=>Math.max(1,Math.ceil((i.at+TRASH_DAYS*864e5-Date.now())/864e5));
+  const row=i=>`<div class="trow"><div><b>${i.kind==='pb'?'📘 '+esc(i.data.name):'🏈 '+esc(i.data.name)}</b>
+      <span class="hint">${i.kind==='pb'?`Playbook · ${i.data.plays.length} Plays`:`aus „${esc(i.pbName||'?')}“`} · gelöscht ${new Date(i.at).toLocaleDateString('de-DE')} · noch ${daysLeft(i)} Tage</span></div>
+      <button class="btn sm primary" data-trest="${i.id}">Wiederherstellen</button><button class="btn sm danger" data-tdel="${i.id}" title="Endgültig löschen">✕</button></div>`;
+  const body=()=>Trash.items.length?Trash.items.map(row).join(''):'<p class="hint">Der Papierkorb ist leer.</p>';
+  const r=modal('Papierkorb',`<p class="hint" style="margin-top:0">Gelöschte Plays und Playbooks bleiben hier ${TRASH_DAYS} Tage, danach werden sie automatisch entfernt.</p><div id="trashList">${body()}</div>`,
+    [{label:'Papierkorb leeren',keep:true,cls:'danger',onClick:async el=>{if(!Trash.items.length)return;Trash.items=[];Trash.save();el.querySelector('#trashList').innerHTML=body();renderSide()}},
+     {label:'Schließen',value:null,cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('click',e=>{
+    const rs=e.target.closest('[data-trest]'),dl=e.target.closest('[data-tdel]');
+    if(dl){Trash.items=Trash.items.filter(i=>i.id!==dl.dataset.tdel);Trash.save();back.querySelector('#trashList').innerHTML=body();renderSide();return}
+    if(rs){const it=Trash.items.find(i=>i.id===rs.dataset.trest);if(!it)return;restoreTrash(it);Trash.items=Trash.items.filter(i=>i!==it);Trash.save();back.remove();}
+  });
+  await r;
+}
+function restoreTrash(it){
+  if(it.kind==='pb'){const pb=clone(it.data);if(state.pbs.find(x=>x.id===pb.id))pb.id=uid('pb');
+    state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);return toast(`„${pb.name}“ wiederhergestellt`)}
+  const pl=clone(it.data);
+  let pb=state.pbs.find(x=>x.id===it.pbId)||state.pbs.find(x=>x.variant===it.variant&&x.type===it.type);
+  if(!pb){pb={id:uid('pb'),name:it.pbName||'Wiederhergestellt',type:it.type,variant:it.variant,created:Date.now(),plays:[],fieldV:FLAG_V};state.pbs.push(pb)}
+  if(pb.plays.find(x=>x.id===pl.id))pl.id=uid('pl');
+  pb.plays.splice(Math.min(it.idx??pb.plays.length,pb.plays.length),0,pl);
+  Store.savePlay(pb,pl);Store.savePb(pb);state.pbId=pb.id;saveUI();selectPlay(pl.id);toast(`„${pl.name}“ wiederhergestellt`);
 }
 function newPlay(pb,name){
   const forms=FORMS[pb.variant][ownKind(pb)];const fname=Object.keys(forms)[0];
@@ -412,7 +473,8 @@ const Folder={handle:null,pending:null,files:{},
     try{for await(const e of this.handle.values()){
       if(e.kind!=='file'||!/\.json$/i.test(e.name))continue;
       try{const j=JSON.parse(await (await e.getFile()).text());
-        if(j&&j.app==='playbook-builder'&&j.playbook&&j.playbook.id&&VAR[j.playbook.variant]){const pb=j.playbook;if(j.fieldV&&!pb.fieldV)pb.fieldV=j.fieldV;found.push(pb);this.files[pb.id]=e.name}}catch(err){}
+        if(j&&j.app==='playbook-builder-trash'){Trash.merge(j.items);continue}
+        if(j&&j.app==='playbook-builder'&&j.playbook&&j.playbook.id&&VAR[j.playbook.variant]){const pb=cleanPb(j.playbook,true);if(j.fieldV&&!pb.fieldV)pb.fieldV=j.fieldV;found.push(pb);this.files[pb.id]=e.name}}catch(err){console.warn('skip',e.name,err)}
     }}catch(e){toast('Ordner konnte nicht gelesen werden.');this.handle=null;renderAll();return}
     found.forEach(pb=>{migrateFlag(pb);const i=state.pbs.findIndex(x=>x.id===pb.id);
       if(i<0)state.pbs.push(pb);else if(this.stamp(pb)>this.stamp(state.pbs[i]))state.pbs[i]=pb;});
@@ -431,10 +493,13 @@ const Folder={handle:null,pending:null,files:{},
         if(old&&old!==name){try{await h.removeEntry(old)}catch(e){}}
         this.files[pb.id]=name;
       }
+      {const fh=await h.getFileHandle('Papierkorb.trash.json',{create:true});const w=await fh.createWritable();
+        await w.write(JSON.stringify({app:'playbook-builder-trash',v:1,items:Trash.items}));await w.close();}
       for(const id of Object.keys(this.files)){if(!state.pbs.find(x=>x.id===id)){try{await h.removeEntry(this.files[id])}catch(e){}delete this.files[id]}}
     }catch(e){console.warn(e);toast('Speichern im Ordner fehlgeschlagen – bitte Ordner neu verbinden.');this.pending=this.handle;this.handle=null;renderAll()}
   }
 };
+function trashBtn(){const n=Trash.items.length;return `<button class="btn sm" data-a="trash" style="grid-column:1/-1" title="Gelöschte Plays und Playbooks wiederherstellen">🗑 Papierkorb${n?` (${n})`:''}</button>`}
 function folderUI(){
   if(!Folder.supported())return '';
   if(Folder.handle)return `<div class="folderbox">📁 <b>${esc(Folder.handle.name)}</b><span class="hint">Änderungen werden automatisch im Ordner gespeichert.</span><button class="btn sm" data-a="folderOff">Trennen</button></div>`;
@@ -540,7 +605,7 @@ function oneRoute(r,start,base,pcol,op,force,meta){
   else if(r.end==='block'){const ang=Math.atan2(b[1]-a[1],b[0]-a[0])+Math.PI/2,L=8*k;
     s+=`<line x1="${(b[0]-L*Math.cos(ang)).toFixed(1)}" y1="${(b[1]-L*Math.sin(ang)).toFixed(1)}" x2="${(b[0]+L*Math.cos(ang)).toFixed(1)}" y2="${(b[1]+L*Math.sin(ang)).toFixed(1)}" stroke="${col}" stroke-width="${sw+0.4}" stroke-linecap="round"/>`;}
   else if(r.end==='zone')s+=`<ellipse cx="${b[0].toFixed(1)}" cy="${b[1].toFixed(1)}" rx="${((r.zw||7.6)/2*S).toFixed(1)}" ry="${((r.zh||4.4)/2*S).toFixed(1)}" fill="${col}" fill-opacity=".16" stroke="${col}" stroke-width="${Math.max(1.2,sw)}"${r.style==='dotted'?' stroke-dasharray="1 4" stroke-linecap="round"':r.style==='dashed'?' stroke-dasharray="6 4"':''}/>`;
-  if(meta&&meta.hit)s+=`<path d="${d}" fill="none" stroke="#000" stroke-opacity="0" stroke-width="14" pointer-events="stroke" data-r="${meta.pid}" data-rk="${meta.k}" data-rj="${meta.j}" style="cursor:pointer"/>`;
+  if(meta&&meta.hit)s+=`<path d="${d}" fill="none" stroke="#000" stroke-opacity="0" stroke-width="${COARSE?26:14}" pointer-events="stroke" data-r="${meta.pid}" data-rk="${meta.k}" data-rj="${meta.j}" style="cursor:pointer"/>`;
   return s+'</g>';
 }
 function markMarkup(m,v,o){
@@ -578,7 +643,7 @@ function playerMarkup(p,pos,opp,o){
   const halo=FIELD_BG[o.style]||FIELD_BG.light;
   let g=`<g class="pl" data-p="${p.id}" data-opp="${opp?1:0}" transform="translate(${x.toFixed(1)},${y.toFixed(1)})${o.flip?' scale(1,-1)':''}">`;
   if(sel)g+=`<circle r="18" fill="none" stroke="#f59e0b" stroke-width="3"/>`;
-  g+=`<circle r="15" fill="#fff" fill-opacity="0"/>`;
+  g+=`<circle r="${COARSE?22:15}" fill="#fff" fill-opacity="0"/>`;
   const txt=(c,sz,dy=0)=>`<text y="${dy}" dy=".35em" text-anchor="middle" font-family="${FONT}" font-size="${sz}" font-weight="700" fill="${c}">${lbl}</text>`;
   const fill=p.fill||'#fff';const tc=isDark(fill)?'#fff':(col===OPP_COLOR?'#6b7280':INK);const st=`stroke="${col}" stroke-width="1.5"`;
   if(p.shape==='square')g+=`<rect x="-10.5" y="-10.5" width="21" height="21" rx="2" fill="${fill}" ${st}/>`+txt(tc,fs);
@@ -611,18 +676,19 @@ function playMarkup(pb,pl,o={}){
     if(sz){const X=cx+sz.x*S,Y=los+sz.y*S,Wd=sz.w*S,Ht=sz.h*S;
       [['nw',X,Y],['n',X+Wd/2,Y],['ne',X+Wd,Y],['e',X+Wd,Y+Ht/2],['se',X+Wd,Y+Ht],['s',X+Wd/2,Y+Ht],['sw',X,Y+Ht],['w',X,Y+Ht/2]].forEach(([h,x,y])=>{
         const cur={n:'ns',s:'ns',e:'ew',w:'ew',ne:'nesw',sw:'nesw',nw:'nwse',se:'nwse'}[h];
-        s+=`<rect data-zh="${h}" x="${(x-5).toFixed(1)}" y="${(y-5).toFixed(1)}" width="10" height="10" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2" style="cursor:${cur}-resize"/>`;});}
+        const hz=COARSE?18:10;s+=`<rect data-zh="${h}" x="${(x-hz/2).toFixed(1)}" y="${(y-hz/2).toFixed(1)}" width="${hz}" height="${hz}" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2" style="cursor:${cur}-resize"/>`;});}
     const sp=pl.players.find(p=>p.id===o.sel);
     if(sp){const b=base(sp);
       const hs=(r,k,j)=>{if(r&&r.pts)absPts(sp,r.pts,b).forEach((q,i)=>{
-        s+=`<circle data-h="${k}" data-j="${j}" data-i="${i}" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="6" fill="#fff" stroke="${r.color||sp.color}" stroke-width="2"/>`})};
+        if(COARSE)s+=`<circle data-h="${k}" data-j="${j}" data-i="${i}" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="15" fill="#fff" fill-opacity="0"/>`;
+        s+=`<circle data-h="${k}" data-j="${j}" data-i="${i}" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${COARSE?8:6}" fill="#fff" stroke="${r.color||sp.color}" stroke-width="2"/>`})};
       hs(sp.motion,'motion',0);hs(sp.route,'route',0);(sp.alts||[]).forEach((r,j)=>hs(r,'alt',j));
       // resize handles for a zone at the end of the selected route
       const ck=curRouteKey(sp),cr=ck&&getRoute(sp,ck);
       if(cr&&cr.end==='zone'&&cr.pts.length&&ck.k!=='motion'){const L=cr.pts[cr.pts.length-1],ex=b[0]+L.x*S,ey=b[1]+L.y*S,rx=(cr.zw||7.6)/2*S,ry=(cr.zh||4.4)/2*S;
         [['e',ex+rx,ey],['w',ex-rx,ey],['n',ex,ey-ry],['s',ex,ey+ry],['ne',ex+rx*.707,ey-ry*.707],['nw',ex-rx*.707,ey-ry*.707],['se',ex+rx*.707,ey+ry*.707],['sw',ex-rx*.707,ey+ry*.707]].forEach(([h,x,y])=>{
           const cur={n:'ns',s:'ns',e:'ew',w:'ew',ne:'nesw',sw:'nesw',nw:'nwse',se:'nwse'}[h];
-          s+=`<rect data-zr="${h}" data-cx="${ex.toFixed(1)}" data-cy="${ey.toFixed(1)}" x="${(x-5).toFixed(1)}" y="${(y-5).toFixed(1)}" width="10" height="10" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2" style="cursor:${cur}-resize"/>`;});}
+          const hz=COARSE?18:10;s+=`<rect data-zr="${h}" data-cx="${ex.toFixed(1)}" data-cy="${ey.toFixed(1)}" x="${(x-hz/2).toFixed(1)}" y="${(y-hz/2).toFixed(1)}" width="${hz}" height="${hz}" rx="2" fill="#fff" stroke="#f59e0b" stroke-width="2" style="cursor:${cur}-resize"/>`;});}
     }
     if(state.drawing&&state.cursor){
       const dp=pl.players.find(p=>p.id===state.drawing.pid);
@@ -639,21 +705,27 @@ function svgFor(pb,pl,o={}){const {fw,fh}=dims(VAR[pb.variant]);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${fw} ${fh}" preserveAspectRatio="xMidYMid meet">${playMarkup(pb,pl,o)}</svg>`}
 
 /* ---------- UI: sidebar ---------- */
+function playMatches(pl,q){if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes].some(x=>(x||'').toLowerCase().includes(q))}
+function playListHTML(pb){
+  const q=state.q.trim();const list=pb.plays.map((pl,i)=>[pl,i]).filter(([pl])=>playMatches(pl,q));
+  return list.map(([pl,i])=>`<div class="play${pl.id===state.playId?' cur':''}" data-play="${pl.id}">
+      <div class="num">${i+1}</div>${svgFor(pb,pl,{style:'light'})}
+      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(pl.name||'Ohne Namen')}</div><div class="ct">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</div></div>
+      <div class="mv">${q?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`).join('')
+    +(pb.plays.length?(q?`<div class="hint">${list.length} von ${pb.plays.length} Plays${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>');
+}
 function renderSide(){
   const el=$('#side');const pb=curPb();
   let h=`<div class="pbhead"><select id="pbSel">${state.pbs.map(p=>`<option value="${p.id}"${p.id===state.pbId?' selected':''}>${esc(p.name)}</option>`).join('')}${state.pbs.length?'':'<option>— kein Playbook —</option>'}</select>
     <button class="btn" data-a="newPb" title="Neues Playbook">＋</button>${pb?'<button class="btn" data-a="pbMenu" title="Playbook-Einstellungen">⋯</button>':''}</div>`;
   if(pb){
     h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span></div>`;
-    h+=`<div class="plays">${pb.plays.map((pl,i)=>`<div class="play${pl.id===state.playId?' cur':''}" data-play="${pl.id}">
-      <div class="num">${i+1}</div>${svgFor(pb,pl,{style:'light'})}
-      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(pl.name||'Ohne Namen')}</div><div class="ct">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</div></div>
-      <div class="mv"><button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button></div></div>`).join('')}
-      ${pb.plays.length?'':'<div class="hint">Noch keine Plays.</div>'}</div>
+    if(pb.plays.length>4)h+=`<input type="search" id="playSearch" placeholder="🔍 Plays suchen (Name, Kategorie, Formation)…" value="${esc(state.q)}">`;
+    h+=`<div class="plays">${playListHTML(pb)}</div>
       <button class="btn primary" data-a="newPlay">＋ Neues Play</button>
       <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
-      <button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}</div>`;
-  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}</div>`;
+      <button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
+  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
   const old=el.querySelector('.plays');const st=old?old.scrollTop:0;
   el.innerHTML=h;
   const nl=el.querySelector('.plays');if(nl){nl.scrollTop=st;const c=nl.querySelector('.play.cur');
@@ -680,7 +752,9 @@ function renderCenter(){
     <button class="btn sm" data-a="undo" ${state.undo.length&&!L?'':'disabled'} title="Rückgängig (Strg+Z)">↶</button>
     <button class="btn sm" data-a="redo" ${state.redo.length&&!L?'':'disabled'} title="Wiederholen (Strg+Y)">↷</button>
     <span class="sep"></span>
-    <button class="btn sm ${state.anim?'on':''}" data-a="anim">${state.anim?(state.anim.done?'↺ Zurück':'■ Stopp'):'▶ Abspielen'}</button>
+    <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer zum Präsentieren (L) – Esc beendet">🔴 Laser</button>
+    <button class="btn sm ${state.anim?'on':''}" data-a="anim">${state.anim?(state.anim.done?'↺ Zurück':'■ Stopp'):'▶ Abspielen'}</button>${animOptSel(pl)}
+    <button class="btn sm" data-a="present" title="Präsentationsmodus (Vollbild, Pfeiltasten)">▣ Präsentieren</button>
     <span class="sep"></span>
     <select id="formSel" class="sm"${D} title="Eigene Formation laden"><option value="">${pb.type==='defense'?'Defense':'Offense'}-Formation…</option>${(()=>{const cf=customForms(pb);const ks=Object.keys(cf);
       return (ks.length?`<optgroup label="Eigene Formationen">${ks.map(k=>`<option value="c:${esc(k)}">${esc(k)} (${cf[k].players.map(p=>esc(p.label)).join(', ')})</option>`).join('')}</optgroup>`:'')+
@@ -700,6 +774,9 @@ function renderCenter(){
   <div class="hintbar" id="hintbar"></div>`;
   renderField();
 }
+function animOptSel(pl){const n=Math.max(0,...[...pl.players,...pl.opp].map(p=>(p.alts||[]).filter(a=>a.pts&&a.pts.length).length));
+  if(!n){state.animOpt=0;return ''}if(state.animOpt>n)state.animOpt=0;
+  return `<select id="animOpt" class="sm" title="Welche Option abspielen?"><option value="0">Hauptrouten</option>${Array.from({length:n},(_,i)=>`<option value="${i+1}"${state.animOpt===i+1?' selected':''}>Alternative ${i+1}</option>`).join('')}</select>`}
 function renderField(){
   const svg=$('#field');const pb=curPb(),pl=curPlay();if(!svg||!pb||!pl)return;
   const {fw,fh}=dims(VP(pb,pl));
@@ -709,7 +786,7 @@ function renderField(){
 }
 function hintText(){
   if(state.anim)return state.anim.done?'Alle Spieler stehen am Ende ihrer Route. <b>↺ Zurück</b> stellt die Aufstellung wieder her.':'Animation läuft…';
-  if(state.drawing)return `<b>${{route:'Route',motion:'Motion',alt:'Alternative'}[state.drawing.kind]} zeichnen:</b> Tippe Punkte aufs Feld. Zum Beenden den letzten Punkt erneut antippen, doppelklicken oder Enter drücken. Esc bricht ab.`;
+  if(state.drawing)return `<b>${{route:'Route',motion:'Motion',alt:'Alternative'}[state.drawing.kind]} zeichnen:</b> Tippe Punkte aufs Feld. <button class="btn sm primary" data-a="drawDone">✓ Fertig</button> <button class="btn sm" data-a="drawCancel">✕ Abbrechen</button> <span class="hint">(oder letzten Punkt erneut antippen / Enter)</span>`;
   if(state.mode==='route')return '<b>Route:</b> Tippe einen eigenen Spieler an, dann Punkte aufs Feld.';
   if(state.mode==='motion')return '<b>Motion:</b> Tippe einen eigenen Spieler an, dann Punkte für die Bewegung vor dem Snap.';
   if(state.mode==='add')return '<b>Spieler hinzufügen:</b> Tippe aufs Feld.';
@@ -814,6 +891,8 @@ function renderInsp(){
         ${cur.k==='motion'?'':`<div class="row"><div><label>Linie</label><select data-rf="style">${[['solid','durchgezogen'],['dashed','gestrichelt'],['dotted','gepunktet']].map(([v,n])=>`<option value="${v}"${r.style===v?' selected':''}>${n}</option>`).join('')}</select></div>
         <div><label>Ende</label><select data-rf="end">${[['arrow','Pfeil'],['block','Block ⊥'],['dot','Punkt'],['bolt','Blitz ⚡'],['zone','Zone'],['none','keins']].map(([v,n])=>`<option value="${v}"${r.end===v?' selected':''}>${n}</option>`).join('')}</select></div></div>`}
         <label>Stärke der Linie <span class="rv">${fmtNum(r.w||1.4)}</span></label><input type="range" min="0.5" max="7" step="0.1" data-rw="1" value="${r.w||1.4}" style="width:100%;border:0;padding:0;accent-color:var(--accent)">
+        ${cur.k==='motion'?'':`<div class="row"><div><label>Tempo</label><select data-rf="speed">${[[0.6,'langsam'],[1,'normal'],[1.5,'schnell'],[2,'sehr schnell']].map(([v,n])=>`<option value="${v}"${(r.speed||1)==v?' selected':''}>${n}</option>`).join('')}</select></div>
+        <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
         <div class="row" style="margin-top:6px"><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
@@ -821,7 +900,32 @@ function renderInsp(){
   h+=`<h4>&nbsp;</h4><button class="btn sm danger" data-a="delPlayer">Spieler entfernen</button>`;
   el.innerHTML=h;
 }
-function renderAll(){renderSide();renderCenter();renderInsp();updateStatus()}
+function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar()}
+function renderPresentBar(){
+  let bar=$('#presentBar');
+  if(!state.present){if(bar)bar.remove();return}
+  const pb=curPb(),pl=curPlay();if(!pb||!pl)return;
+  if(!bar){bar=document.createElement('div');bar.id='presentBar';document.body.appendChild(bar)}
+  const i=pb.plays.indexOf(pl);
+  bar.innerHTML=`<button class="btn sm" data-a="presPrev" ${i>0?'':'disabled'} title="Vorheriges Play (←)">◀</button>
+    <div class="ptitle"><b>${i+1}. ${esc(pl.name)}</b><span>${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</span></div>
+    <button class="btn sm" data-a="presNext" ${i<pb.plays.length-1?'':'disabled'} title="Nächstes Play (→)">▶</button>
+    <span class="sep"></span>
+    <button class="btn sm ${state.anim?'on':''}" data-a="anim" title="Abspielen (Leertaste)">${state.anim?(state.anim.done?'↺ Zurück':'■ Stopp'):'▶ Abspielen'}</button>${animOptSel(pl)}
+    <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L)">🔴 Laser</button>
+    ${pl.notes?`<button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen ein/aus (N)">📝 Notizen</button>`:''}
+    <button class="btn sm" data-a="presExit" title="Beenden (Esc)">✕ Beenden</button>`;
+  let nb=$('#presNotesBox');
+  if(state.presNotes&&pl.notes){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}nb.textContent=pl.notes}else if(nb)nb.remove();
+}
+function setPresent(on){
+  state.present=on;document.body.classList.toggle('presenting',on);
+  if(on){state.sel=null;state.drawing=null;state.mode='select';const de=document.documentElement;try{if(de.requestFullscreen&&!document.fullscreenElement)de.requestFullscreen().catch(()=>{})}catch(e){}}
+  else{try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}const nb=$('#presNotesBox');if(nb)nb.remove()}
+  renderAll();
+}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&state.present)setPresent(false)});
+function presStep(d){const pb=curPb(),pl=curPlay();if(!pb||!pl)return;const i=pb.plays.indexOf(pl)+d;if(i>=0&&i<pb.plays.length)selectPlay(pb.plays[i].id)}
 
 /* ---------- undo / mutation ---------- */
 function commit(){
@@ -843,7 +947,7 @@ function restore(json){
 function undo(){const pl=curPlay();if(!state.undo.length||!pl)return;state.redo.push(JSON.stringify(pl));restore(state.undo.pop())}
 function redo(){const pl=curPlay();if(!state.redo.length||!pl)return;state.undo.push(JSON.stringify(pl));restore(state.redo.pop())}
 function selectPlay(id){state.playId=id;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
-function selectPb(id){state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
+function selectPb(id){state.q='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
 
 /* ---------- field interaction ---------- */
 function toField(e){
@@ -887,7 +991,7 @@ function addPoint(q){
 }
 
 function onDown(e){
-  if(state.anim||!curPlay())return;
+  if(Laser.on||state.present||state.anim||!curPlay())return;
   if(curPlay().locked){toast('🔒 Play ist gesperrt – oben auf das Schloss klicken zum Entsperren.');return}
   const q=toField(e);if(!q)return;
   const t=e.target.closest('[data-p],[data-h],[data-m]');
@@ -1002,20 +1106,23 @@ function applyTemplate(i){
 function startAnim(){
   const pb=curPb(),pl=curPlay();const v=VP(pb,pl);const {los,cx}=dims(v);
   const all=[...pl.players,...(pl.showOpp?pl.opp:[])];
-  const tr={};let mMax=0,rMax=0;
+  const opt=state.animOpt||0;   // 0 = main routes, n = alternative n (players without it run their main route)
+  const vm=55,vr=75; // svg units per second
+  const tr={};let mMax=0,T2=0;
   all.forEach(p=>{const b=[cx+p.x*S,los+p.y*S];
     const mot=[b,...absPts(p,p.motion&&p.motion.pts,b)];const me=mot[mot.length-1];
-    const rt=[me,...absPts(p,p.route&&p.route.pts,b)];
-    const ml=lenOf(mot),rl=lenOf(rt);mMax=Math.max(mMax,ml);rMax=Math.max(rMax,rl);tr[p.id]={mot,rt,ml,rl}});
-  if(!mMax&&!rMax){toast('Keine Routen zum Abspielen.');return}
-  const vm=55,vr=75; // svg units per second
-  const T1=mMax/vm,gap=mMax?0.35:0,T2=rMax/vr;
+    const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:p.route;
+    const rt=[me,...absPts(p,r&&r.pts,b)];
+    const ml=lenOf(mot),rl=lenOf(rt),f=(r&&r.speed)||1,d=(r&&r.delay)||0;
+    mMax=Math.max(mMax,ml);if(rl)T2=Math.max(T2,d+rl/(vr*f));tr[p.id]={mot,rt,ml,rl,f,d}});
+  if(!mMax&&!T2){toast('Keine Routen zum Abspielen.');return}
+  const T1=mMax/vm,gap=mMax?0.35:0;
   const t0=performance.now();state.sel=null;state.drawing=null;
   state.anim={pos:{},raf:0};renderCenter();renderInsp();
   const step=now=>{
     if(!state.anim)return;const t=(now-t0)/1000;
-    for(const id in tr){const k=tr[id];
-      state.anim.pos[id]=t<T1+gap?along(k.mot,Math.min(t*vm,k.ml)):along(k.rt,Math.min((t-T1-gap)*vr,k.rl));}
+    for(const id in tr){const k=tr[id];const t2=t-T1-gap;
+      state.anim.pos[id]=t<T1+gap?along(k.mot,Math.min(t*vm,k.ml)):along(k.rt,Math.max(0,Math.min((t2-k.d)*vr*k.f,k.rl)));}
     renderField();
     if(t>T1+gap+T2+0.05){state.anim.done=true;renderCenter();return}   // stay at the end until sent back
     state.anim.raf=requestAnimationFrame(step);
@@ -1068,14 +1175,17 @@ async function pbMenu(){
     [{label:'Löschen',value:'del',cls:'danger'},{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
   if(r.value==='save'){pb.name=r.el.querySelector('#pbName').value.trim()||pb.name;Store.savePb(pb);renderSide();}
   if(r.value==='del'){
-    if(!await confirmBox('Playbook löschen?',`„${esc(pb.name)}“ mit ${pb.plays.length} Plays wird endgültig gelöscht. Tipp: vorher über „Playbook teilen“ eine Sicherung speichern.`))return;
+    if(!await confirmBox('Playbook löschen?',`„${esc(pb.name)}“ mit ${pb.plays.length} Plays wird in den Papierkorb verschoben und kann dort ${TRASH_DAYS} Tage lang wiederhergestellt werden.`,'In den Papierkorb'))return;
+    Trash.add({kind:'pb',data:clone(pb)});
     Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);
   }
 }
 function addPlay(){const pb=curPb();const pl=newPlay(pb);const t=layoutTpl(pb);if(t)applyLayout(t,pl);pb.plays.push(pl);Store.savePlay(pb,pl);Store.savePb(pb);selectPlay(pl.id)}
 async function delPlay(){
-  const pb=curPb(),pl=curPlay();if(!await confirmBox('Play löschen?',`„${esc(pl.name)}“ wird gelöscht.`))return;
-  const i=pb.plays.indexOf(pl);pb.plays.splice(i,1);Store.deletePlay(pb,pl);
+  const pb=curPb(),pl=curPlay();if(!await confirmBox('Play löschen?',`„${esc(pl.name)}“ wird in den Papierkorb verschoben und kann dort ${TRASH_DAYS} Tage lang wiederhergestellt werden.`,'In den Papierkorb'))return;
+  const i=pb.plays.indexOf(pl);
+  Trash.add({kind:'play',pbId:pb.id,pbName:pb.name,variant:pb.variant,type:pb.type,idx:i,data:clone(pl)});
+  pb.plays.splice(i,1);Store.deletePlay(pb,pl);
   const nx=pb.plays[Math.min(i,pb.plays.length-1)];selectPlay(nx?nx.id:null);
 }
 function applyLayoutAll(){const pb=curPb(),t=layoutTpl(pb);if(!t)return;let n=0;
@@ -1202,6 +1312,52 @@ async function importDialog(){
   if(r.value!=='ok')return;
   doImport(r.el.querySelector('#jsonIn').value);
 }
+/* ---------- clean everything that comes from a file: only known fields, numbers in range, safe colours (no code injection) ---------- */
+const HEXC=/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/;
+const cCol=(c,d)=>typeof c==='string'&&HEXC.test(c)?c:d;
+const cNum=(v,d=0,min=-200,max=200)=>{v=Number(v);return Number.isFinite(v)?Math.max(min,Math.min(max,v)):d};
+const cStr=(v,max=200)=>typeof v==='string'?v.slice(0,max):(typeof v==='number'?String(v):'');
+const cOne=(v,list,d)=>list.includes(v)?v:d;
+const cArr=(v,max)=>Array.isArray(v)?v.slice(0,max):[];
+const cId=(v,pre,keep)=>keep&&typeof v==='string'&&/^[\w.\-:@+~]{1,80}$/.test(v)?v:uid(pre);
+function cleanRoute(r){
+  if(!r||typeof r!=='object')return null;const pts=cArr(r.pts,80).filter(q=>q&&typeof q==='object').map(q=>({x:cNum(q.x),y:cNum(q.y)}));if(!pts.length)return null;
+  const o={pts,style:cOne(r.style,['solid','dashed','dotted'],'solid'),end:cOne(r.end,['arrow','block','dot','bolt','zone','none'],'arrow'),curve:!!r.curve};
+  if(r.color!=null)o.color=cCol(r.color,INK);if(r.w!=null)o.w=cNum(r.w,1.4,0.5,7);if(r.zw!=null)o.zw=cNum(r.zw,7.6,1,80);if(r.zh!=null)o.zh=cNum(r.zh,4.4,1,80);
+  if(r.speed!=null)o.speed=cNum(r.speed,1,0.3,3);if(r.delay!=null)o.delay=cNum(r.delay,0,0,10);return o;
+}
+function cleanPlayer(p,keep){
+  if(!p||typeof p!=='object')return null;
+  const o={id:cId(p.id,'p',keep),label:cStr(p.label,3),x:cNum(p.x,0,-40,40),y:cNum(p.y,0,-40,40),shape:cOne(p.shape,['circle','square','tri','text'],'circle'),
+    color:cCol(p.color,INK),read:Math.round(cNum(p.read,0,0,5)),route:cleanRoute(p.route),motion:cleanRoute(p.motion),alts:cArr(p.alts,8).map(cleanRoute).filter(Boolean)};
+  const f=cCol(p.fill,null);if(f)o.fill=f;return o;
+}
+function cleanMark(m,keep){
+  if(!m||typeof m!=='object')return null;const type=cOne(m.type,['zone','text','bolt'],null);if(!type)return null;
+  const o={id:cId(m.id,'m',keep),type,x:cNum(m.x,0,-60,60),y:cNum(m.y,0,-60,60),color:cCol(m.color,type==='zone'?'#ef4444':INK)};
+  if(type==='zone'){Object.assign(o,{w:cNum(m.w,5,0.5,80),h:cNum(m.h,5,0.5,80),rx:cNum(m.rx,0,0,99),opacity:cNum(m.opacity,0.2,0.02,1),dashed:!!m.dashed,border:m.border!==false});
+    if(m.bcolor!=null)o.bcolor=cCol(m.bcolor,o.color);if(m.bw!=null)o.bw=cNum(m.bw,1.6,0.3,6)}
+  if(type==='text'){o.text=cStr(m.text,60);o.size=cNum(m.size,2,0.4,8)}
+  if(type==='bolt'){o.size=cNum(m.size,1.5,0.4,8);o.rot=cNum(m.rot,0,-360,360)}
+  return o;
+}
+function cleanPlay(pl,keep){
+  if(!pl||typeof pl!=='object')throw new Error('Ein Play in der Datei ist beschädigt.');
+  return {id:cId(pl.id,'pl',keep),name:cStr(pl.name,80)||'Play',cat:cStr(pl.cat,40),formation:cStr(pl.formation,40),notes:cStr(pl.notes,4000),
+    players:cArr(pl.players,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),opp:cArr(pl.opp,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),
+    oppForm:cStr(pl.oppForm,40),showOpp:pl.showOpp!==false,flipV:!!pl.flipV,losShift:cNum(pl.losShift,0,-30,30),locked:!!pl.locked,
+    marks:cArr(pl.marks,80).map(m=>cleanMark(m,keep)).filter(Boolean),updated:cNum(pl.updated,Date.now(),0,1e14)};
+}
+function cleanPb(src,keep){
+  if(!src||typeof src!=='object')throw new Error('Kein Playbook in der Datei.');
+  if(!VAR[src.variant])throw new Error('Unbekannte Spielvariante – die Datei passt nicht zu dieser App.');
+  const plays=cArr(src.plays,1000);const ids=plays.map(p=>p&&p.id);
+  const pb={id:cId(src.id,'pb',keep),name:cStr(src.name,80)||'Importiert',type:src.type==='defense'?'defense':'offense',variant:src.variant,
+    created:cNum(src.created,Date.now(),0,1e14),updated:cNum(src.updated,0,0,1e14),plays:plays.map(p=>cleanPlay(p,keep))};
+  if(src.fieldV===FLAG_V)pb.fieldV=FLAG_V;
+  const li=ids.indexOf(src.layoutPlayId);if(li>=0)pb.layoutPlayId=pb.plays[li].id;
+  return pb;
+}
 function normPlay(pl){
   pl.id=uid('pl');pl.players=(pl.players||[]).map(p=>({...p,id:uid('p')}));pl.opp=(pl.opp||[]).map(p=>({...p,id:uid('p')}));
   pl.name=pl.name||'Play';pl.cat=pl.cat||'';pl.formation=pl.formation||'';pl.notes=pl.notes||'';pl.showOpp=pl.showOpp!==false;pl.oppForm=pl.oppForm||'';return pl;
@@ -1245,30 +1401,35 @@ function importFlagPlay(j){
         players:conv.filter(c=>c.side===type).map(c=>c.o),opp:conv.filter(c=>c.side!==type).map(c=>c.o),oppForm:'',showOpp:true,marks,updated:Date.now()});
       count++;
     });
-    migrateFlag(pb);state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));made=made||pb;
+    pb.plays=pb.plays.map(pl=>cleanPlay(pl,false));migrateFlag(pb);state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));made=made||pb;
   });
-  if(!made)return toast('Keine Plays in der Datei gefunden.');
+  if(!made)return importError('In der FlagPlay-Datei wurden keine Plays gefunden.');
   selectPb(made.id);toast(`${count} Plays aus FlagPlay importiert`+(skipped?` (${skipped} Elemente übersprungen)`:''));
 }
 function doImport(text){
-  let j;try{j=JSON.parse(text)}catch(e){return toast('Das ist keine gültige Playbook-Datei.')}
-  if(j&&!j.app&&Array.isArray(j.plays)&&Array.isArray(j.playbooks))return importFlagPlay(j);
-  if(!j||j.app!=='playbook-builder')return toast('Das ist keine gültige Playbook-Datei.');
-  if(j.playbook){
-    const src=j.playbook;if(!VAR[src.variant])return toast('Unbekannte Spielvariante.');
-    const pb={id:uid('pb'),name:src.name||'Importiert',type:src.type==='defense'?'defense':'offense',variant:src.variant,created:Date.now(),plays:(src.plays||[]).map(p=>normPlay(clone(p)))};
-    if(src.fieldV)pb.fieldV=src.fieldV;migrateFlag(pb);
-    state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast('Playbook importiert');
-  } else if(j.play){
-    const pb=curPb();
-    if(!pb)return toast('Lege zuerst ein Playbook an.');
-    if(j.variant!==pb.variant||j.type!==pb.type)return toast(`Dieses Play gehört in ein ${j.type==='defense'?'Defense':'Offense'}-Playbook (${VAR[j.variant]?VAR[j.variant].name:'?'}).`);
-    const pl=normPlay(clone(j.play));if(pb.variant==='flag5'&&j.fieldV!==FLAG_V)scalePlayX(pl,FLAG_K);pb.plays.push(pl);Store.savePlay(pb,pl);Store.savePb(pb);selectPlay(pl.id);toast('Play importiert');
-  } else toast('Keine Plays in der Datei gefunden.');
+  if(typeof text!=='string'||!text.trim())return importError('Die Datei ist leer.');
+  if(text.length>20e6)return importError('Die Datei ist zu groß (über 20 MB) – das ist keine Playbook-Datei.');
+  let j;try{j=JSON.parse(text)}catch(e){return importError('Die Datei ist keine Playbook-Datei oder beschädigt (kein gültiges JSON).')}
+  try{
+    if(j&&!j.app&&Array.isArray(j.plays)&&Array.isArray(j.playbooks))return importFlagPlay(j);
+    if(!j||typeof j!=='object'||j.app!=='playbook-builder')return importError('Das ist keine Datei aus dem Playbook Builder. Erwartet wird eine Datei, die über „Playbook teilen“ oder „Teilen“ gespeichert wurde.');
+    if(j.playbook){
+      const pb=cleanPb(j.playbook,false);if(!pb.fieldV&&j.fieldV===FLAG_V)pb.fieldV=FLAG_V;migrateFlag(pb);
+      state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast(`Playbook „${pb.name}“ mit ${pb.plays.length} Plays importiert`);
+    } else if(j.play){
+      const pb=curPb();
+      if(!pb)return importError('Lege zuerst ein Playbook an, in das das Play kommen soll.');
+      if(!VAR[j.variant])return importError('Unbekannte Spielvariante in der Datei.');
+      if(j.variant!==pb.variant||j.type!==pb.type)return importError(`Dieses Play gehört in ein ${j.type==='defense'?'Defense':'Offense'}-Playbook (${VAR[j.variant].name}). Wähle oben links ein passendes Playbook und importiere erneut.`);
+      const pl=cleanPlay(j.play,false);if(pb.variant==='flag5'&&j.fieldV!==FLAG_V)scalePlayX(pl,FLAG_K);pb.plays.push(pl);Store.savePlay(pb,pl);Store.savePb(pb);selectPlay(pl.id);toast('Play importiert');
+    } else importError('In der Datei wurden keine Plays gefunden.');
+  }catch(e){console.warn(e);importError((e&&e.message)||'Die Datei konnte nicht gelesen werden.')}
 }
+function importError(msg){modal('Import nicht möglich',`<p>${esc(msg)}</p><p class="hint">Es wurde nichts verändert.</p>`,[{label:'OK',value:null,cls:'primary'}])}
 document.addEventListener('change',async e=>{
   if(e.target.id!=='fileInModal')return;const f=e.target.files[0];if(!f)return;
   const n=$('#pickName');if(n)n.textContent='Lese '+f.name+'…';
+  if(f.size>20e6){toast('Datei ist zu groß für ein Playbook.');return}
   try{const txt=await f.text();const back=e.target.closest('.mback');if(back)back.remove();doImport(txt)}
   catch(err){toast('Datei konnte nicht gelesen werden.')}
 });
@@ -1349,6 +1510,29 @@ async function feedbackDialog(){
   if(url)setTimeout(()=>URL.revokeObjectURL(url),5000);
 }
 function toPngBlob(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(),'image/png')};img.onerror=rej;img.src=u})}
+/* ---------- laser pointer for presenting: glowing red dot with a short fading trail ---------- */
+const Laser={on:false,cv:null,ctx:null,pts:[],raf:0,
+  toggle(v){this.on=v===undefined?!this.on:v;
+    if(this.on){if(!this.cv){const c=document.createElement('canvas');c.id='laser';document.body.appendChild(c);this.cv=c;this.ctx=c.getContext('2d');
+        addEventListener('resize',()=>this.size());addEventListener('pointermove',e=>this.move(e),{passive:true})}
+      this.size();this.cv.style.display='block';document.body.classList.add('lasering');toast('🔴 Laserpointer an – Esc oder L zum Beenden');}
+    else{if(this.cv)this.cv.style.display='none';document.body.classList.remove('lasering');this.pts=[];}
+    const b=$('.laserbtn');if(b)b.classList.toggle('on',this.on);
+  },
+  size(){const d=devicePixelRatio||1;this.cv.width=innerWidth*d;this.cv.height=innerHeight*d;this.ctx.setTransform(d,0,0,d,0,0)},
+  move(e){if(!this.on)return;this.pts.push({x:e.clientX,y:e.clientY,t:performance.now()});if(!this.raf)this.raf=requestAnimationFrame(()=>this.draw())},
+  draw(){this.raf=0;const c=this.ctx,now=performance.now(),LIFE=450;
+    this.pts=this.pts.filter(p=>now-p.t<LIFE);c.clearRect(0,0,innerWidth,innerHeight);if(!this.on)return;
+    c.lineCap='round';c.lineJoin='round';
+    for(let i=1;i<this.pts.length;i++){const a=this.pts[i-1],b=this.pts[i],k=1-(now-b.t)/LIFE;
+      c.strokeStyle=`rgba(255,30,30,${0.55*k})`;c.lineWidth=2+6*k;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke();}
+    const h=this.pts[this.pts.length-1];
+    if(h){const g=c.createRadialGradient(h.x,h.y,0,h.x,h.y,16);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,40,40,1)');g.addColorStop(1,'rgba(255,0,0,0)');
+      c.fillStyle=g;c.beginPath();c.arc(h.x,h.y,16,0,Math.PI*2);c.fill();this.last=h}
+    if(this.pts.length>1)this.raf=requestAnimationFrame(()=>this.draw());
+    else if(this.last){const L=this.last,g=c.createRadialGradient(L.x,L.y,0,L.x,L.y,16);g.addColorStop(0,'#fff');g.addColorStop(.25,'rgba(255,40,40,1)');g.addColorStop(1,'rgba(255,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(L.x,L.y,16,0,Math.PI*2);c.fill()}
+  }
+};
 function helpDialog(){
   modal('So funktioniert’s',`<ul>
     <li><b>Playbook anlegen:</b> Offense oder Defense, Flag 5er oder Tackle 11er.</li>
@@ -1360,6 +1544,9 @@ function helpDialog(){
     <li><b>Playbook / Wristband</b> exportiert die ausgewählten Plays als PNG oder SVG.</li>
     <li><b>Teilen:</b> Playbook als Datei exportieren – andere importieren es in ihre eigene Kopie.</li>
     <li><b>📁 Ordner verbinden</b> (Chrome/Edge am PC): Playbooks werden automatisch als Dateien in einem Ordner auf deinem Gerät gespeichert – bleiben auch erhalten, wenn Browserdaten gelöscht werden.</li>
+    <li><b>▣ Präsentieren:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
+    <li><b>🗑 Papierkorb:</b> Gelöschtes bleibt 30 Tage und lässt sich wiederherstellen.</li>
+    <li><b>🔴 Laser</b> (Taste L): roter Laserpunkt zum Präsentieren – solange er an ist, wird nichts verändert. Esc beendet.</li>
     <li>Tastatur: V/R/M/P = Werkzeuge, Entf = Spieler löschen, Strg+Z / Strg+Y, Enter = Zeichnen beenden.</li></ul>
     <p class="hint">${Store.mode==='cloud'?'Jeder Nutzer hat eigene, private Playbooks in seinem Konto.':Store.mode==='local'?'Gespeichert wird lokal in diesem Browser. Für ein Backup nutze „Playbook teilen“.':'In dieser Ansicht kann nicht gespeichert werden – bitte exportieren.'}</p>`,
     [{label:'Alles klar',value:null,cls:'primary'}]);
@@ -1391,6 +1578,15 @@ document.addEventListener('click',async e=>{
   switch(act){
     case 'newPb':return newPbDialog();
     case 'help':return helpDialog();
+    case 'trash':return trashDialog();
+    case 'present':return setPresent(true);
+    case 'presExit':return setPresent(false);
+    case 'presPrev':return presStep(-1);
+    case 'presNext':return presStep(1);
+    case 'presNotes':state.presNotes=!state.presNotes;return renderPresentBar();
+    case 'drawDone':return finishDrawing();
+    case 'drawCancel':{const p=curPlay()&&curPlay().players.find(x=>x.id===state.drawing&&state.drawing.pid);state.drawing=null;state.cursor=null;undo();state.mode='select';return renderCenter()}
+    case 'laser':return Laser.toggle();
     case 'feedback':return feedbackDialog();
     case 'folderOn':return Folder.connect();
     case 'folderReconnect':return Folder.reconnect();
@@ -1460,12 +1656,14 @@ document.addEventListener('change',e=>{
   if(t.id==='formSel'&&t.value)return loadFormation(t.value);
   if(t.id==='oppSel')return loadOpp(t.value);
   if(t.dataset.pf==='shape'||t.dataset.pf==='read'){const p=selPlayer();commit();p[t.dataset.pf]=t.dataset.pf==='read'?+t.value:t.value;return changed({})}
-  if(t.dataset.rf){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;commit();r[t.dataset.rf]=t.type==='checkbox'?t.checked:t.value;return changed({})}
+  if(t.id==='animOpt'){state.animOpt=+t.value;return}
+  if(t.dataset.rf){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;commit();const f=t.dataset.rf;r[f]=t.type==='checkbox'?t.checked:(f==='speed'||f==='delay')?+t.value:t.value;return changed({})}
 });
 document.addEventListener('focusin',e=>{if(e.target.dataset&&(e.target.dataset.f||e.target.dataset.mf||e.target.dataset.pf==='label'))state.editSnap=curPlay()?JSON.stringify(curPlay()):null});
 document.addEventListener('pointerdown',e=>{if(e.target.dataset&&(e.target.dataset.mf||e.target.dataset.rw))state.editSnap=curPlay()?JSON.stringify(curPlay()):null},true);
 document.addEventListener('input',e=>{
   const t=e.target;
+  if(t.id==='playSearch'){state.q=t.value;const pb=curPb(),nl=$('.plays');if(pb&&nl)nl.innerHTML=playListHTML(pb);return}
   if(t.id==='zoom'){state.zoom=+t.value;const f=$('#field');if(f)f.style.width=state.zoom+'%';clearTimeout(state.zt);state.zt=setTimeout(saveUI,300);return}
   const pl=curPlay();if(!pl)return;
   if(t.dataset.rw){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;
@@ -1489,6 +1687,14 @@ document.addEventListener('dblclick',e=>{if(e.target.closest('#field')&&state.dr
 document.addEventListener('keydown',e=>{
   if($('.mback'))return;
   const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
+  if(e.key==='Escape'&&Laser.on){Laser.toggle(false);return}
+  if(state.present){const k=e.key;
+    if(k==='ArrowRight'||k==='PageDown'){e.preventDefault();return presStep(1)}
+    if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();return presStep(-1)}
+    if(k===' '){e.preventDefault();return state.anim?stopAnim():startAnim()}
+    if(k.toLowerCase()==='n'){state.presNotes=!state.presNotes;return renderPresentBar()}
+    if(k==='Escape'){return setPresent(false)}}
+  if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key.toLowerCase()==='l'){Laser.toggle();return}
   if(!curPlay())return;
   if(curPlay().locked)return;
   const k=e.key.toLowerCase();
@@ -1506,6 +1712,7 @@ document.addEventListener('keydown',e=>{
 /* ---------- init ---------- */
 (async function init(){
   renderAll();
+  Trash.load();
   const data=await Store.init();
   state.pbs=Array.isArray(data)?data:[];
   state.pbs.forEach(pb=>{if(migrateFlag(pb)){Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl))}});
