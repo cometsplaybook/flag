@@ -349,6 +349,27 @@ function newPlay(pb,name){
 /* ---------- storage ---------- */
 const LSK='playbook-builder-v1';
 const W={timers:new Map(),fns:new Map(),busy:new Set(),again:new Map()};
+let quotaWarned=false;
+function writeLocal(key,obj){
+  try{localStorage.setItem(key,JSON.stringify(obj));return true}
+  catch(e){if(!quotaWarned){quotaWarned=true;toast('Browser-Speicher ist voll – bitte über „Playbook teilen“ eine Sicherung speichern.')}return false}
+}
+/* emergency copy: while saving to the account, a copy is also kept in this browser. If a cloud write gets lost
+   (tab closed, connection gone), the newer local copy is put back the next time the app opens. */
+const BACKUP_KEY='pbb-backup';
+const Backup={t:0,
+  save(){clearTimeout(this.t);this.t=setTimeout(()=>this.now(),80)},
+  now(){clearTimeout(this.t);this.t=0;if(Store.mode==='cloud')writeLocal(BACKUP_KEY,{v:1,uid:Store.uid,at:Date.now(),pbs:state.pbs})},
+  restore(pbs){
+    let b=null;try{b=JSON.parse(localStorage.getItem(BACKUP_KEY)||'null')}catch(e){}
+    if(!b||b.uid!==Store.uid||!Array.isArray(b.pbs))return 0;
+    let n=0;
+    b.pbs.forEach(bp=>{const pb=pbs.find(x=>x.id===bp.id);if(!pb||!Array.isArray(bp.plays))return;
+      bp.plays.forEach(bpl=>{const i=pb.plays.findIndex(x=>x.id===bpl.id);
+        if(i>=0&&(bpl.updated||0)>(pb.plays[i].updated||0)){try{pb.plays[i]=cleanPlay(bpl,true);n++}catch(e){}}})});
+    return n;
+  }
+};
 const Store={mode:'memory',db:null,uid:null,note:'',
   async init(){
     if(window.claude&&typeof window.claude.use==='function'){
@@ -358,7 +379,11 @@ const Store={mode:'memory',db:null,uid:null,note:'',
         if(db&&id){
           this.db=db;this.uid=id;
           const data=await Promise.race([this.loadCloud(),new Promise((_,rej)=>setTimeout(()=>rej({code:'timeout'}),12000))]);
-          this.mode='cloud';return data;
+          this.mode='cloud';
+          const n=Backup.restore(data);
+          if(n){setTimeout(()=>{data.forEach(pb=>pb.plays.forEach(pl=>{const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);schedule('pl:'+pl.id,()=>ref.set(clone(pl)))}));
+            toast(`${n} ${n===1?'Änderung':'Änderungen'} vom letzten Mal wiederhergestellt`)},0)}
+          return data;
         }
       }catch(e){console.warn('cloud unavailable',e);this.note='Konto-Speicher gerade nicht erreichbar – es wird lokal im Browser gespeichert.';}
     }
@@ -390,7 +415,7 @@ const Store={mode:'memory',db:null,uid:null,note:'',
   },
   savePlay(pb,pl){
     pl.updated=Date.now();
-    if(this.mode==='cloud'){const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);
+    if(this.mode==='cloud'){Backup.save();const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);
       schedule('pl:'+pl.id,()=>{const cur=pb.plays.find(x=>x.id===pl.id);return cur?ref.set(clone(cur)):Promise.resolve()});}
     else this.saveLocal();
   },
@@ -406,9 +431,10 @@ const Store={mode:'memory',db:null,uid:null,note:'',
   },
   saveAll(){state.pbs.forEach(pb=>{this.savePb(pb);pb.plays.forEach(pl=>this.savePlay(pb,pl))})},
   saveLocal(){
-    if(Folder.handle)schedule('folder',()=>Folder.flush(),1000);
+    if(Folder.handle)schedule('folder',()=>Folder.flush(),400);
+    if(this.mode==='cloud'){Backup.save();return}
     if(this.mode!=='local'){updateStatus();return}
-    schedule('local',()=>{localStorage.setItem(LSK,JSON.stringify({v:1,pbs:state.pbs}));return Promise.resolve()});
+    schedule('local',()=>{writeLocal(LSK,{v:1,pbs:state.pbs});return Promise.resolve()},80);
   },
   fallback(msg){
     if(this.mode!=='cloud')return;
@@ -437,9 +463,15 @@ async function run(key){
   if(W.again.has(key)){const f=W.again.get(key);W.again.delete(key);W.fns.set(key,f);run(key);}
   updateStatus();
 }
-function flushAll(){[...W.timers.keys()].forEach(k=>{clearTimeout(W.timers.get(k));run(k)})}
+function flushAll(){if(Backup.t)Backup.now();[...W.timers.keys()].forEach(k=>{clearTimeout(W.timers.get(k));run(k)})}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushAll()});
 window.addEventListener('pagehide',flushAll);
+// warn before closing while writes to the account or folder are still on their way
+window.addEventListener('beforeunload',e=>{
+  flushAll();
+  const open=[...W.timers.keys(),...W.busy].some(k=>k!=='local');
+  if(open){e.preventDefault();e.returnValue='Änderungen werden noch gespeichert.';return e.returnValue}
+});
 /* ---------- folder on the user's computer (File System Access API, Chrome/Edge desktop) ---------- */
 const IDB={db:null,
   open(){return this.db||(this.db=new Promise((res,rej)=>{const r=indexedDB.open('pbb',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}))},
@@ -705,14 +737,21 @@ function svgFor(pb,pl,o={}){const {fw,fh}=dims(VAR[pb.variant]);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${fw} ${fh}" preserveAspectRatio="xMidYMid meet">${playMarkup(pb,pl,o)}</svg>`}
 
 /* ---------- UI: sidebar ---------- */
+const thumbCache=new Map();   // play id -> {k, svg}: redraw a preview only when the play changed
+function thumbFor(pb,pl){
+  const k=pb.variant+'|'+pb.type+'|'+JSON.stringify(pl);const c=thumbCache.get(pl.id);
+  if(c&&c.k===k)return c.svg;
+  const svg=svgFor(pb,pl,{style:'light'});thumbCache.set(pl.id,{k,svg});return svg;
+}
 function playMatches(pl,q){if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes].some(x=>(x||'').toLowerCase().includes(q))}
-function playListHTML(pb){
+function playListHTML(pb){const r=playItems(pb);return r.items.join('')+r.tail}
+function playItems(pb){
   const q=state.q.trim();const list=pb.plays.map((pl,i)=>[pl,i]).filter(([pl])=>playMatches(pl,q));
-  return list.map(([pl,i])=>`<div class="play${pl.id===state.playId?' cur':''}" data-play="${pl.id}">
-      <div class="num">${i+1}</div>${svgFor(pb,pl,{style:'light'})}
+  return {items:list.map(([pl,i])=>`<div class="play" data-play="${pl.id}">
+      <div class="num">${i+1}</div>${thumbFor(pb,pl)}
       <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(pl.name||'Ohne Namen')}</div><div class="ct">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</div></div>
-      <div class="mv">${q?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`).join('')
-    +(pb.plays.length?(q?`<div class="hint">${list.length} von ${pb.plays.length} Plays${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>');
+      <div class="mv">${q?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`),
+    tail:(pb.plays.length?(q?`<div class="hint">${list.length} von ${pb.plays.length} Plays${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>')};
 }
 function renderSide(){
   const el=$('#side');const pb=curPb();
@@ -721,16 +760,28 @@ function renderSide(){
   if(pb){
     h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span></div>`;
     if(pb.plays.length>4)h+=`<input type="search" id="playSearch" placeholder="🔍 Plays suchen (Name, Kategorie, Formation)…" value="${esc(state.q)}">`;
-    h+=`<div class="plays">${playListHTML(pb)}</div>
+    var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
       <button class="btn primary" data-a="newPlay">＋ Neues Play</button>
       <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
       <button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
   } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import" style="grid-column:1/-1">Importieren</button>${folderUI()}${trashBtn()}</div>`;
-  const old=el.querySelector('.plays');const st=old?old.scrollTop:0;
-  el.innerHTML=h;
-  const nl=el.querySelector('.plays');if(nl){nl.scrollTop=st;const c=nl.querySelector('.play.cur');
+  const items=pb&&LI?LI.items:[];
+  const nlx=el.querySelector('.plays');
+  if(h===el._h&&el.firstChild&&nlx&&el._items&&el._items.length===items.length){
+    // same frame, same number of plays: swap only the entries that changed
+    items.forEach((it,i)=>{if(it!==el._items[i]&&nlx.children[i])nlx.children[i].outerHTML=it});el._items=items;
+  } else if(h!==el._h||!el.firstChild||!el._items||el._items.join('')!==items.join('')){   // only touch the DOM when the sidebar really changed
+    el._items=items;
+    const old=el.querySelector('.plays');const st=old?old.scrollTop:0;
+    const ae=document.activeElement,srch=ae&&ae.id==='playSearch'?[ae.selectionStart,ae.selectionEnd]:null;
+    el.innerHTML=h.replace('\u0001',items.join(''));el._h=h;const nl0=el.querySelector('.plays');if(nl0)nl0.scrollTop=st;
+    if(srch){const i=$('#playSearch');if(i){i.focus({preventScroll:true});i.setSelectionRange(...srch)}}
+  }
+  markCurPlay();
+  const nl=el.querySelector('.plays');if(nl){const c=nl.querySelector('.play.cur');
     if(c){const r=c.getBoundingClientRect(),R=nl.getBoundingClientRect();if(r.top<R.top)nl.scrollTop+=r.top-R.top-4;else if(r.bottom>R.bottom)nl.scrollTop+=r.bottom-R.bottom+4}}
 }
+function markCurPlay(){document.querySelectorAll('#side .play').forEach(d=>d.classList.toggle('cur',d.dataset.play===state.playId))}
 let sideTimer=null;function renderSideSoon(){clearTimeout(sideTimer);sideTimer=setTimeout(renderSide,250)}
 
 /* ---------- UI: center ---------- */
@@ -1663,7 +1714,7 @@ document.addEventListener('focusin',e=>{if(e.target.dataset&&(e.target.dataset.f
 document.addEventListener('pointerdown',e=>{if(e.target.dataset&&(e.target.dataset.mf||e.target.dataset.rw))state.editSnap=curPlay()?JSON.stringify(curPlay()):null},true);
 document.addEventListener('input',e=>{
   const t=e.target;
-  if(t.id==='playSearch'){state.q=t.value;const pb=curPb(),nl=$('.plays');if(pb&&nl)nl.innerHTML=playListHTML(pb);return}
+  if(t.id==='playSearch'){state.q=t.value;const pb=curPb(),nl=$('.plays');if(pb&&nl){nl.innerHTML=playListHTML(pb);markCurPlay();$('#side')._h=null}return}
   if(t.id==='zoom'){state.zoom=+t.value;const f=$('#field');if(f)f.style.width=state.zoom+'%';clearTimeout(state.zt);state.zt=setTimeout(saveUI,300);return}
   const pl=curPlay();if(!pl)return;
   if(t.dataset.rw){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;
