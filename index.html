@@ -158,11 +158,37 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;font-size:14px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .banner{background:#fff7ed;border:1px solid #fdba74;color:#7c2d12;border-radius:8px;padding:8px 12px;font-size:13px}
-@media (max-width:1100px){
-  .app{grid-template-columns:240px minmax(0,1fr)}
-  aside.insp{grid-column:1 / -1}
+.app{position:relative}
+.ptog{position:absolute;top:22px;z-index:5;width:22px;height:46px;padding:0;border:1px solid var(--line);background:var(--panel);border-radius:7px;cursor:pointer;font-size:11px;color:var(--muted);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.ptog:hover{color:var(--ink);border-color:var(--ink)}
+#togSide{left:277px}#togInsp{right:307px}
+body.presenting .ptog{display:none}
+@media (min-width:1101px){
+  body.side-min .app{grid-template-columns:minmax(0,1fr) 300px}
+  body.insp-min .app{grid-template-columns:270px minmax(0,1fr)}
+  body.side-min.insp-min .app{grid-template-columns:minmax(0,1fr)}
+  body.side-min aside.side{display:none}
+  body.side-min #togSide{left:3px}
+  body.side-min .app{padding-left:30px}
+}
+@media (min-width:761px){
+  body.insp-min aside.insp{display:none}
+  body.insp-min #togInsp{right:3px}
+  body.insp-min .app{padding-right:30px}
+}
+/* tablet: options stay on the right, the play list moves below the field */
+@media (min-width:761px) and (max-width:1100px){
+  .app{grid-template-columns:minmax(0,1fr) 280px;min-height:0;align-items:start}
+  body.insp-min .app{grid-template-columns:minmax(0,1fr)}
+  section.center{grid-column:1;grid-row:1}
+  aside.side{grid-column:1;grid-row:2}
+  aside.insp{grid-column:2;grid-row:1 / span 2;align-self:start;position:sticky;top:8px;max-height:calc(100vh - 16px);overflow:auto}
+  .plays{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));max-height:300px;min-height:0;align-content:start}
+  #togSide{display:none}
+  #togInsp{right:287px}
 }
 @media (max-width:760px){
+  .ptog{display:none}
   #field{width:100%!important}
   .zoom{display:none}
   .app{grid-template-columns:1fr;padding:8px}
@@ -184,6 +210,8 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
   <aside class="side panel" id="side"></aside>
   <section class="center" id="center"></section>
   <aside class="insp panel" id="insp"></aside>
+  <button class="ptog" id="togSide" data-a="togSide" title="Play-Liste ein-/ausblenden">◀</button>
+  <button class="ptog" id="togInsp" data-a="togInsp" title="Optionen ein-/ausblenden">▶</button>
 </div>
 <div class="toast" id="toast"></div>
 <input type="file" id="fileIn" accept=".json,application/json" hidden>
@@ -1017,6 +1045,14 @@ function renderInsp(){
   h+=`<h4>&nbsp;</h4><button class="btn sm danger" data-a="delPlayer">Spieler entfernen</button>`;
   el.innerHTML=h;
 }
+function applyMin(){
+  let m={};try{m=JSON.parse(localStorage.getItem('pbb-min')||'{}')||{}}catch(e){}
+  document.body.classList.toggle('side-min',!!m.side);document.body.classList.toggle('insp-min',!!m.insp);
+  const a=$('#togSide'),b=$('#togInsp');if(a)a.textContent=m.side?'▶':'◀';if(b)b.textContent=m.insp?'◀':'▶';
+}
+function toggleMin(k){let m={};try{m=JSON.parse(localStorage.getItem('pbb-min')||'{}')||{}}catch(e){}m[k]=!m[k];try{localStorage.setItem('pbb-min',JSON.stringify(m))}catch(e){
+    document.body.classList.toggle(k+'-min');return}applyMin()}
+applyMin();
 function toggleTag(t){
   const pb=curPb(),pl=curPlay();if(!pl||pl.locked||!t)return;t=t.trim().slice(0,24);if(!t)return;
   commit();const a=pl.tags||(pl.tags=[]);const i=a.indexOf(t);if(i>=0)a.splice(i,1);else if(a.length<12)a.push(t);
@@ -2017,6 +2053,8 @@ document.addEventListener('click',async e=>{
     case 'newPb':return newPbDialog();
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
+    case 'togSide':return toggleMin('side');
+    case 'togInsp':return toggleMin('insp');
     case 'present':return setPresent(true);
     case 'presExit':return setPresent(false);
     case 'presPrev':return presStep(-1);
