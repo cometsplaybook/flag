@@ -295,11 +295,11 @@ const OFF_T=[
 const DEF_T=[
   {n:'Blitz',k:'blitz'},{n:'Contain',k:'contain'},{n:'Deep ½',k:'deep2'},
   {n:'Deep ⅓',k:'deep3'},{n:'Deep ¼',k:'deep4'},{n:'Deep Mitte',k:'deepm'},{n:'Flat',k:'flat'},
-  {n:'Hook/Curl',k:'hook'},{n:'Hole',k:'hole'},{n:'Mann',k:'man'}
+  {n:'Hook/Curl',k:'hook'},{n:'Hole',k:'hole'},{n:'Man',k:'man'}
 ];
 const CATS={
   offense:['Lauf','Pass','Play-Action','RPO','Screen','Trick','Red Zone','Extra Point'],
-  defense:['Cover 0','Cover 1','Cover 2','Cover 3','Cover 4','Zone','Mann','Blitz','Goal Line']
+  defense:['Cover 0','Cover 1','Cover 2','Cover 3','Cover 4','Zone','Man','Blitz','Goal Line']
 };
 
 /* ---------- state ---------- */
@@ -786,6 +786,11 @@ function playMarkup(pb,pl,o={}){
         if(COARSE)s+=`<circle data-h="${k}" data-j="${j}" data-i="${i}" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="15" fill="#fff" fill-opacity="0"/>`;
         s+=`<circle data-h="${k}" data-j="${j}" data-i="${i}" cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${COARSE?8:6}" fill="#fff" stroke="${r.color||sp.color}" stroke-width="2"/>`})};
       hs(sp.motion,'motion',0);hs(sp.route,'route',0);(sp.alts||[]).forEach((r,j)=>hs(r,'alt',j));
+      {const mk=curRouteKey(sp),mr=mk&&getRoute(sp,mk);
+        if(mr&&mr.pts&&mr.pts.length&&!o.anim){const mo=sp.motion&&sp.motion.pts.length?absPts(sp,sp.motion.pts,b):[];
+          const st=mk.k==='motion'||!mo.length?b:mo[mo.length-1];const ap=[st,...absPts(sp,mr.pts,b)];
+          for(let i=1;i<ap.length;i++){const mx=(ap[i-1][0]+ap[i][0])/2,my=(ap[i-1][1]+ap[i][1])/2;if(Math.hypot(ap[i][0]-ap[i-1][0],ap[i][1]-ap[i-1][1])<14)continue;
+            s+=`<g data-mid="${mk.k}" data-j="${mk.j||0}" data-i="${i-1}" data-x="${mx.toFixed(1)}" data-y="${my.toFixed(1)}" style="cursor:copy"><circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="${COARSE?13:9}" fill="#fff" fill-opacity="0"/><circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="${COARSE?6:4.5}" fill="#fff" stroke="${mr.color||sp.color||INK}" stroke-width="1.3" stroke-dasharray="2 1.5"/><path d="M${(mx-2.4).toFixed(1)} ${my.toFixed(1)}h4.8M${mx.toFixed(1)} ${(my-2.4).toFixed(1)}v4.8" stroke="${mr.color||sp.color||INK}" stroke-width="1"/></g>`}}}
       // resize handles for a zone at the end of the selected route
       const ck=curRouteKey(sp),cr=ck&&getRoute(sp,ck);
       if(cr&&cr.end==='zone'&&cr.pts.length&&ck.k!=='motion'){const L=cr.pts[cr.pts.length-1],ex=b[0]+L.x*S,ey=b[1]+L.y*S,rx=(cr.zw||7.6)/2*S,ry=(cr.zh||4.4)/2*S;
@@ -914,6 +919,7 @@ function renderField(){
 }
 function hintText(){
   if(state.anim)return state.anim.done?'Alle Spieler stehen am Ende ihrer Route. <b>↺ Zurück</b> stellt die Aufstellung wieder her.':state.anim.playing?'Animation läuft…':'Pausiert – mit <b>⏮ ⏭</b> gehst du in Einzelschritten vor und zurück.';
+  if(state.pickMan)return `<b>Man-Deckung:</b> Tippe den Gegenspieler an, den er decken soll. <button class="btn sm" data-a="pickCancel">✕ Abbrechen</button>`;
   if(state.drawing)return `<b>${{route:'Route',motion:'Motion',alt:'Alternative'}[state.drawing.kind]} zeichnen:</b> Tippe Punkte aufs Feld. <button class="btn sm primary" data-a="drawDone">✓ Fertig</button> <button class="btn sm" data-a="drawCancel">✕ Abbrechen</button> <span class="hint">(oder letzten Punkt erneut antippen / Enter)</span>`;
   if(state.mode==='route')return '<b>Route:</b> Tippe einen eigenen Spieler an, dann Punkte aufs Feld.';
   if(state.mode==='motion')return '<b>Motion:</b> Tippe einen eigenen Spieler an, dann Punkte für die Bewegung vor dem Snap.';
@@ -1039,7 +1045,7 @@ function renderInsp(){
         ${cur.k==='motion'?'':`<div class="row"><div><label>Tempo</label><select data-rf="speed">${[[0.6,'langsam'],[1,'normal'],[1.5,'schnell'],[2,'sehr schnell']].map(([v,n])=>`<option value="${v}"${(r.speed||1)==v?' selected':''}>${n}</option>`).join('')}</select></div>
         <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
-        <div class="row" style="margin-top:6px"><button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
+        <div class="row" style="margin-top:6px"><button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="contRoute" title="Weitere Punkte an diese Linie anhängen, z. B. ums Eck">✎ Weiterzeichnen</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
   } else h+=`<p class="hint" style="margin-top:12px">Gegner-Spieler kannst du verschieben und gestalten, damit die Aufstellung zu deinem Play passt.</p>`;
   h+=`<h4>&nbsp;</h4><button class="btn sm danger" data-a="delPlayer">Spieler entfernen</button>`;
@@ -1106,7 +1112,7 @@ function restore(json){
 }
 function undo(){const pl=curPlay();if(!state.undo.length||!pl)return;state.redo.push(JSON.stringify(pl));restore(state.undo.pop())}
 function redo(){const pl=curPlay();if(!state.redo.length||!pl)return;state.undo.push(JSON.stringify(pl));restore(state.redo.pop())}
-function selectPlay(id){state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
+function selectPlay(id){state.pickMan=null;state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
 function selectPb(id){state.q='';state.tagF='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.multi=[];state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
 
 /* ---------- field interaction ---------- */
@@ -1123,6 +1129,22 @@ function findMark(id){const pl=curPlay();return pl&&(pl.marks||[]).find(m=>m.id=
 
 function drawRoute(p){const d=state.drawing;if(!d||!p)return null;return d.kind==='alt'?(p.alts||[])[d.j]:p[d.kind]}
 function drawArr(p){const r=drawRoute(p);return r?r.pts:[]}
+// line from the defender to his man; corners can be added afterwards by pulling the ⊕ in the middle of a segment
+function setMan(dpid,rid,asAlt){
+  const pb=curPb(),pl=curPlay(),p=findP(dpid),o=findP(rid);if(!p||!o)return;
+  const dx=p.x-o.x,dy=p.y-o.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,l*0.5);
+  const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,color:(p.route&&p.route.color)||defRouteColor(p)};
+  commit();
+  if(asAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  else{p.route=route;state.selRoute={k:'route',j:0}}
+  state.sel=p.id;state.pickMan=null;changed({insp:true});
+  toast(`Man auf ${o.label||'Gegner'} – zum Umleiten den ⊕ auf der Linie ziehen`);
+}
+function continueDrawing(){
+  const p=selPlayer();if(!p)return;const key=curRouteKey(p);const r=getRoute(p,key);if(!r||!r.pts.length)return;
+  commit();state.mode='route';state.sel=p.id;state.selRoute={k:key.k,j:key.j};state.drawing={kind:key.k,pid:p.id,j:key.j};
+  renderCenter();renderInsp();toast('Tippe weitere Punkte aufs Feld – „✓ Fertig“ zum Beenden');
+}
 function startDrawing(kind,pid){
   const pl=curPlay();const p=pl.players.find(x=>x.id===pid);if(!p)return;
   commit();
@@ -1156,11 +1178,20 @@ function onDown(e){
   const q=toField(e);if(!q)return;
   const t=e.target.closest('[data-p],[data-h],[data-m]');
   const svg=$('#field');
+  if(state.pickMan){const pm=state.pickMan;
+    if(t&&t.dataset.p&&t.dataset.opp==='1')return setMan(pm.pid,t.dataset.p,pm.alt);
+    if(t&&t.dataset.p&&t.dataset.p===pm.pid)return;
+    state.pickMan=null;renderField();renderInsp();toast('Man-Auswahl abgebrochen');return}
   if(state.mode==='select'){
     const zr=e.target.closest('[data-zr]');
     if(zr){const p=selPlayer();const key=p&&curRouteKey(p);if(key){state.drag={type:'zr',pid:p.id,key,h:zr.dataset.zr,cx:+zr.dataset.cx,cy:+zr.dataset.cy,moved:false,sx:q[0],sy:q[1]};svg.setPointerCapture(e.pointerId)}return}
     const zh=e.target.closest('[data-zh]');
     if(zh){const m=findMark(state.sel);if(m){state.drag={type:'zh',h:zh.dataset.zh,mid:m.id,moved:false,sx:q[0],sy:q[1],ox:m.x,oy:m.y,ow:m.w,oh:m.h};svg.setPointerCapture(e.pointerId)}return}
+    const mid=e.target.closest('[data-mid]');
+    if(mid&&!t){const p=selPlayer();const key={k:mid.dataset.mid,j:+mid.dataset.j||0};const r=p&&getRoute(p,key);
+      if(r){commit();const i=+mid.dataset.i;const [ax,ay]=toYd([+mid.dataset.x,+mid.dataset.y]);r.pts.splice(i,0,{x:r1(ax-p.x),y:r1(ay-p.y)});
+        state.selRoute=key;state.drag={type:'h',k:key.k,j:key.j,i,pid:p.id,moved:true,sx:q[0],sy:q[1]};svg.setPointerCapture(e.pointerId);renderField()}
+      return}
     if(t&&t.dataset.h){state.drag={type:'h',k:t.dataset.h,j:+t.dataset.j||0,i:+t.dataset.i,pid:state.sel,moved:false,sx:q[0],sy:q[1]};svg.setPointerCapture(e.pointerId);return}
     if(!t&&e.target.closest('[data-los]')){state.drag={type:'los',sy:q[1],moved:false,start:curPlay().losShift||0};svg.setPointerCapture(e.pointerId);return}
     const rt=e.target.closest('[data-r]');
@@ -1188,6 +1219,12 @@ function onDown(e){
       return;
     }
     if(t&&t.dataset.p&&t.dataset.opp==='0'&&t.dataset.p!==state.drawing.pid){finishDrawing(true);startDrawing(state.mode,t.dataset.p);return}
+    if(t&&t.dataset.p&&t.dataset.opp==='1'&&state.drawing.kind!=='motion'&&curPb().type==='defense'){   // line ends on a receiver = man coverage
+      const dp=findP(state.drawing.pid),o=findP(t.dataset.p),r=dp&&drawRoute(dp);
+      if(r&&o){const arr=r.pts;const last=arr.length?{x:dp.x+arr[arr.length-1].x,y:dp.y+arr[arr.length-1].y}:{x:dp.x,y:dp.y};
+        const dx=last.x-o.x,dy=last.y-o.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,l*0.5);
+        arr.push({x:r1(o.x+dx/l*k-dp.x),y:r1(o.y+dy/l*k-dp.y)});r.man=o.id;if(!r.pts.slice(0,-1).length||r.end==='arrow')r.end='none';
+        finishDrawing();toast(`Man auf ${o.label||'Gegner'}`);return}}
     addPoint(q);return;
   }
   if(state.mode==='add'){
@@ -1240,7 +1277,7 @@ function applyTemplate(i){
   const clampAbs=(x,y)=>clampYd(x,y);const toRel=(ax,ay)=>{const [x,y]=clampAbs(ax,ay);return {x:r1(x-p.x),y:r1(y-p.y)}};
   let route;
   if(pb.type==='defense'){
-    const t=DEF_T[i];const deep=-Math.min(16,v.up-3);let pts=[],end='zone',style='solid',zw=0;
+    const t=DEF_T[i];const deep=-Math.min(16,v.up-3);let pts=[],end='zone',style='solid',zw=0,manId=null;
     switch(t.k){
       case 'blitz':pts=[toRel(0,3)];end='bolt';break;
       case 'contain':pts=[toRel(p.x+sx*1.5,0.5),toRel(sx*v.W*0.14,4)];end='arrow';break;
@@ -1252,11 +1289,11 @@ function applyTemplate(i){
       case 'hook':pts=[toRel(sx*v.W*0.17,-8)];break;
       case 'hole':pts=[toRel(0,-10)];break;
       case 'man':{
-        if(!pl.opp.length){toast('Für Mann-Deckung zuerst einen Gegner einblenden.');return}
-        let best=null,bd=1e9;pl.opp.forEach(o=>{const dd=Math.hypot(o.x-p.x,o.y-p.y);if(dd<bd){bd=dd;best=o}});
-        pts=[{x:r1(best.x-p.x),y:r1(best.y-0.8-p.y)}];end='arrow';style='dashed';break;}
+        if(!pl.opp.length||!pl.showOpp){toast('Für Man-Deckung zuerst oben einen Gegner einblenden.');return}
+        state.pickMan={pid:p.id,alt:!!state.tplAlt};renderField();renderInsp();
+        toast('Tippe jetzt den Gegenspieler an, den er decken soll');return;}
     }
-    route={pts,style,end,curve:false};if(zw)route.zw=zw;
+    route={pts,style,end,curve:!!(route&&route.curve)};if(zw)route.zw=zw;if(manId)route.man=manId;
   } else {
     const t=OFF_T[i];let pts;
     if(t.abs)pts=t.abs.map(([x,y])=>toRel(x,y));
@@ -1289,9 +1326,25 @@ function animModel(pb,pl,opt){
     const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:p.route;   // players without that alternative run their main route
     const rt=[me,...absPts(p,r&&r.pts,b)];
     const ml=lenOf(mot),rl=lenOf(rt),f=(r&&r.speed)||1,d=(r&&r.delay)||0;
-    mMax=Math.max(mMax,ml);if(rl)T2=Math.max(T2,d+rl/(vr*f));tr[p.id]={mot,rt,ml,rl,f,d}});
-  if(!mMax&&!T2)return null;
+    tr[p.id]={mot,rt,ml,rl,f,d,r,b};mMax=Math.max(mMax,ml)});
+  // man coverage: a defender whose line starts at a receiver stays with that receiver during the animation
+  const defs=pb.type==='defense'?pl.players:(pl.showOpp?pl.opp:[]),recs=pb.type==='defense'?(pl.showOpp?pl.opp:[]):pl.players;
+  defs.forEach(p=>{const k=tr[p.id],r=k&&k.r;if(!r||!r.pts||!r.pts.length||r.end==='zone'||r.end==='bolt')return;
+    const P=r.pts.map(q=>[p.x+q.x,p.y+q.y]);const near=pt=>{let best=null,bd=2.2;recs.forEach(o=>{const dd=Math.hypot(o.x-pt[0],o.y-pt[1]);if(dd<bd){bd=dd;best=o}});return best};
+    let rc=r.man&&recs.find(o=>o.id===r.man),via=P.slice(0,-1),end=P[P.length-1];
+    if(!rc)rc=near(end);
+    if(!rc&&(rc=near(P[0]))){via=[];end=P[0]}   // older lines that start at the receiver
+    if(!rc||!tr[rc.id])return;
+    let ox=end[0]-rc.x,oy=end[1]-rc.y;const l=Math.hypot(ox,oy);if(l>1.5){ox*=1.5/l;oy*=1.5/l}
+    const path=[k.b,...via.map(([x,y])=>[k.b[0]+(x-p.x)*S,k.b[1]+(y-p.y)*S])];   // the way around other players, as drawn
+    const pl0=lenOf(path),pe=path[path.length-1],rb=tr[rc.id].mot[0];
+    const rest=Math.max(1,Math.hypot(rb[0]+ox*S-pe[0],rb[1]+oy*S-pe[1])),sp=vr*1.8;
+    const kr=tr[rc.id],still=!(kr.ml>0.5||kr.rl>0.5);   // a receiver who does not move is not chased
+    k.man={to:rc.id,off:[ox*S,oy*S],path,pl:pl0,rest,sp,still,mot:kr.ml>0.5,d0:kr.d,tc:still?0:Math.max(0.3,(pl0+rest)/sp)}});
+  for(const id in tr){const k=tr[id];if(!k.man&&k.rl)T2=Math.max(T2,k.d+k.rl/(vr*k.f))}
+  if(!mMax&&!T2&&!Object.values(tr).some(k=>k.man&&!k.man.still))return null;
   const T1=mMax/vm,gap=mMax?0.35:0;
+  for(const id in tr){const m=tr[id].man;if(m&&!m.still)T2=Math.max(T2,(m.mot?-T1-gap:m.d0)+m.tc+0.2)}
   const M={tr,T1,gap,T2,vm,vr,total:T1+gap+T2,ball:null};
   // the ball: centre -> QB at the snap, then thrown to read 1
   const off=pb.type==='offense'?pl.players:(pl.showOpp?pl.opp:[]);const L=p=>(p.label||'').toUpperCase();
@@ -1306,6 +1359,13 @@ function routePos(M,k,t2){return along(k.rt,Math.max(0,Math.min((t2-k.d)*M.vr*k.
 function animAt(M,t){
   const pos={};const t2=t-M.T1-M.gap;
   for(const id in M.tr){const k=M.tr[id];pos[id]=t<M.T1+M.gap?along(k.mot,Math.min(t*M.vm,k.ml)):routePos(M,k,t2)}
+  for(const id in M.tr){const k=M.tr[id];if(!k.man)continue;const tp=pos[k.man.to];if(!tp)continue;
+    const m=k.man;if(m.still){pos[id]=k.b;continue}
+    const ts=m.mot?t:t-M.T1-M.gap-m.d0;if(ts<=0){pos[id]=k.b;continue}   // wait until his man starts moving
+    const g=[tp[0]+m.off[0],tp[1]+m.off[1]],d=ts*m.sp;
+    if(d<m.pl){pos[id]=along(m.path,d);continue}   // first along the drawn way
+    const pe=m.path[m.path.length-1],u=Math.min(1,(d-m.pl)/m.rest);   // then onto the receiver and stay with him
+    pos[id]=[pe[0]+(g[0]-pe[0])*u,pe[1]+(g[1]-pe[1])*u]}
   let ball=null,bs=1;const B=M.ball;const mix=(a,b,u)=>[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u];
   if(B){const q=pos[B.qb],cp=B.c&&pos[B.c];
     const hold=p=>[p[0]+9,p[1]+7];   // carried next to the player so the label stays readable
@@ -1672,6 +1732,7 @@ function cleanRoute(r){
   if(!r||typeof r!=='object')return null;const pts=cArr(r.pts,80).filter(q=>q&&typeof q==='object').map(q=>({x:cNum(q.x),y:cNum(q.y)}));if(!pts.length)return null;
   const o={pts,style:cOne(r.style,['solid','dashed','dotted'],'solid'),end:cOne(r.end,['arrow','block','dot','bolt','zone','none'],'arrow'),curve:!!r.curve};
   if(r.color!=null)o.color=cCol(r.color,INK);if(r.w!=null)o.w=cNum(r.w,1.4,0.5,7);if(r.zw!=null)o.zw=cNum(r.zw,7.6,1,80);if(r.zh!=null)o.zh=cNum(r.zh,4.4,1,80);
+  if(typeof r.man==='string'&&/^[\w.\-:@+~]{1,80}$/.test(r.man))o.man=r.man;
   if(r.speed!=null)o.speed=cNum(r.speed,1,0.3,3);if(r.delay!=null)o.delay=cNum(r.delay,0,0,10);return o;
 }
 function cleanPlayer(p,keep){
@@ -2008,7 +2069,7 @@ function helpDialog(){
     <li><b>Formation</b> über das Auswahlmenü laden, Spieler per Ziehen verschieben.</li>
     <li><b>Route / Auftrag:</b> Spieler antippen und rechts eine Vorlage wählen (Slant, Post, Blitz, Deep ⅓ …) – oder mit <b>↗ Route</b> selbst zeichnen.</li>
     <li><b>Motion</b> (gestrichelt) läuft in der Animation vor dem Snap.</li>
-    <li><b>Gegner</b> einblenden, um Plays gegen eine Front oder Coverage zu zeigen. In Defense-Playbooks kannst du mit <b>Mann</b> Deckungen zum nächsten Gegner ziehen.</li>
+    <li><b>Gegner</b> einblenden, um Plays gegen eine Front oder Coverage zu zeigen. In Defense-Playbooks wählst du <b>Man</b> und tippst dann den Gegenspieler an. Um einen Spieler herum leitest du die Linie, indem du den <b>⊕</b> in der Mitte eines Abschnitts ziehst – so entsteht eine neue Ecke. Beim Selberzeichnen endet die Linie automatisch als Man-Deckung, wenn du zuletzt einen Gegenspieler antippst. Beim Abspielen läuft der Defender den gezeichneten Weg und bleibt dann an seinem Mann. Mit <b>✎ Weiterzeichnen</b> hängst du an jede Linie weitere Punkte an.</li>
     <li><b>▶ Abspielen</b> animiert alle Routen – mit Pause, Einzelschritt (⏮ ⏭) und Tempo. Der Ball geht vom QB zum Spieler mit Read 1. Unter „Aktionen“ speicherst du die Animation als <b>Video oder GIF</b>.</li>
     <li><b>☑ Mehrere</b> (oder Umschalt-Klick): mehrere Spieler markieren, gemeinsam ziehen, ausrichten. <b>⧉ Kopieren</b> überträgt eine Route auf andere Spieler (Strg+C / Strg+V).</li>
     <li><b>Situationen</b> (z. B. „3rd &amp; long“, „Red Zone“) am Play vergeben – danach filtern und als <b>Call-Sheet</b> drucken.</li>
@@ -2112,6 +2173,8 @@ document.addEventListener('click',async e=>{
     case 'multiClear':state.multi=[];state.sel=null;renderField();return renderInsp();
     case 'alignY':case 'alignX':case 'distX':case 'multiDel':return multiAct(act);
     case 'copyRoute':return copyRoute();
+    case 'contRoute':return continueDrawing();
+    case 'pickCancel':state.pickMan=null;renderField();renderCenter();return renderInsp();
     case 'pasteRoute':return pasteRoute(false);
     case 'pasteRouteM':return pasteRoute(true);
     case 'animPause':return animPause();
@@ -2218,6 +2281,7 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&k==='v'&&state.clip&&(state.sel||state.multi.length)){e.preventDefault();return pasteRoute(e.shiftKey)}
   if(e.ctrlKey||e.metaKey||e.altKey)return;
   if(k==='enter'&&state.drawing){e.preventDefault();return finishDrawing()}
+  if(k==='escape'&&state.pickMan){state.pickMan=null;renderField();renderInsp();return}
   if(k==='escape'){if(state.drawing){const p=curPlay().players.find(x=>x.id===state.drawing.pid);if(p&&drawArr(p).length)return finishDrawing();state.drawing=null;state.cursor=null;undo();return}
     state.sel=null;state.mode='select';renderCenter();return renderInsp()}
   if((k==='delete'||k==='backspace')&&state.multi.length>1){e.preventDefault();return multiAct('multiDel')}
