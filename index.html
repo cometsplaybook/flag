@@ -247,6 +247,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
+const APP_VERSION='2026-11-14.3';
+// shown to coaches who still have an older version open – newest first, short and in plain words
+const APP_NOTES=["Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -879,7 +882,7 @@ function playItems(pb){
 function playRow(pb,pl,filt){
   return `<div class="play${isF(pl)?' isform':''}" data-play="${pl.id}">
       <div class="num">${playNo(pb,pl)}</div>${thumbFor(pb,pl)}
-      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(pl.name||'Ohne Namen')}</div><div class="ct">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</div></div>
+      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(callName(pl)||'Ohne Namen')}</div><div class="ct">${esc(pl.cat||'')}</div></div>
       <div class="mv">${filt?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`;
 }
 function renderSide(){
@@ -1143,7 +1146,7 @@ function renderPresentBar(){
   const i=pb.plays.indexOf(pl);
   {const o=sortKinds(pb.plays);const k=o.indexOf(pl);var pPrev=k>0,pNext=k<o.length-1}
   bar.innerHTML=`<button class="btn sm" data-a="presPrev" ${pPrev?'':'disabled'} title="Vorheriges Play (←)">◀</button>
-    <div class="ptitle"><b>${playNo(pb,pl)}. ${esc(pl.name)}</b><span>${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</span></div>
+    <div class="ptitle"><b>${playNo(pb,pl)}. ${esc(callName(pl))}</b><span>${esc(pl.cat||'')}</span></div>
     <button class="btn sm" data-a="presNext" ${pNext?'':'disabled'} title="Nächstes Play (→)">▶</button>
     <span class="sep"></span>
     ${animCtl(pl)}
@@ -1478,7 +1481,7 @@ async function exportAnim(kind){
   stopAnim(true);renderCenter();
   const {fw,fh}=dims(VP(pb,pl));const W=kind==='gif'?480:960,head=kind==='gif'?24:44,fhp=Math.round(fh*W/fw/2)*2,H=fhp+head;
   const cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d',{willReadFrequently:kind==='gif'});
-  const title=`${playNo(pb,pl)}. ${pl.name||''}`,style=state.style;
+  const title=`${playNo(pb,pl)}. ${callName(pl)}`,style=state.style;
   const draw=async t=>{const f=animAt(M,Math.max(0,Math.min(M.total,t)));
     const img=await svgImage(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${fhp}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{anim:f.pos,ball:f.ball,bs:f.bs,style})}</svg>`);
     ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.drawImage(img,0,head,W,fhp);
@@ -1697,7 +1700,7 @@ function singleSVG(pb,pl){
   const H=fh+head+foot;
   let notes='';if(pl.notes){const lines=wrap(pl.notes,Math.floor(fw/6.6)).slice(0,6);notes=lines.map((l,i)=>`<text x="10" y="${head+fh+20+i*16}" font-family="${FONT}" font-size="12" fill="#333">${esc(l)}</text>`).join('')}
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${fw}" height="${H}" viewBox="0 0 ${fw} ${H}"><rect width="${fw}" height="${H}" fill="#fff"/>
-    <text x="10" y="27" font-family="${FONT}" font-size="20" font-weight="700" fill="${INK}">${playNo(pb,pl)}. ${esc(pl.name)}</text>
+    <text x="10" y="27" font-family="${FONT}" font-size="20" font-weight="700" fill="${INK}">${playNo(pb,pl)}. ${esc(callName(pl))}</text>
     <text x="${fw-10}" y="27" text-anchor="end" font-family="${FONT}" font-size="13" fill="#666">${esc([pl.cat,pl.formation].filter(Boolean).join(' · '))}</text>
     <svg x="0" y="${head}" width="${fw}" height="${fh}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{style:state.style==='light'?'print':state.style})}</svg>${notes}</svg>`;
 }
@@ -1713,15 +1716,15 @@ function sheetSVG(pb,layout,style,sel,sub,o){
   if(!wrist)s+=`<text x="${pad}" y="38" font-family="${FONT}" font-size="26" font-weight="700" fill="${INK}">${esc(pb.name)}${sub?' – '+esc(sub):''}</text><text x="${Wd-pad}" y="38" text-anchor="end" font-family="${FONT}" font-size="13" fill="#666">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${new Date().toLocaleDateString('de-DE')}</text>`;
   list.forEach((pl,i)=>{
     const c=i%cols,r=Math.floor(i/cols),x=pad+c*(tw+gap),y=top+r*(th+head+noteH+gap);const no=playNo(pb,pl);
-    if(!wrist){const meta=o.meta!==false?[isF(pl)?'':pl.formation,pl.cat].filter(Boolean).join(' · '):'';
+    if(!wrist){const meta=o.meta!==false?(pl.cat||''):'';
       const mw=meta?Math.min(tw*0.45,meta.length*fs*0.36):0,maxName=Math.max(6,Math.floor((tw-mw-8)/(fs*0.56)));
-      s+=`<text x="${x}" y="${y+head-8}" font-family="${FONT}" font-size="${fs}" font-weight="700" fill="${INK}">${esc(clip(no+'. '+(pl.name||''),maxName))}</text>`;
+      s+=`<text x="${x}" y="${y+head-8}" font-family="${FONT}" font-size="${fs}" font-weight="700" fill="${INK}">${esc(clip(no+'. '+callName(pl),maxName))}</text>`;
       if(meta)s+=`<text x="${x+tw}" y="${y+head-8}" text-anchor="end" font-family="${FONT}" font-size="${(fs*0.72).toFixed(1)}" fill="#777">${esc(clip(meta,Math.floor(tw*0.45/(fs*0.4))))}</text>`}
     s+=`<svg x="${x}" y="${y+head}" width="${tw}" height="${th}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{style})}</svg><rect x="${x}" y="${y+head}" width="${tw}" height="${th}" fill="none" stroke="${INK}" stroke-width="${wrist?1.2:1}"/>`;
     if(noteH&&pl.notes){const lines=wrapText(pl.notes,Math.floor(tw/(fs*0.48)),g.noteLines);
       lines.forEach((ln,k)=>{s+=`<text x="${x+2}" y="${y+head+th+fs*0.95*(k+1)+3}" font-family="${FONT}" font-size="${(fs*0.8).toFixed(1)}" fill="#333">${esc(ln)}</text>`})}
     if(wrist){s+=`<rect x="${x}" y="${y}" width="30" height="22" fill="${INK}"/><text x="${x+15}" y="${y+16}" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="700" fill="#fff">${no}</text>
-      <text x="${x+tw-4}" y="${y+th-5}" text-anchor="end" font-family="${FONT}" font-size="10" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">${esc((pl.name||'').slice(0,28))}</text>`}
+      <text x="${x+tw-4}" y="${y+th-5}" text-anchor="end" font-family="${FONT}" font-size="10" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">${esc(clip(callName(pl),30))}</text>`}
   });
   return s+'</svg>';
 }
@@ -1752,10 +1755,13 @@ function overviewSVG(pb,list,part,parts){
   cols.forEach(([n,x])=>{s+=`<text x="${pad+x}" y="${top-8}" font-family="${FONT}" font-size="12" font-weight="700" fill="#666">${n}</text>`});
   s+=`<line x1="${pad}" y1="${top-2}" x2="${W-pad}" y2="${top-2}" stroke="${INK}" stroke-width="1.2"/>`;
   list.forEach((pl,i)=>{const y=top+i*rh;if(i%2)s+=`<rect x="${pad}" y="${y}" width="${W-2*pad}" height="${rh}" fill="#f3f4f6"/>`;
-    const v=[playNo(pb,pl),clip(pl.name||'',40),clip(isF(pl)?'':(pl.formation||''),24),clip(pl.cat||'',18),clip((pl.tags||[]).join(', '),28)];
+    const v=[playNo(pb,pl),clip(callName(pl),40),clip(isF(pl)?'':(pl.formation||''),24),clip(pl.cat||'',18),clip((pl.tags||[]).join(', '),28)];
     cols.forEach(([n,x],k)=>{s+=`<text x="${pad+x}" y="${y+15}" font-family="${FONT}" font-size="13" ${k<2?'font-weight="700"':''} fill="${INK}">${esc(v[k])}</text>`})});
   return s+'</svg>';
 }
+// call name = formation first, then the play: "Base Raven"
+function callName(pl){const f=(isF(pl)?'':(pl.formation||'')).trim(),n=(pl.name||'').trim();
+  if(!f)return n;if(!n||n.toLowerCase()===f.toLowerCase())return f;if(n.toLowerCase().startsWith(f.toLowerCase()+' '))return n;return f+' '+n}
 function callSheetSVG(pb,sel){
   const groups=[];const add=(t,pl)=>{let g=groups.find(x=>x.t===t);if(!g)groups.push(g={t,pl:[]});g.pl.push(pl)};
   const order=usedTags(pb);order.forEach(t=>sel.forEach(pl=>{if((pl.tags||[]).includes(t))add(t,pl)}));
@@ -1768,8 +1774,7 @@ function callSheetSVG(pb,sel){
     g.pl.forEach((pl,i)=>{const ry=y+hh+i*rh;
       body+=(i?`<line x1="${x}" y1="${ry}" x2="${x+cw}" y2="${ry}" stroke="#ccc" stroke-width=".8"/>`:'')+
         `<text x="${x+10}" y="${ry+17}" font-family="${FONT}" font-size="14" font-weight="700" fill="${INK}">${playNo(pb,pl)}</text>
-         <text x="${x+40}" y="${ry+17}" font-family="${FONT}" font-size="14" fill="${INK}">${esc((pl.name||'').slice(0,24))}</text>
-         <text x="${x+cw-8}" y="${ry+17}" text-anchor="end" font-family="${FONT}" font-size="11" fill="#666">${esc((pl.formation||'').slice(0,16))}</text>`});
+         <text x="${x+40}" y="${ry+17}" font-family="${FONT}" font-size="14" fill="${INK}">${esc(clip(callName(pl),Math.floor((cw-48)/7.4)))}</text>`});
     colY[c]=y+h+gap});
   const H=Math.max(...colY)+pad-gap;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#fff"/>
@@ -1793,7 +1798,7 @@ function wristPages(pb,sel,style,wmm,hmm,cols,rows){
       card.forEach((pl,i)=>{const x=X+(i%cols)*cw,y=Y+Math.floor(i/cols)*ch;const no=playNo(pb,pl);const nb=Math.max(3.2,Math.min(5.5,ch*0.2));
         s+=`<svg x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" viewBox="0 0 ${fw} ${fh}" preserveAspectRatio="xMidYMid meet">${playMarkup(pb,pl,{style})}</svg>
           <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${(nb*1.5).toFixed(2)}" height="${nb.toFixed(2)}" fill="${INK}"/><text x="${(x+nb*0.75).toFixed(2)}" y="${(y+nb*0.76).toFixed(2)}" text-anchor="middle" font-family="${FONT}" font-size="${(nb*0.74).toFixed(2)}" font-weight="700" fill="#fff">${no}</text>
-          <text x="${(x+cw-0.8).toFixed(2)}" y="${(y+ch-1).toFixed(2)}" text-anchor="end" font-family="${FONT}" font-size="${Math.max(1.7,Math.min(2.6,cw*0.075)).toFixed(2)}" font-weight="700" fill="${INK}" stroke="#fff" stroke-width=".6" paint-order="stroke">${esc((pl.name||'').slice(0,22))}</text>
+          <text x="${(x+cw-0.8).toFixed(2)}" y="${(y+ch-1).toFixed(2)}" text-anchor="end" font-family="${FONT}" font-size="${Math.max(1.7,Math.min(2.6,cw*0.075)).toFixed(2)}" font-weight="700" fill="${INK}" stroke="#fff" stroke-width=".6" paint-order="stroke">${esc(clip(callName(pl),26))}</text>
           <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${cw.toFixed(2)}" height="${ch.toFixed(2)}" fill="none" stroke="${INK}" stroke-width=".2"/>`});
       s+=`<rect x="${X}" y="${Y}" width="${wmm}" height="${hmm}" fill="none" stroke="${INK}" stroke-width=".35"/>`});
     pages.push(s+'</svg>');
@@ -1823,7 +1828,7 @@ async function sheetDialog(){
     <label style="grid-column:1/-1"><input type="radio" name="lay" value="call"><span>Call-Sheet<small>Tabelle für den Spieltag, sortiert nach Situation</small></span></label></div>
     <div id="sheetOpts"><div class="row" style="align-items:flex-end"><div style="flex:1"><label>Spalten</label><select id="sCols">${[1,2,3,4,5,6].map(n=>`<option value="${n}"${SO.cols===n?' selected':''}>${n}</option>`).join('')}</select></div>
         <div style="flex:2"><label class="chk"><input type="checkbox" id="sLand"${SO.land?' checked':''}> Querformat (beim Drucken)</label></div></div>
-      <label class="chk"><input type="checkbox" id="sMeta"${SO.meta!==false?' checked':''}> Formation und Kategorie neben dem Namen</label>
+      <label class="chk"><input type="checkbox" id="sMeta"${SO.meta!==false?' checked':''}> Kategorie neben dem Namen</label>
       <label class="chk"><input type="checkbox" id="sNotes"${SO.notes?' checked':''}> Notizen / Coaching Points unter jedem Play</label>
       <label class="chk"><input type="checkbox" id="sOver"${SO.over?' checked':''}> Übersichtsseite am Anfang (Nummer, Name, Formation)</label>
       <p class="hint" id="sInfo" style="margin:4px 0 0"></p></div>
@@ -1836,7 +1841,7 @@ async function sheetDialog(){
     <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label><label style="grid-column:1/-1"><input type="radio" name="fmt" value="print"><span>Drucken / als PDF speichern<small>A4, mehrere Seiten</small></span></label></div>
     <label style="display:flex;justify-content:space-between;align-items:center">Welche Plays? <span><button type="button" class="btn sm" data-pick="all">Alle</button> <button type="button" class="btn sm" data-pick="none">Keine</button></span></label>
     ${pb.plays.some(isF)?`<p style="margin:4px 0"><button type="button" class="btn sm" data-pick="plays">Nur Plays</button> <button type="button" class="btn sm" data-pick="forms">Nur Formationen</button> <span class="hint">Formationen kommen im Playbook auf eine eigene Seite.</span></p>`:''}
-    <div class="picklist">${sortKinds(pb.plays).map(pl=>`<label><input type="checkbox" name="pick" value="${pl.id}" data-kind="${isF(pl)?'f':'p'}" checked> <b>${playNo(pb,pl)}.</b> ${esc(pl.name||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
+    <div class="picklist">${sortKinds(pb.plays).map(pl=>`<label><input type="checkbox" name="pick" value="${pl.id}" data-kind="${isF(pl)?'f':'p'}" checked> <b>${playNo(pb,pl)}.</b> ${esc(callName(pl)||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
     <p class="hint" id="pickCount" style="margin:4px 0 0">${pb.plays.length} von ${pb.plays.length} ausgewählt</p>`,
     [{label:'Abbrechen',value:null},{label:'Erstellen',value:'ok',cls:'primary',validate:el=>{if(!el.querySelector('[name=pick]:checked')){toast('Bitte mindestens ein Play auswählen.');return false}return true}}]);
   if(r.value!=='ok')return;
@@ -2174,7 +2179,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   // ----- pull everything this account may see -----
   async pull(first){
     if(!this.user||this.pulling)return;if(state.drag||state.drawing){this.later(5000);return}
-    this.pulling=true;let changed=false;
+    this.pulling=true;let changed=false;const news=[];
     try{
       if(first||!this.user.verified)try{await this.token(true)}catch(e){}
       const lists=[await this.query('owner','EQUAL',this.user.uid)];
@@ -2189,7 +2194,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
         const rp=this.parse(d);if(!rp)continue;
         if(!loc){rp.cloud={...meta,ut:d.ut};state.pbs.push(rp);changed=true;continue}
         if(loc.cloud&&loc.cloud.dirty&&role!=='read'){mergePb(loc,rp);loc.cloud={...loc.cloud,...meta,ut:d.ut};this.touch(loc)}
-        else{rp.cloud={...meta,ut:d.ut};state.pbs[i]=rp}
+        else{rp.cloud={...meta,ut:d.ut};state.pbs[i]=rp;if(!first&&d.updatedBy&&d.updatedBy!==this.user.email)news.push([rp.name,d.updatedBy])}
         changed=true;
       }
       // gone on the server: deleted elsewhere or no longer shared
@@ -2203,6 +2208,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     if(changed){if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;const pb=curPb();
       if(pb&&!pb.plays.find(x=>x.id===state.playId)){state.playId=pb.plays[0]?pb.plays[0].id:null;state.sel=null}
       if(state.anim)stopAnim(true);Store.saveLocal();renderAll()}
+    if(news.length)toast(news.length===1?`„${news[0][0]}“ wurde von ${news[0][1].split('@')[0]} aktualisiert`:`${news.length} geteilte Playbooks wurden aktualisiert`);
     updateStatus();this.later();
   },
   later(ms){clearTimeout(this.timer);if(!this.user)return;this.timer=setTimeout(()=>{if(document.visibilityState==='visible')this.pull();else this.later()},ms||60000)},
@@ -2305,6 +2311,32 @@ async function shareDialog(pb){
   Sync.touch(pb);await Sync.push(pb.id);renderSide();
   toast(Sync.state==='ok'?(list.length?`Geteilt mit ${list.length} ${list.length===1?'Person':'Personen'}`:'Freigaben entfernt'):'Gespeichert – wird übertragen, sobald du online bist');
 }
+
+/* ---------- new app version on the server? ask to reload ---------- */
+const Upd={last:0,shown:false,snooze:0,
+  async check(){
+    if(!HOSTED||this.shown||Date.now()<this.snooze||!/^https?:/.test(location.protocol))return;this.last=Date.now();
+    let txt;try{const r=await fetch(location.pathname+(location.pathname.endsWith('/')?'':'')+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;txt=await r.text()}catch(e){return}
+    const m=/const APP_VERSION='([^']+)'/.exec(txt);if(!m||m[1]===APP_VERSION)return;
+    let notes=[];try{const n=/const APP_NOTES=(\[.*?\]);/.exec(txt);if(n)notes=JSON.parse(n[1]).filter(x=>typeof x==='string').slice(0,6)}catch(e){}
+    this.show(m[1],notes);
+  },
+  async show(v,notes){
+    if($('.mback')||state.drag||state.drawing||state.present){setTimeout(()=>this.show(v,notes),20000);return}
+    this.shown=true;
+    const r=await modal('Neue Version der App',`<p style="margin-top:0">Es gibt eine neue Version des Playbook Builders. Bitte aktualisiere, damit alle Coaches mit derselben Version arbeiten.</p>
+      ${notes.length?`<p class="hint" style="margin-bottom:4px"><b>Neu:</b></p><ul style="margin-top:0">${notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
+      <p class="hint">Deine Playbooks bleiben erhalten – es wird nur die App neu geladen.</p>`,
+      [{label:'Später',value:null},{label:'Jetzt aktualisieren',value:'go',cls:'primary'}]);
+    if(r.value!=='go'){this.shown=false;this.snooze=Date.now()+30*60000;return}
+    toast('Wird aktualisiert…');flushAll();
+    for(let i=0;i<40&&(W.timers.size||W.busy.size);i++)await new Promise(res=>setTimeout(res,150));
+    try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}
+    location.reload();
+  }
+};
+if(HOSTED){setTimeout(()=>Upd.check(),15000);setInterval(()=>{if(document.visibilityState==='visible')Upd.check()},10*60000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-Upd.last>2*60000)Upd.check()})}
 
 /* ---------- unexpected errors: tell the user, keep the data ---------- */
 let crashAt=0;
