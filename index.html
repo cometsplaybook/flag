@@ -95,6 +95,7 @@ body.lasering,body.lasering *{cursor:none!important}
   .ppage:last-child{page-break-after:auto;break-after:auto}
   .ppage svg{width:190mm;height:auto;max-height:276mm}
   .ppage.real{padding:0}.ppage.real svg{width:210mm;height:297mm;max-height:none}
+  .ppage.land{width:297mm;height:209mm}.ppage.land svg{width:277mm;max-height:189mm}
 }
 .mback.busy{z-index:200}
 .acct-tabs{display:flex;gap:6px;margin-bottom:10px}
@@ -104,11 +105,13 @@ body.lasering,body.lasering *{cursor:none!important}
 #acctBtn.on{background:rgba(255,255,255,.28)}
 .kindtabs{display:flex;gap:4px;margin:6px 0 2px}.kindtabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:7px;padding:4px 2px;font-size:12px;cursor:pointer}
 .kindtabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.plgroup{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px 4px 2px;grid-column:1/-1}
+.plgroup{display:flex;gap:6px;align-items:center;width:100%;text-align:left;border:0;background:#f1efe9;border-radius:7px;cursor:pointer;font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px 8px;grid-column:1/-1;margin:2px 0}
+.plgroup:hover{color:var(--ink)}.plgroup span{font-size:12px;width:10px}
 .play.isform .num{background:#e0e7ff;color:#3730a3;font-size:12px}
 .newrow{display:grid;grid-template-columns:1fr auto;gap:6px}.newrow .btn{white-space:nowrap;padding-left:8px;padding-right:8px}
 .cpick{display:inline-block;width:26px;height:26px;border-radius:50%;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);position:relative;cursor:pointer;vertical-align:middle;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
 .cpick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.chk{display:flex;gap:6px;align-items:center;color:var(--ink);font-weight:400;margin-top:6px}
 .hrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .hrow svg{width:110px;border:1px solid var(--line);border-radius:4px}.hrow .hint{display:block;font-size:12px}
 .trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -316,7 +319,7 @@ const CATS={
 };
 
 /* ---------- state ---------- */
-const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,q:'',tagF:'',kindF:'',multi:[],clip:null,animRate:1,quiz:false,quizShown:false,present:false,animOpt:0,mode:'select',drawing:null,cursor:null,drag:null,
+const state={pbs:[],pbId:null,playId:null,sel:null,selRoute:null,q:'',tagF:'',kindF:'',collapsed:(()=>{try{return JSON.parse(localStorage.getItem('pbb-fold')||'{}')||{}}catch(e){return {}}})(),multi:[],clip:null,animRate:1,quiz:false,quizShown:false,present:false,animOpt:0,mode:'select',drawing:null,cursor:null,drag:null,
   undo:[],redo:[],anim:null,snap:true,style:'light',editSnap:null};
 state.zoom=70;
 try{const s=JSON.parse(localStorage.getItem('pbb-ui')||'{}');if(s.style)state.style=s.style;if(s.snap===false)state.snap=false;if(s.zoom)state.zoom=s.zoom;}catch(e){}
@@ -863,9 +866,12 @@ function playItems(pb){
   if(state.tagF&&!usedTags(pb).includes(state.tagF))state.tagF='';
   const q=state.q.trim();const list=sortKinds(pb.plays).map(pl=>[pl,0]).filter(([pl])=>playMatches(pl,q));const filt=q||state.tagF||state.kindF;
   const nf=list.filter(([pl])=>isF(pl)).length,np=list.length-nf;
-  const out=[];list.forEach(([pl],k)=>{
-    if(nf&&!state.kindF&&k===0)out.push(`<div class="plgroup">Formationen · ${nf}</div>`);
-    if(nf&&np&&!state.kindF&&k===nf)out.push(`<div class="plgroup">Plays · ${np}</div>`);
+  const out=[],grp=nf&&!state.kindF,col=state.collapsed||{};
+  const hd=(k,n,c)=>`<button class="plgroup" data-grp="${k}" title="${col[k]?'Aufklappen':'Zuklappen'}"><span>${col[k]?'▸':'▾'}</span> ${n} · ${c}</button>`;
+  list.forEach(([pl],k)=>{
+    if(grp&&k===0)out.push(hd('f','Formationen',nf));
+    if(grp&&np&&k===nf)out.push(hd('p','Plays',np));
+    if(grp&&col[isF(pl)?'f':'p'])return;   // group is folded in
     out.push(playRow(pb,pl,filt))});
   return {items:out,
     tail:(pb.plays.length?(filt?`<div class="hint">${list.length} von ${pb.plays.length} Einträgen${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>')};
@@ -1696,23 +1702,58 @@ function singleSVG(pb,pl){
     <svg x="0" y="${head}" width="${fw}" height="${fh}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{style:state.style==='light'?'print':state.style})}</svg>${notes}</svg>`;
 }
 function wrap(text,n){const out=[];String(text).split(/\n/).forEach(par=>{let line='';par.split(/\s+/).forEach(w=>{if((line+' '+w).trim().length>n){out.push(line.trim());line=w}else line+=' '+w});out.push(line.trim())});return out}
-function sheetSVG(pb,layout,style,sel,sub){
+// o: {cols, notes, meta, land, rows}  – rows = rows per page (print), otherwise all on one picture
+function sheetSVG(pb,layout,style,sel,sub,o){
   if(style==='light')style='print';  // print/export on pure white to save ink
-  const list=sel||pb.plays;
+  o=o||{};const list=sel||pb.plays;
   const {fw,fh}=dims(VAR[pb.variant]);const wrist=layout==='wrist';
-  const cols=Math.max(1,Math.min(list.length,wrist?(pb.variant==='flag5'?5:4):3));const tw=wrist?(pb.variant==='flag5'?150:220):340;const sc=tw/fw;const th=Math.round(fh*sc);
-  const head=wrist?0:26,gap=wrist?6:16,pad=wrist?10:24,top=wrist?pad:64;
-  const n=list.length,rows=Math.max(1,Math.ceil(n/cols));
-  const Wd=pad*2+cols*tw+(cols-1)*gap,Hd=top+rows*(th+head+gap)-gap+pad;
+  const g=sheetGeo(pb,list,wrist,o);const {cols,tw,th,head,gap,pad,top,noteH,fs,Wd}=g;
+  const rows=Math.max(1,Math.ceil(list.length/cols));const Hd=top+rows*(th+head+noteH+gap)-gap+pad;
   let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${Wd}" height="${Hd}" viewBox="0 0 ${Wd} ${Hd}"><rect width="${Wd}" height="${Hd}" fill="#fff"/>`;
   if(!wrist)s+=`<text x="${pad}" y="38" font-family="${FONT}" font-size="26" font-weight="700" fill="${INK}">${esc(pb.name)}${sub?' – '+esc(sub):''}</text><text x="${Wd-pad}" y="38" text-anchor="end" font-family="${FONT}" font-size="13" fill="#666">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${new Date().toLocaleDateString('de-DE')}</text>`;
   list.forEach((pl,i)=>{
-    const c=i%cols,r=Math.floor(i/cols),x=pad+c*(tw+gap),y=top+r*(th+head+gap);const no=playNo(pb,pl);
-    if(!wrist)s+=`<text x="${x}" y="${y+18}" font-family="${FONT}" font-size="15" font-weight="700" fill="${INK}">${no}. ${esc(pl.name)}</text><text x="${x+tw}" y="${y+18}" text-anchor="end" font-family="${FONT}" font-size="11" fill="#777">${esc(pl.cat||'')}</text>`;
+    const c=i%cols,r=Math.floor(i/cols),x=pad+c*(tw+gap),y=top+r*(th+head+noteH+gap);const no=playNo(pb,pl);
+    if(!wrist){const meta=o.meta!==false?[isF(pl)?'':pl.formation,pl.cat].filter(Boolean).join(' · '):'';
+      const mw=meta?Math.min(tw*0.45,meta.length*fs*0.36):0,maxName=Math.max(6,Math.floor((tw-mw-8)/(fs*0.56)));
+      s+=`<text x="${x}" y="${y+head-8}" font-family="${FONT}" font-size="${fs}" font-weight="700" fill="${INK}">${esc(clip(no+'. '+(pl.name||''),maxName))}</text>`;
+      if(meta)s+=`<text x="${x+tw}" y="${y+head-8}" text-anchor="end" font-family="${FONT}" font-size="${(fs*0.72).toFixed(1)}" fill="#777">${esc(clip(meta,Math.floor(tw*0.45/(fs*0.4))))}</text>`}
     s+=`<svg x="${x}" y="${y+head}" width="${tw}" height="${th}" viewBox="0 0 ${fw} ${fh}">${playMarkup(pb,pl,{style})}</svg><rect x="${x}" y="${y+head}" width="${tw}" height="${th}" fill="none" stroke="${INK}" stroke-width="${wrist?1.2:1}"/>`;
+    if(noteH&&pl.notes){const lines=wrapText(pl.notes,Math.floor(tw/(fs*0.48)),g.noteLines);
+      lines.forEach((ln,k)=>{s+=`<text x="${x+2}" y="${y+head+th+fs*0.95*(k+1)+3}" font-family="${FONT}" font-size="${(fs*0.8).toFixed(1)}" fill="#333">${esc(ln)}</text>`})}
     if(wrist){s+=`<rect x="${x}" y="${y}" width="30" height="22" fill="${INK}"/><text x="${x+15}" y="${y+16}" text-anchor="middle" font-family="${FONT}" font-size="15" font-weight="700" fill="#fff">${no}</text>
-      <text x="${x+tw-4}" y="${y+th-5}" text-anchor="end" font-family="${FONT}" font-size="10" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">${esc(pl.name).slice(0,28)}</text>`}
+      <text x="${x+tw-4}" y="${y+th-5}" text-anchor="end" font-family="${FONT}" font-size="10" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">${esc((pl.name||'').slice(0,28))}</text>`}
   });
+  return s+'</svg>';
+}
+function sheetGeo(pb,list,wrist,o){
+  const {fw,fh}=dims(VAR[pb.variant]);
+  const cols=Math.max(1,Math.min(list.length||1,wrist?(pb.variant==='flag5'?5:4):(o.cols||3)));
+  const Wd0=1100;   // same page width for every column count, so names and lines keep their size relation
+  const gap=wrist?6:(cols>=5?10:16),pad=wrist?10:24,top=wrist?pad:64;
+  const tw=wrist?(pb.variant==='flag5'?150:220):Math.floor((Wd0-pad*2-(cols-1)*gap)/cols);
+  const th=Math.round(fh*tw/fw);const fs=wrist?15:Math.max(11,Math.min(22,Math.round(tw*0.045+3)));
+  const head=wrist?0:Math.round(fs*1.75);
+  const noteLines=!wrist&&o.notes?Math.min(5,Math.max(0,...list.map(pl=>wrapText(pl.notes||'',Math.floor(tw/(fs*0.48)),5).length))):0;
+  const noteH=noteLines?Math.round(noteLines*fs*0.95+8):0;
+  const Wd=pad*2+cols*tw+(cols-1)*gap;
+  return {cols,tw,th,head,gap,pad,top,noteH,noteLines,fs,Wd};
+}
+const clip=(t,n)=>t.length>n?t.slice(0,Math.max(1,n-1))+'…':t;
+function wrapText(t,n,max){const out=[];String(t||'').split(/\n/).forEach(par=>{let line='';par.split(/\s+/).filter(Boolean).forEach(w=>{
+    if((line+' '+w).trim().length>n){if(line)out.push(line);line=w.length>n?w.slice(0,n):w}else line=(line+' '+w).trim()});if(line)out.push(line)});
+  if(out.length>max){out.length=max;out[max-1]=clip(out[max-1]+' …',n)}return out}
+// how many rows fit on one A4 page
+function sheetRows(pb,list,o){const g=sheetGeo(pb,list,false,o);const Hp=g.Wd*(o.land?190/277:277/190);
+  return Math.max(1,Math.floor((Hp-g.top-g.pad+g.gap)/(g.th+g.head+g.noteH+g.gap)))}
+function overviewSVG(pb,list,part,parts){
+  const W=1000,pad=28,rh=22,top=78;const cols=[['Nr',0],['Name',60],['Formation',420],['Kategorie',620],['Situationen',760]];
+  const H=top+list.length*rh+pad;let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#fff"/>
+    <text x="${pad}" y="40" font-family="${FONT}" font-size="26" font-weight="700" fill="${INK}">${esc(pb.name)} – Übersicht${parts>1?` (${part}/${parts})`:''}</text>`;
+  cols.forEach(([n,x])=>{s+=`<text x="${pad+x}" y="${top-8}" font-family="${FONT}" font-size="12" font-weight="700" fill="#666">${n}</text>`});
+  s+=`<line x1="${pad}" y1="${top-2}" x2="${W-pad}" y2="${top-2}" stroke="${INK}" stroke-width="1.2"/>`;
+  list.forEach((pl,i)=>{const y=top+i*rh;if(i%2)s+=`<rect x="${pad}" y="${y}" width="${W-2*pad}" height="${rh}" fill="#f3f4f6"/>`;
+    const v=[playNo(pb,pl),clip(pl.name||'',40),clip(isF(pl)?'':(pl.formation||''),24),clip(pl.cat||'',18),clip((pl.tags||[]).join(', '),28)];
+    cols.forEach(([n,x],k)=>{s+=`<text x="${pad+x}" y="${y+15}" font-family="${FONT}" font-size="13" ${k<2?'font-weight="700"':''} fill="${INK}">${esc(v[k])}</text>`})});
   return s+'</svg>';
 }
 function callSheetSVG(pb,sel){
@@ -1759,20 +1800,33 @@ function wristPages(pb,sel,style,wmm,hmm,cols,rows){
   }
   return pages;
 }
-function printPages(svgs,real){   // real=true: pages are already A4 in millimetres
+function printPages(svgs,real,land){   // real=true: pages are already A4 in millimetres
   let root=$('#printRoot');if(root)root.remove();root=document.createElement('div');root.id='printRoot';
-  root.innerHTML=svgs.map(v=>`<div class="ppage${real?' real':''}">${v}</div>`).join('');document.body.appendChild(root);
+  root.innerHTML=svgs.map(v=>`<div class="ppage${real?' real':''}${land?' land':''}">${v}</div>`).join('');document.body.appendChild(root);
+  let ps=$('#pageSize');if(!ps){ps=document.createElement('style');ps.id='pageSize';document.head.appendChild(ps)}ps.textContent=`@media print{@page{size:A4 ${land?'landscape':'portrait'};margin:0}}`;
   document.body.classList.add('printing');
   const done=()=>{document.body.classList.remove('printing');root.remove();window.removeEventListener('afterprint',done)};
   window.addEventListener('afterprint',done);
   setTimeout(()=>{try{window.print()}catch(e){toast('Drucken ist in dieser Ansicht nicht möglich – bitte als PNG speichern.')}setTimeout(()=>{if(document.body.classList.contains('printing')&&!window.matchMedia('print').matches)done()},60000)},80);
 }
+let SO={cols:3,meta:true,notes:false,over:false,land:false};try{Object.assign(SO,JSON.parse(localStorage.getItem('pbb-sheet')||'{}'))}catch(e){}
+function sheetInfo(back){const i=back.querySelector('#sInfo');if(!i)return;const pb=curPb();const n=back.querySelectorAll('[name=pick]:checked').length||1;
+  const o={cols:+back.querySelector('#sCols').value,notes:back.querySelector('#sNotes').checked,land:back.querySelector('#sLand').checked};
+  const list=pb.plays.filter(x=>[...back.querySelectorAll('[name=pick]:checked')].some(c=>c.value===x.id));const per=sheetRows(pb,list.length?list:pb.plays,o)*o.cols;
+  i.textContent=`Beim Drucken: ${per} Plays pro Seite, ca. ${Math.max(1,Math.ceil(n/per))} ${Math.ceil(n/per)>1?'Seiten':'Seite'}${pb.plays.some(isF)?' (plus eigene Seite für Formationen)':''}.`}
 async function sheetDialog(){
   const pb=curPb();if(!pb.plays.length)return toast('Keine Plays vorhanden.');
+  setTimeout(()=>{const b=[...document.querySelectorAll('.mback')].pop();if(b&&b.querySelector('#sheetOpts'))sheetInfo(b)},50);
   const r=await modal('Playbook / Wristband',`
     <div class="choice"><label><input type="radio" name="lay" value="sheet" checked><span>Playbook<small>3 Spalten mit Namen – zum Ausdrucken</small></span></label>
     <label><input type="radio" name="lay" value="wrist"><span>Wristband<small>Kompakte Karten mit großen Nummern</small></span></label>
     <label style="grid-column:1/-1"><input type="radio" name="lay" value="call"><span>Call-Sheet<small>Tabelle für den Spieltag, sortiert nach Situation</small></span></label></div>
+    <div id="sheetOpts"><div class="row" style="align-items:flex-end"><div style="flex:1"><label>Spalten</label><select id="sCols">${[1,2,3,4,5,6].map(n=>`<option value="${n}"${SO.cols===n?' selected':''}>${n}</option>`).join('')}</select></div>
+        <div style="flex:2"><label class="chk"><input type="checkbox" id="sLand"${SO.land?' checked':''}> Querformat (beim Drucken)</label></div></div>
+      <label class="chk"><input type="checkbox" id="sMeta"${SO.meta!==false?' checked':''}> Formation und Kategorie neben dem Namen</label>
+      <label class="chk"><input type="checkbox" id="sNotes"${SO.notes?' checked':''}> Notizen / Coaching Points unter jedem Play</label>
+      <label class="chk"><input type="checkbox" id="sOver"${SO.over?' checked':''}> Übersichtsseite am Anfang (Nummer, Name, Formation)</label>
+      <p class="hint" id="sInfo" style="margin:4px 0 0"></p></div>
     <div id="wristOpts" hidden><label>Wristband-Größe</label>
       <select id="wSize"><option value="free">Ein Bild in freier Größe (wie bisher)</option><option value="115x55">Erwachsene – ca. 11,5 × 5,5 cm</option><option value="95x45">Jugend – ca. 9,5 × 4,5 cm</option><option value="custom">Eigene Größe …</option></select>
       <div id="wReal" hidden><div class="row" style="margin-top:6px"><div style="flex:1"><label>Breite (cm)</label><input type="text" id="wW" value="11,5" inputmode="decimal"></div><div style="flex:1"><label>Höhe (cm)</label><input type="text" id="wH" value="5,5" inputmode="decimal"></div>
@@ -1789,6 +1843,8 @@ async function sheetDialog(){
   const lay=r.el.querySelector('[name=lay]:checked').value,sty=r.el.querySelector('[name=sty]:checked').value,fmt=r.el.querySelector('[name=fmt]:checked').value;
   const ids=[...r.el.querySelectorAll('[name=pick]:checked')].map(x=>x.value);const sel=sortKinds(pb.plays.filter(x=>ids.includes(x.id)));
   const selF=sel.filter(isF),selP=sel.filter(x=>!isF(x));
+  const so={cols:+r.el.querySelector('#sCols').value,meta:r.el.querySelector('#sMeta').checked,notes:r.el.querySelector('#sNotes').checked,over:r.el.querySelector('#sOver').checked,land:r.el.querySelector('#sLand').checked};
+  if(lay==='sheet'){SO=so;try{localStorage.setItem('pbb-sheet',JSON.stringify(so))}catch(e){}}
   const num=id=>parseFloat(String(r.el.querySelector(id).value).replace(',','.'));
   const wsize=r.el.querySelector('#wSize').value;
   try{
@@ -1799,10 +1855,12 @@ async function sheetDialog(){
     } else if(lay==='call')pages=[callSheetSVG(pb,sel)];
     else if(lay==='call')pages=[callSheetSVG(pb,selP.length?selP:sel)];
     else if(lay==='sheet'){pages=[];const parts=[[selF,'Formationen'],[selP,selF.length?'Plays':'']].filter(x=>x[0].length);   // formations on their own page(s)
-      const per=fmt==='print'?12:1e9;parts.forEach(([l,sub])=>{for(let i=0;i<l.length;i+=per)pages.push(sheetSVG(pb,lay,sty,l.slice(i,i+per),sub))})}
+      if(so.over){const per=fmt==='print'?(so.land?32:48):1e9;const n=Math.ceil(sel.length/per);for(let i=0;i<sel.length;i+=per)pages.push(overviewSVG(pb,sel.slice(i,i+per),i/per+1,n))}
+      parts.forEach(([l,sub])=>{const per=fmt==='print'?sheetRows(pb,l,so)*so.cols:1e9;for(let i=0;i<l.length;i+=per)pages.push(sheetSVG(pb,lay,sty,l.slice(i,i+per),sub,so))})}
     else pages=[sheetSVG(pb,lay,sty,sel)];
-    if(fmt==='print')return printPages(pages,real);
-    for(let i=0;i<pages.length;i++){const n=name+(lay==='sheet'&&fmt!=='print'&&selF.length&&selP.length?(i===0?'_Formationen':'_Plays'):(pages.length>1?`_Seite${i+1}`:''));
+    if(fmt==='print')return printPages(pages,real,lay==='sheet'&&so.land);
+    const lbl=lay==='sheet'&&fmt!=='print'?[...(so.over?['_Uebersicht']:[]),...(selF.length?['_Formationen']:[]),...(selP.length?['_Plays']:[])]:null;
+    for(let i=0;i<pages.length;i++){const n=name+(lbl&&pages.length>1?lbl[i]:(pages.length>1?`_Seite${i+1}`:''));
       if(fmt==='svg')await saveFile(n+'.svg',pages[i]);else{toast('Bild wird erstellt…');await saveFile(n+'.png',await toPNG(pages[i],real?3.125:2))}}
   }catch(e){toast(e.message)}
 }
@@ -2001,7 +2059,8 @@ function pickCount(){const all=document.querySelectorAll('[name=pick]'),on=docum
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;const k=b.dataset.pick;document.querySelectorAll('[name=pick]').forEach(x=>x.checked=k==='all'||(k==='plays'&&x.dataset.kind==='p')||(k==='forms'&&x.dataset.kind==='f'));pickCount()});
 document.addEventListener('change',e=>{if(e.target.name==='pick')pickCount();
   const t=e.target,mb=t.closest&&t.closest('.mback');if(!mb||!mb.querySelector('#wristOpts'))return;
-  if(t.name==='lay')mb.querySelector('#wristOpts').hidden=t.value!=='wrist';
+  if(t.name==='lay'){mb.querySelector('#wristOpts').hidden=t.value!=='wrist';mb.querySelector('#sheetOpts').hidden=t.value!=='sheet'}
+  if(['sCols','sNotes','sLand'].includes(t.id)||t.name==='pick')sheetInfo(mb);
   if(t.id==='wSize'){mb.querySelector('#wReal').hidden=t.value==='free';const m=/^(\d+)x(\d+)$/.exec(t.value);if(m){mb.querySelector('#wW').value=String(m[1]/10).replace('.',',');mb.querySelector('#wH').value=String(m[2]/10).replace('.',',')}}
 });
 // drag & drop a .json file anywhere on the page
@@ -2449,6 +2508,7 @@ document.addEventListener('click',async e=>{
   const tp=e.target.closest('[data-tpl]');if(tp){applyTemplate(+tp.dataset.tpl);return}
   const tg=e.target.closest('[data-tag]');if(tg){toggleTag(tg.dataset.tag);return}
   const kd=e.target.closest('[data-kind]');if(kd){state.kindF=kd.dataset.kind;return renderSide()}
+  const gp=e.target.closest('[data-grp]');if(gp){const k=gp.dataset.grp;state.collapsed[k]=!state.collapsed[k];try{localStorage.setItem('pbb-fold',JSON.stringify(state.collapsed))}catch(err){}return renderSide()}
   const a=e.target.closest('[data-a]');if(!a)return;
   const act=a.dataset.a;const p=selPlayer();
   if(isRO(curPb())&&RO_BLOCK.has(act))return toast('👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.');
