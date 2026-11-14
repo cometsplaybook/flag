@@ -97,6 +97,11 @@ body.lasering,body.lasering *{cursor:none!important}
   .ppage.real{padding:0}.ppage.real svg{width:210mm;height:297mm;max-height:none}
 }
 .mback.busy{z-index:200}
+.acct-tabs{display:flex;gap:6px;margin-bottom:10px}
+.share-row{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.share-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.shared{background:#e0e7ff;color:#3730a3}
+#acctBtn.on{background:rgba(255,255,255,.28)}
 .hrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .hrow svg{width:110px;border:1px solid var(--line);border-radius:4px}.hrow .hint{display:block;font-size:12px}
 .trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -202,6 +207,7 @@ body.presenting .ptog{display:none}
 <header>
   <div class="logo"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="9" transform="rotate(-35 16 16)" fill="#8b5a2b" stroke="#fff" stroke-width="1.5"/><path d="M11 21 21 11M13 15l4 4M15 13l4 4M11 17l4 4" stroke="#fff" stroke-width="1.6"/></svg><span>Playbook Builder</span></div>
   <div class="status" id="status">Lädt…</div>
+  <button class="hbtn" id="acctBtn" data-a="account" title="Konto & Synchronisierung" hidden>👤 Anmelden</button>
   <button class="hbtn" data-a="feedback" title="Fehler melden, Verbesserungen und Wünsche schicken">✉ Feedback</button>
   <button class="hbtn" data-a="help" title="Hilfe">?</button>
 </header>
@@ -229,7 +235,7 @@ const INK='#1b1f1d';
 const PAL=['#dc2626','#2563eb','#d97706','#7c3aed','#0d9488','#db2777','#65a30d','#0891b2'];
 const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // running on its own (GitHub Pages / file), not inside Claude
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
-  m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
+  m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
@@ -348,7 +354,22 @@ function scalePlayX(pl,k){
   [...(pl.players||[]),...(pl.opp||[])].forEach(p=>{p.x=r1(p.x*k);sr(p.route);sr(p.motion);(p.alts||[]).forEach(sr)});
   (pl.marks||[]).forEach(m=>{m.x=r1(m.x*k);if(m.type==='zone')m.w=r1(m.w*k)});
 }
+// a real line has length; a single dot on the player (from an accidental tap) does not count
+function hasLine(r){if(!r||!r.pts||!r.pts.length)return false;let x=0,y=0,l=0;r.pts.forEach(q=>{l+=Math.hypot(q.x-x,q.y-y);x=q.x;y=q.y});return l>=0.6}
+// a player who only has alternatives gets the first one as his route (otherwise he stands still when the play runs)
+function fixRoutes(pb){let n=0;
+  pb.plays.forEach(pl=>[...(pl.players||[]),...(pl.opp||[])].forEach(p=>{
+    if(p.route&&!hasLine(p.route)){p.route=null;n++}
+    if(p.alts&&p.alts.length){const k=p.alts.length;p.alts=p.alts.filter(hasLine);if(p.alts.length!==k)n++}
+    if(!p.route&&p.alts&&p.alts.length){const a=p.alts.shift();if(a.style==='dotted')a.style='solid';p.route=a;n++}}));
+  return n>0;
+}
+const isRO=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
+const isLk=pl=>!!(pl&&(pl.locked||isRO(curPb())));
+const RO_BLOCK=new Set(['newPlay','delPlay','dupPlay','up','down','applyLayoutAll','setLayout','backupLater_','multiDel','pasteRoute','pasteRouteM','history','contRoute']);
 function migrateFlag(pb){
+  const fixed=fixRoutes(pb);
+  if(pb.variant!=='flag5'||pb.fieldV===FLAG_V)return fixed;
   if(pb.variant!=='flag5'||pb.fieldV===FLAG_V)return false;
   pb.plays.forEach(pl=>scalePlayX(pl,FLAG_K));pb.fieldV=FLAG_V;return true;
 }
@@ -460,21 +481,23 @@ const Store={mode:'memory',db:null,uid:null,note:'',
   },
   meta(pb){const m={kind:'playbook',name:pb.name,type:pb.type,variant:pb.variant,created:pb.created||Date.now(),updated:Date.now(),order:pb.plays.map(p=>p.id)};if(pb.layoutPlayId)m.layoutPlayId=pb.layoutPlayId;if(pb.fieldV)m.fieldV=pb.fieldV;return m},
   savePb(pb){
-    pb.updated=Date.now();
+    pb.updated=Date.now();Sync.touch(pb);
     if(this.mode==='cloud'){const ref=this.col().doc(pb.id);schedule('pb:'+pb.id,()=>ref.set(this.meta(pb)));}
     else this.saveLocal();
   },
   savePlay(pb,pl){
-    pl.updated=Date.now();
+    pl.updated=Date.now();Sync.touch(pb);
     if(this.mode==='cloud'){Backup.save();const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);
       schedule('pl:'+pl.id,()=>{const cur=pb.plays.find(x=>x.id===pl.id);return cur?ref.set(clone(cur)):Promise.resolve()});}
     else this.saveLocal();
   },
   deletePlay(pb,pl){
+    (pb.del||(pb.del={}))[pl.id]=Date.now();Sync.touch(pb);
     if(this.mode==='cloud'){const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);schedule('pl:'+pl.id,()=>ref.delete(),10);this.savePb(pb);}
     else this.saveLocal();
   },
   deletePb(pb){
+    Sync.removePb(pb);
     if(this.mode==='cloud'){
       pb.plays.forEach(pl=>{const ref=this.col().doc(pb.id).collection('plays').doc(pl.id);schedule('pl:'+pl.id,()=>ref.delete(),10)});
       const ref=this.col().doc(pb.id);schedule('pb:'+pb.id,()=>ref.delete(),10);
@@ -572,7 +595,7 @@ const Folder={handle:null,pending:null,files:{},
       for(const pb of state.pbs){
         const name=this.fileName(pb),old=this.files[pb.id];
         const fh=await h.getFileHandle(name,{create:true});const w=await fh.createWritable();
-        await w.write(JSON.stringify({app:'playbook-builder',v:1,fieldV:pb.fieldV||FLAG_V,playbook:pb},null,1));await w.close();
+        await w.write(JSON.stringify({app:'playbook-builder',v:1,fieldV:pb.fieldV||FLAG_V,playbook:noCloud(pb)},null,1));await w.close();
         if(old&&old!==name){try{await h.removeEntry(old)}catch(e){}}
         this.files[pb.id]=name;
       }
@@ -612,6 +635,8 @@ function updateStatus(){
   el.classList.toggle('warn',Store.mode==='memory'&&!Folder.handle);
   if(Folder.handle){el.textContent=saving?'Speichert…':`✓ Gespeichert im Ordner „${Folder.handle.name}“`;return}
   if(Store.mode==='memory'){el.textContent='Nicht gespeichert – Export nutzen';return}
+  if(Sync.user){const st=Sync.state;el.classList.toggle('warn',st==='offline'||st==='error');
+    el.textContent=saving||st==='busy'?'☁ Synchronisiert…':st==='offline'?'☁ Offline – wird später synchronisiert':st==='error'?'☁ Synchronisierung gestört':'☁ Synchronisiert';return}
   el.textContent=saving?'Speichert…':(Store.mode==='cloud'?'✓ Privat in deinem Konto gespeichert':'✓ Lokal in diesem Browser gespeichert');
 }
 function showBanner(){
@@ -834,14 +859,14 @@ function playItems(pb){
 }
 function renderSide(){
   const el=$('#side');const pb=curPb();
-  let h=`<div class="pbhead"><select id="pbSel">${state.pbs.map(p=>`<option value="${p.id}"${p.id===state.pbId?' selected':''}>${esc(p.name)}</option>`).join('')}${state.pbs.length?'':'<option>— kein Playbook —</option>'}</select>
+  let h=`<div class="pbhead"><select id="pbSel">${state.pbs.map(p=>`<option value="${p.id}"${p.id===state.pbId?' selected':''}>${p.cloud&&p.cloud.role!=='own'?'👥 ':''}${esc(p.name)}</option>`).join('')}${state.pbs.length?'':'<option>— kein Playbook —</option>'}</select>
     <button class="btn" data-a="newPb" title="Neues Playbook">＋</button>${pb?'<button class="btn" data-a="pbMenu" title="Playbook-Einstellungen">⋯</button>':''}</div>`;
   if(pb){
-    h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span></div>`;
+    h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span>${shareChip(pb)}</div>`;
     if(pb.plays.length>4)h+=`<input type="search" id="playSearch" placeholder="🔍 Plays suchen (Name, Kategorie, Formation)…" value="${esc(state.q)}">`;
     {const ut=usedTags(pb);if(ut.length)h+=`<select id="tagFilter" title="Nach Situation filtern"><option value="">Alle Situationen</option>${ut.map(t=>`<option value="${esc(t)}"${state.tagF===t?' selected':''}>${esc(t)}</option>`).join('')}</select>`}
     var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
-      <button class="btn primary" data-a="newPlay">＋ Neues Play</button>
+      ${isRO(pb)?'':'<button class="btn primary" data-a="newPlay">＋ Neues Play</button>'}
       <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
       <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
   } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
@@ -871,7 +896,7 @@ function renderCenter(){
   if(!pl){el.innerHTML=`<div class="panel welcome"><h2>${esc(pb.name)}</h2><p>Dieses Playbook ist noch leer.</p><p><button class="btn primary" data-a="newPlay">＋ Erstes Play anlegen</button></p></div>`;return}
   const own=FORMS[pb.variant][ownKind(pb)],opp=FORMS[pb.variant][oppKind(pb)];
   const m=state.mode;
-  const L=!!pl.locked,D=L?' disabled':'';
+  const L=isLk(pl),D=L?' disabled':'';
   el.innerHTML=`<div class="toolbar panel" style="padding:8px">
     <button class="btn sm lockbtn ${L?'locked':''}" data-a="lock" title="${L?'Gesperrt – zum Entsperren klicken':'Play gegen Änderungen sperren'}">${L?'🔒':'🔓'}</button>
     <span class="sep"></span>
@@ -951,9 +976,9 @@ function showRangeVal(t){const l=t.previousElementSibling;const v=l&&l.querySele
 function renderInsp(){
   const el=$('#insp');const pb=curPb(),pl=curPlay();
   if(!pb||!pl){el.innerHTML=`<h3>Info</h3><p class="hint">Hier bearbeitest du Details zu Plays und Spielern.</p>`;return}
-  if(pl.locked){state.sel=null;
-    el.innerHTML=`<h3>Play ${pb.plays.indexOf(pl)+1} <span title="gesperrt">🔒</span></h3>
-      <div class="banner" style="margin-bottom:10px">Dieses Play ist gegen Änderungen gesperrt. Zum Bearbeiten oben auf 🔒 klicken.</div>
+  if(isLk(pl)){state.sel=null;
+    el.innerHTML=`<h3>Play ${pb.plays.indexOf(pl)+1} <span title="gesperrt">${isRO(pb)?'👁':'🔒'}</span></h3>
+      <div class="banner" style="margin-bottom:10px">${isRO(pb)?`Nur Lesezugriff – geteilt von ${esc(pb.cloud.ownerEmail||'einem Coach')}. Ändern kann nur, wer Bearbeitungsrechte hat.`:'Dieses Play ist gegen Änderungen gesperrt. Zum Bearbeiten oben auf 🔒 klicken.'}</div>
       <fieldset class="lockfs" disabled>
       <label>Name</label><input type="text" value="${esc(pl.name)}">
       <label>Kategorie</label><input type="text" value="${esc(pl.cat)}">
@@ -1060,7 +1085,7 @@ function toggleMin(k){let m={};try{m=JSON.parse(localStorage.getItem('pbb-min')|
     document.body.classList.toggle(k+'-min');return}applyMin()}
 applyMin();
 function toggleTag(t){
-  const pb=curPb(),pl=curPlay();if(!pl||pl.locked||!t)return;t=t.trim().slice(0,24);if(!t)return;
+  const pb=curPb(),pl=curPlay();if(!pl||isLk(pl)||!t)return;t=t.trim().slice(0,24);if(!t)return;
   commit();const a=pl.tags||(pl.tags=[]);const i=a.indexOf(t);if(i>=0)a.splice(i,1);else if(a.length<12)a.push(t);
   Store.savePlay(pb,pl);renderInsp();renderSide();
 }
@@ -1135,7 +1160,7 @@ function setMan(dpid,rid,asAlt){
   const dx=p.x-o.x,dy=p.y-o.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,l*0.5);
   const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,color:(p.route&&p.route.color)||defRouteColor(p)};
   commit();
-  if(asAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  if(asAlt&&hasLine(p.route)){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
   else{p.route=route;state.selRoute={k:'route',j:0}}
   state.sel=p.id;state.pickMan=null;changed({insp:true});
   toast(`Man auf ${o.label||'Gegner'} – zum Umleiten den ⊕ auf der Linie ziehen`);
@@ -1150,7 +1175,8 @@ function startDrawing(kind,pid){
   commit();
   let j=0;
   const dc=(p.route&&p.route.color)||defRouteColor(p);const pe=state.pendingEnd;state.pendingEnd=null;
-  if(kind==='route'&&(pe==='bolt'||state.tplAlt)&&p.route&&p.route.pts.length)kind='alt';   // keep the existing route, add an alternative
+  if(kind==='route'&&(pe==='bolt'||state.tplAlt)&&hasLine(p.route))kind='alt';   // keep the existing route, add an alternative
+  if(kind==='alt'&&!hasLine(p.route))kind='route';   // no route yet: the first line is the route
   if(kind==='alt'){p.alts=p.alts||[];p.alts.push({pts:[],style:'solid',end:pe||'arrow',curve:false,color:dc});j=p.alts.length-1;}
   else{const prev=p[kind];
     p[kind]=kind==='route'?{pts:[],style:prev&&prev.style||'solid',end:pe||(prev&&prev.end!=='bolt'&&prev.end)||'arrow',curve:false,color:(prev&&prev.color)||dc}:{pts:[],curve:false,color:(prev&&prev.color)||dc};}
@@ -1159,7 +1185,7 @@ function startDrawing(kind,pid){
 function finishDrawing(keepMode){
   if(!state.drawing)return;const d=state.drawing;const p=curPlay().players.find(x=>x.id===d.pid);
   if(p){const r=drawRoute(p);if(r){const arr=r.pts.filter((q,i,a)=>i===0||Math.hypot(q.x-a[i-1].x,q.y-a[i-1].y)>0.3);r.pts=arr;
-    if(!arr.length){if(d.kind==='alt')p.alts.splice(d.j,1);else p[d.kind]=null}}}
+    if(!hasLine(r)){if(d.kind==='alt')p.alts.splice(d.j,1);else p[d.kind]=null}}}
   state.drawing=null;state.cursor=null;state.pendingEnd=null;
   if(!keepMode&&state.mode!=='select'){state.mode='select';changed({insp:true,center:true});return}
   changed({insp:true});
@@ -1174,7 +1200,7 @@ function addPoint(q){
 
 function onDown(e){
   if(Laser.on||state.present||state.anim||!curPlay())return;
-  if(curPlay().locked){toast('🔒 Play ist gesperrt – oben auf das Schloss klicken zum Entsperren.');return}
+  if(isLk(curPlay())){toast(isRO(curPb())?'👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.':'🔒 Play ist gesperrt – oben auf das Schloss klicken zum Entsperren.');return}
   const q=toField(e);if(!q)return;
   const t=e.target.closest('[data-p],[data-h],[data-m]');
   const svg=$('#field');
@@ -1303,7 +1329,7 @@ function applyTemplate(i){
   }
   route.color=(p.route&&p.route.color)||defRouteColor(p);
   commit();
-  if(state.tplAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  if(state.tplAlt&&hasLine(p.route)){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
   else{p.route=route;state.selRoute={k:'route',j:0}}
   changed({insp:true});
 }
@@ -1323,7 +1349,7 @@ function animModel(pb,pl,opt){
   const tr={};let mMax=0,T2=0;
   all.forEach(p=>{const b=[cx+p.x*S,los+p.y*S];
     const mot=[b,...absPts(p,p.motion&&p.motion.pts,b)];const me=mot[mot.length-1];
-    const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:p.route;   // players without that alternative run their main route
+    const r=(opt&&p.alts&&p.alts[opt-1]&&p.alts[opt-1].pts.length)?p.alts[opt-1]:(hasLine(p.route)?p.route:(p.alts||[]).find(hasLine));   // players without that alternative run their main route
     const rt=[me,...absPts(p,r&&r.pts,b)];
     const ml=lenOf(mot),rl=lenOf(rt),f=(r&&r.speed)||1,d=(r&&r.delay)||0;
     tr[p.id]={mot,rt,ml,rl,f,d,r,b};mMax=Math.max(mMax,ml)});
@@ -1508,10 +1534,20 @@ async function newPbDialog(){
 }
 async function pbMenu(){
   const pb=curPb();
+  const own=!pb.cloud||pb.cloud.role==='own';
+  if(!own){const c=pb.cloud;
+    const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</span></p>
+      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> – du kannst es ${c.role==='edit'?'<b>bearbeiten</b>':'nur <b>lesen</b>'}.</div>`,
+      [{label:'Aus meiner Liste entfernen',value:'unshare',cls:'danger'},{label:'Schließen',value:null,cls:'primary'}]);
+    if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);toast('Aus deiner Liste entfernt')}
+    return}
   const r=await modal('Playbook',`<label>Name</label><input type="text" id="pbName" value="${esc(pb.name)}">
-    <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>`,
-    [{label:'Löschen',value:'del',cls:'danger'},{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
+    <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>
+    ${Sync.on()?`<p class="hint" style="margin:0">${pb.cloud&&((pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length)?`👥 Geteilt mit ${(pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length} ${((pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
+    [{label:'Löschen',value:'del',cls:'danger'},...(Sync.on()?[{label:'👥 Freigeben',value:'share'}]:[]),{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
   if(r.value==='save'){pb.name=r.el.querySelector('#pbName').value.trim()||pb.name;Store.savePb(pb);renderSide();}
+  if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);return toast('Aus deiner Liste entfernt')}
+  if(r.value==='share')return shareDialog(pb);
   if(r.value==='del'){
     if(!await confirmBox('Playbook löschen?',`„${esc(pb.name)}“ mit ${pb.plays.length} Plays wird in den Papierkorb verschoben und kann dort ${TRASH_DAYS} Tage lang wiederhergestellt werden.`,'In den Papierkorb'))return;
     Trash.add({kind:'pb',data:clone(pb)});
@@ -1710,7 +1746,7 @@ function exportJSON(obj,title,file){
     [{label:'Text kopieren',keep:true,onClick:async el=>{try{await navigator.clipboard.writeText(txt);toast('Kopiert')}catch(e){const t=el.querySelector('#jsonOut');t.select();toast('Bitte mit Strg+C kopieren')}}},
      {label:'Als Datei speichern',keep:true,onClick:()=>saveFile(file,txt)},{label:'Schließen',value:null,cls:'primary'}]);
 }
-function exportPb(){const pb=curPb();exportJSON({app:'playbook-builder',v:1,playbook:pb},'Playbook teilen',fname(pb.name)+'.json')}
+function exportPb(){const pb=curPb();exportJSON({app:'playbook-builder',v:1,playbook:noCloud(pb)},'Playbook teilen',fname(pb.name)+'.json')}
 function sharePlay(){const pb=curPb(),pl=curPlay();exportJSON({app:'playbook-builder',v:1,variant:pb.variant,type:pb.type,fieldV:pb.fieldV||FLAG_V,play:pl},'Play teilen',fname(pl.name)+'.json')}
 async function importDialog(){
   const r=await modal('Importieren',`<p class="hint">Lade eine Playbook- oder Play-Datei (.json), die jemand mit dir geteilt hat, oder füge den Text ein. Auch Exporte aus FlagPlay Studio werden erkannt. Du kannst die Datei auch einfach aufs Fenster ziehen.</p>
@@ -1765,6 +1801,7 @@ function cleanPb(src,keep){
   const pb={id:cId(src.id,'pb',keep),name:cStr(src.name,80)||'Importiert',type:src.type==='defense'?'defense':'offense',variant:src.variant,
     created:cNum(src.created,Date.now(),0,1e14),updated:cNum(src.updated,0,0,1e14),plays:plays.map(p=>cleanPlay(p,keep))};
   if(src.fieldV===FLAG_V)pb.fieldV=FLAG_V;
+  if(src.del&&typeof src.del==='object'){pb.del={};Object.keys(src.del).slice(0,3000).forEach(k=>{if(/^[\w.\-:@+~]{1,80}$/.test(k))pb.del[k]=cNum(src.del[k],0,0,1e14)})}
   const li=ids.indexOf(src.layoutPlayId);if(li>=0)pb.layoutPlayId=pb.plays[li].id;
   return pb;
 }
@@ -1908,6 +1945,240 @@ $('#fileIn').addEventListener('change',async e=>{
   const ta=$('#jsonIn');if(ta){ta.value=txt;const n=$('#pickName');if(n)n.textContent=f.name}else doImport(txt);
 });
 
+/* ================= accounts + sync (Firebase, free Spark plan) =================
+   Each playbook is one document: playbooks/{id} with owner, readers[], editors[] and the playbook as JSON text.
+   Login: e-mail + password. Talks to Firebase over its public REST interface – no extra library is loaded.
+   Fill in the two values from your Firebase project (Projekteinstellungen → Allgemein → Meine Apps → Web-App). */
+const FIREBASE={apiKey:'AIzaSyAFsi0o_HlsCzHUyIx6ypSWj2D9M8Oe1BU',projectId:'playbook-u13-blau'};
+const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
+  on(){return HOSTED&&!!FIREBASE.apiKey&&!!FIREBASE.projectId},
+  base(){return `https://firestore.googleapis.com/v1/projects/${FIREBASE.projectId}/databases/(default)/documents`},
+  // ----- auth -----
+  async auth(path,body){
+    const r=await fetch(`https://identitytoolkit.googleapis.com/v1/${path}?key=${FIREBASE.apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(authMsg(j&&j.error&&j.error.message));return j;
+  },
+  keep(j){
+    const u={uid:j.localId||j.user_id,email:(j.email||(this.user&&this.user.email)||'').toLowerCase(),idToken:j.idToken||j.id_token,refreshToken:j.refreshToken||j.refresh_token,exp:Date.now()+((+(j.expiresIn||j.expires_in)||3600)-120)*1000};
+    try{const pay=JSON.parse(atob(u.idToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));u.verified=!!pay.email_verified;if(pay.email)u.email=String(pay.email).toLowerCase()}catch(e){u.verified=false}
+    this.user=u;try{localStorage.setItem('pbb-auth',JSON.stringify({uid:u.uid,email:u.email,refreshToken:u.refreshToken}))}catch(e){}
+    this.btn();return u;
+  },
+  async token(force){
+    const u=this.user;if(!u)throw new Error('Nicht angemeldet');
+    if(!force&&u.idToken&&Date.now()<u.exp)return u.idToken;
+    const r=await fetch(`https://securetoken.googleapis.com/v1/token?key=${FIREBASE.apiKey}`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(u.refreshToken)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){const m=j&&j.error&&j.error.message||'';if(/TOKEN_EXPIRED|USER_DISABLED|USER_NOT_FOUND|INVALID_REFRESH_TOKEN/.test(m)){this.signOut(true);throw new Error('Bitte melde dich erneut an.')}throw new Error('offline')}
+    return this.keep(j).idToken;
+  },
+  async signIn(email,pw){const j=await this.auth('accounts:signInWithPassword',{email,password:pw,returnSecureToken:true});this.keep(j);await this.afterLogin()},
+  async signUp(email,pw){const j=await this.auth('accounts:signUp',{email,password:pw,returnSecureToken:true});this.keep(j);
+    try{await this.auth('accounts:sendOobCode',{requestType:'VERIFY_EMAIL',idToken:j.idToken})}catch(e){}await this.afterLogin()},
+  async resetPw(email){await this.auth('accounts:sendOobCode',{requestType:'PASSWORD_RESET',email})},
+  async resendVerify(){await this.auth('accounts:sendOobCode',{requestType:'VERIFY_EMAIL',idToken:await this.token()})},
+  async afterLogin(){toast('Angemeldet als '+this.user.email);this.state='busy';updateStatus();await this.pull(true)},
+  signOut(silent){
+    const was=this.user;this.user=null;clearTimeout(this.timer);try{localStorage.removeItem('pbb-auth')}catch(e){}
+    if(was){state.pbs=state.pbs.filter(pb=>!pb.cloud||pb.cloud.role==='own');state.pbs.forEach(pb=>{delete pb.cloud});   // shared ones leave this device
+      if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;Store.saveLocal();renderAll()}
+    this.btn();updateStatus();if(!silent)toast('Abgemeldet – deine eigenen Playbooks bleiben auf diesem Gerät.');
+  },
+  async deleteAccount(){
+    const own=state.pbs.filter(pb=>pb.cloud&&pb.cloud.role==='own'&&pb.cloud.ut);
+    for(const pb of own){try{await this.req('DELETE',`/playbooks/${pb.id}`)}catch(e){}}
+    await this.auth('accounts:delete',{idToken:await this.token()});this.signOut(true);toast('Konto gelöscht. Deine Playbooks bleiben lokal auf diesem Gerät.');
+  },
+  btn(){const b=$('#acctBtn');if(!b)return;b.hidden=!this.on();b.classList.toggle('on',!!this.user);
+    b.textContent=this.user?'👤 '+(this.user.email.split('@')[0].slice(0,14)):'👤 Anmelden'},
+  // ----- firestore -----
+  async req(method,path,body,q){
+    const url=this.base()+path+(q?('?'+q):'');
+    let r;try{r=await fetch(url,{method,headers:{'Authorization':'Bearer '+await this.token(),'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined})}
+    catch(e){const er=new Error('offline');er.offline=true;throw er}
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok){const er=new Error((j&&j.error&&j.error.message)||('HTTP '+r.status));er.status=r.status;er.code=j&&j.error&&j.error.status;throw er}
+    return j;
+  },
+  enc(pb){const c=pb.cloud;const data=clone(pb);delete data.cloud;
+    const arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
+    return {fields:{owner:{stringValue:c.owner},ownerEmail:{stringValue:c.ownerEmail||''},name:{stringValue:pb.name||''},type:{stringValue:pb.type},variant:{stringValue:pb.variant},
+      readers:arr(c.readers),editors:arr(c.editors),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email}}};
+  },
+  dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue).filter(Boolean);
+    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),readers:a('readers'),editors:a('editors'),data:s('data'),updatedBy:s('updatedBy')}},
+  async query(field,op,value){
+    const j=await this.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'playbooks'}],where:{fieldFilter:{field:{fieldPath:field},op,value:{stringValue:value}}}}});
+    return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document));
+  },
+  parse(d){let src;try{src=JSON.parse(d.data)}catch(e){return null}
+    try{const pb=cleanPb({...src,id:d.id},true);migrateFlag(pb);return pb}catch(e){console.warn('skip shared playbook',e);return null}},
+  role(d){return d.owner===this.user.uid?'own':d.editors.includes(this.user.email)?'edit':'read'},
+  hidden(){try{return JSON.parse(localStorage.getItem('pbb-hidden')||'[]')}catch(e){return []}},
+  // ----- push a playbook (after changes, 2.5 s later) -----
+  touch(pb){
+    if(!this.user||!pb||isRO(pb))return;
+    if(!pb.cloud)pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[]};
+    pb.cloud.dirty=true;schedule('cloud:'+pb.id,()=>this.push(pb.id),2500);
+  },
+  async push(id,retry){
+    const pb=state.pbs.find(x=>x.id===id);if(!pb||!pb.cloud||isRO(pb)||!this.user)return;
+    this.state='busy';updateStatus();
+    try{
+      const q=pb.cloud.ut?'currentDocument.updateTime='+encodeURIComponent(pb.cloud.ut):'currentDocument.exists=false';
+      const j=await this.req('PATCH',`/playbooks/${encodeURIComponent(pb.id)}`,this.enc(pb),q);
+      pb.cloud.ut=j.updateTime;pb.cloud.dirty=false;this.state='ok';Store.saveLocal();
+    }catch(e){
+      if(e.offline||e.message==='offline'){this.state='offline';this.later();}
+      else if(!retry&&(e.code==='FAILED_PRECONDITION'||e.status===409||e.code==='ALREADY_EXISTS'||e.code==='NOT_FOUND')){   // someone else saved in between: merge and try again
+        try{const d=this.dec(await this.req('GET',`/playbooks/${encodeURIComponent(pb.id)}`));const rp=this.parse(d);
+          if(rp){mergePb(pb,rp);pb.cloud.ut=d.ut;Object.assign(pb.cloud,{readers:pb.cloud.role==='own'?pb.cloud.readers:d.readers,editors:pb.cloud.role==='own'?pb.cloud.editors:d.editors});renderAll()}
+        }catch(err){if(err.status===404){pb.cloud.ut=null}else if(err.status===403&&pb.cloud.role==='own'&&!pb.cloud.ut){pb.id=uid('pb');}}
+        return this.push(pb.id,true);
+      } else {console.warn('sync push',e);this.state=e.status===403?'error':'offline';this.later();}
+    }
+    updateStatus();
+  },
+  removePb(pb){
+    if(!this.user||!pb.cloud)return;
+    if(pb.cloud.role==='own'&&pb.cloud.ut){const id=pb.id;schedule('cloud:'+id,()=>this.req('DELETE',`/playbooks/${encodeURIComponent(id)}`).catch(e=>console.warn(e)),10)}
+    else if(pb.cloud.role!=='own'){const h=this.hidden();if(!h.includes(pb.id)){h.push(pb.id);try{localStorage.setItem('pbb-hidden',JSON.stringify(h))}catch(e){}}}
+  },
+  // ----- pull everything this account may see -----
+  async pull(first){
+    if(!this.user||this.pulling)return;if(state.drag||state.drawing){this.later(5000);return}
+    this.pulling=true;let changed=false;
+    try{
+      if(first||!this.user.verified)try{await this.token(true)}catch(e){}
+      const lists=[await this.query('owner','EQUAL',this.user.uid)];
+      if(this.user.verified){for(const f of ['readers','editors']){try{lists.push(await this.query(f,'ARRAY_CONTAINS',this.user.email))}catch(e){if(e.offline||e.message==='offline')throw e;console.warn('shared list',f,e)}}}
+      const seen=new Map();lists.flat().forEach(d=>seen.set(d.id,d));
+      const hid=this.hidden();
+      for(const d of seen.values()){
+        const role=this.role(d);if(role!=='own'&&hid.includes(d.id))continue;
+        const meta={role,owner:d.owner,ownerEmail:d.ownerEmail,readers:d.readers,editors:d.editors};
+        const i=state.pbs.findIndex(x=>x.id===d.id);const loc=state.pbs[i];
+        if(loc&&loc.cloud&&loc.cloud.ut===d.ut){Object.assign(loc.cloud,meta);continue}
+        const rp=this.parse(d);if(!rp)continue;
+        if(!loc){rp.cloud={...meta,ut:d.ut};state.pbs.push(rp);changed=true;continue}
+        if(loc.cloud&&loc.cloud.dirty&&role!=='read'){mergePb(loc,rp);loc.cloud={...loc.cloud,...meta,ut:d.ut};this.touch(loc)}
+        else{rp.cloud={...meta,ut:d.ut};state.pbs[i]=rp}
+        changed=true;
+      }
+      // gone on the server: deleted elsewhere or no longer shared
+      state.pbs=state.pbs.filter(pb=>{if(!pb.cloud||seen.has(pb.id))return true;
+        if(pb.cloud.role==='own'&&(!pb.cloud.ut||pb.cloud.dirty))return true;changed=true;return false});
+      // own playbooks not uploaded yet (e.g. the first login on this device)
+      state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
+      this.state='ok';this.last=Date.now();
+    }catch(e){console.warn('sync pull',e);this.state=e.offline||e.message==='offline'?'offline':'error';if(e.status===401||e.status===403)this.state='error'}
+    finally{this.pulling=false}
+    if(changed){if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;const pb=curPb();
+      if(pb&&!pb.plays.find(x=>x.id===state.playId)){state.playId=pb.plays[0]?pb.plays[0].id:null;state.sel=null}
+      if(state.anim)stopAnim(true);Store.saveLocal();renderAll()}
+    updateStatus();this.later();
+  },
+  later(ms){clearTimeout(this.timer);if(!this.user)return;this.timer=setTimeout(()=>{if(document.visibilityState==='visible')this.pull();else this.later()},ms||60000)},
+  start(){
+    this.btn();if(!this.on())return;
+    let a=null;try{a=JSON.parse(localStorage.getItem('pbb-auth')||'null')}catch(e){}
+    if(a&&a.refreshToken){this.user={uid:a.uid,email:a.email,refreshToken:a.refreshToken,idToken:null,exp:0,verified:false};this.btn();this.pull(true)}
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&this.user&&Date.now()-this.last>15000)this.pull()});
+    window.addEventListener('online',()=>{if(this.user)this.pull()});
+  }
+};
+const noCloud=pb=>({...pb,cloud:undefined});   // sharing details (e-mails) never go into files
+function authMsg(m){m=String(m||'');
+  if(/EMAIL_EXISTS/.test(m))return 'Für diese E-Mail gibt es schon ein Konto – bitte anmelden.';
+  if(/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(m))return 'E-Mail oder Passwort stimmt nicht.';
+  if(/WEAK_PASSWORD/.test(m))return 'Das Passwort ist zu kurz – mindestens 6 Zeichen.';
+  if(/INVALID_EMAIL|MISSING_EMAIL/.test(m))return 'Bitte eine gültige E-Mail-Adresse eingeben.';
+  if(/MISSING_PASSWORD/.test(m))return 'Bitte ein Passwort eingeben.';
+  if(/TOO_MANY_ATTEMPTS/.test(m))return 'Zu viele Versuche – bitte in ein paar Minuten noch einmal.';
+  if(/USER_DISABLED/.test(m))return 'Dieses Konto ist gesperrt.';
+  if(/OPERATION_NOT_ALLOWED/.test(m))return 'Anmeldung per E-Mail ist im Firebase-Projekt noch nicht eingeschaltet.';
+  return 'Das hat nicht geklappt'+(m?' ('+m+')':'')+'. Bist du online?';
+}
+// newer version of each play wins; deletions (tombstones) win over older versions
+function mergePb(loc,rem){
+  const del={...(rem.del||{})};Object.entries(loc.del||{}).forEach(([k,v])=>{if(!del[k]||v>del[k])del[k]=v});
+  const map=new Map();[...rem.plays,...loc.plays].forEach(pl=>{const o=map.get(pl.id);if(!o||(pl.updated||0)>(o.updated||0))map.set(pl.id,pl)});
+  const order=[...rem.plays.map(p=>p.id),...loc.plays.map(p=>p.id)].filter((id,i,a)=>a.indexOf(id)===i);
+  loc.plays=order.map(id=>map.get(id)).filter(pl=>pl&&!(del[pl.id]&&del[pl.id]>=(pl.updated||0)));
+  const cut=Date.now()-90*864e5;Object.keys(del).forEach(k=>{if(del[k]<cut)delete del[k]});loc.del=del;
+  if((rem.updated||0)>(loc.updated||0)){loc.name=rem.name;if(rem.layoutPlayId)loc.layoutPlayId=rem.layoutPlayId}
+}
+function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
+  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='edit'?'bearbeiten':'nur lesen'}</span>`;
+  const n=(c.readers||[]).length+(c.editors||[]).length;return n?` <span class="chip shared" title="Mit ${n} Coaches geteilt">👥 ${n}</span>`:'';}
+async function accountDialog(){
+  if(!Sync.on())return;
+  if(Sync.user){const u=Sync.user;
+    const r=await modal('Dein Konto',`<p style="margin-top:0">Angemeldet als <b>${esc(u.email)}</b></p>
+      ${u.verified?'':`<div class="banner" style="margin-bottom:10px">📧 Bitte bestätige deine E-Mail-Adresse über den Link in der Mail von Firebase (auch im Spam-Ordner nachsehen). Erst dann siehst du Playbooks, die andere mit dir teilen.</div>`}
+      <p class="hint">Status: ${Sync.state==='offline'?'offline – Änderungen werden synchronisiert, sobald du wieder online bist':Sync.state==='error'?'Synchronisierung gestört':'synchronisiert'}${Sync.last?` · zuletzt ${new Date(Sync.last).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr`:''}</p>
+      <p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“.</p>
+      <details><summary class="hint">Konto löschen</summary><p class="hint">Löscht dein Konto und deine Playbooks auf dem Server. Auf diesem Gerät bleiben sie erhalten.</p><button class="btn sm danger" data-acct="delete">Konto endgültig löschen</button></details>`,
+      [...(u.verified?[]:[{label:'Mail erneut senden',value:'resend'},{label:'Ich habe bestätigt',value:'check'}]),{label:'Abmelden',value:'out'},{label:'Jetzt synchronisieren',value:'sync',cls:'primary'}]);
+    if(r.value==='out')return Sync.signOut();
+    if(r.value==='sync'){Sync.state='busy';updateStatus();await Promise.all([...state.pbs].filter(pb=>pb.cloud&&pb.cloud.dirty).map(pb=>Sync.push(pb.id)));await Sync.pull(true);return toast(Sync.state==='ok'?'Synchronisiert':'Synchronisierung nicht möglich – bist du online?')}
+    if(r.value==='resend'){try{await Sync.resendVerify();toast('Bestätigungs-Mail gesendet')}catch(e){toast(e.message)}return}
+    if(r.value==='check'){await Sync.pull(true);return toast(Sync.user&&Sync.user.verified?'E-Mail bestätigt ✓':'Noch nicht bestätigt – bitte den Link in der Mail öffnen.')}
+    return;
+  }
+  let mode='in';
+  const html=()=>`<div class="acct-tabs"><button type="button" class="btn sm ${mode==='in'?'on':''}" data-amode="in">Anmelden</button><button type="button" class="btn sm ${mode==='up'?'on':''}" data-amode="up">Konto erstellen</button></div>
+    <label>E-Mail</label><input type="email" id="aEmail" autocomplete="username" inputmode="email">
+    <label>Passwort</label><input type="password" id="aPw" autocomplete="${mode==='up'?'new-password':'current-password'}" placeholder="${mode==='up'?'mindestens 6 Zeichen':''}">
+    ${mode==='in'?'<p style="margin:6px 0 0"><button type="button" class="btn sm" data-acct="reset">Passwort vergessen?</button></p>':''}
+    <p class="hint">Mit Konto sind deine Playbooks auf allen Geräten gleich, und du kannst sie mit anderen Coaches teilen. Ohne Konto bleibt alles wie bisher nur auf diesem Gerät.</p>
+    <p class="hint" style="font-size:12px">Datenschutz: Für die Anmeldung verarbeitet Google Firebase deine E-Mail-Adresse und dein Passwort (verschlüsselt). Die Playbooks liegen in einer Firebase-Datenbank in Frankfurt. Beides dient nur dazu, deine Playbooks zwischen deinen Geräten und den Coaches abzugleichen, mit denen du teilst. Du kannst dein Konto jederzeit löschen.</p>`;
+  const p=modal('Konto',`<div id="acctBox">${html()}</div>`,[{label:'Abbrechen',value:null},{label:'Weiter',value:'go',cls:'primary',validate:el=>{
+      const e=el.querySelector('#aEmail').value.trim(),w=el.querySelector('#aPw').value;
+      if(!/^\S+@\S+\.\S+$/.test(e)){toast('Bitte eine gültige E-Mail-Adresse eingeben.');return false}if(w.length<6){toast('Das Passwort braucht mindestens 6 Zeichen.');return false}return true}}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('click',async e=>{
+    const m=e.target.closest('[data-amode]');if(m){const em=back.querySelector('#aEmail').value;mode=m.dataset.amode;back.querySelector('#acctBox').innerHTML=html();back.querySelector('#aEmail').value=em;
+      const pb2=[...back.querySelectorAll('.mbtns .btn')].pop();if(pb2)pb2.textContent=mode==='up'?'Konto erstellen':'Anmelden';return}
+    const rs=e.target.closest('[data-acct="reset"]');if(rs){const em=back.querySelector('#aEmail').value.trim();if(!/^\S+@\S+\.\S+$/.test(em))return toast('Bitte zuerst deine E-Mail-Adresse eingeben.');
+      try{await Sync.resetPw(em);toast('Mail zum Zurücksetzen ist unterwegs')}catch(err){toast(err.message)}}
+  });
+  {const b=[...back.querySelectorAll('.mbtns .btn')].pop();if(b)b.textContent='Anmelden'}
+  const r=await p;if(r.value!=='go')return;
+  const email=r.el.querySelector('#aEmail').value.trim().toLowerCase(),pw=r.el.querySelector('#aPw').value;
+  try{if(mode==='up'){await Sync.signUp(email,pw);modal('Konto erstellt',`<p>Willkommen! Wir haben dir eine Mail an <b>${esc(email)}</b> geschickt. Bitte bestätige darin deine Adresse – erst dann können andere Coaches Playbooks mit dir teilen.</p><p class="hint">Deine Playbooks von diesem Gerät werden jetzt in dein Konto übernommen.</p>`,[{label:'Alles klar',value:null,cls:'primary'}])}
+    else await Sync.signIn(email,pw)}
+  catch(err){toast(err.message);setTimeout(accountDialog,50)}
+}
+document.addEventListener('click',async e=>{const d=e.target.closest('[data-acct="delete"]');if(!d)return;
+  if(!await confirmBox('Konto löschen?','Dein Konto und deine Playbooks auf dem Server werden endgültig gelöscht. Geteilte Playbooks sehen die anderen Coaches danach nicht mehr. Auf diesem Gerät bleiben deine Playbooks erhalten.','Endgültig löschen'))return;
+  document.querySelectorAll('.mback').forEach(x=>x.remove());try{await Sync.deleteAccount()}catch(err){toast(err.message)}});
+async function shareDialog(pb){
+  if(!Sync.user){return accountDialog()}
+  if(!pb.cloud)Sync.touch(pb);
+  const c=pb.cloud;let list=[...(c.editors||[]).map(e=>({e,r:'edit'})),...(c.readers||[]).map(e=>({e,r:'read'}))];
+  const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}">${esc(x.e)}</span><select data-srole="${i}"><option value="read"${x.r==='read'?' selected':''}>kann lesen</option><option value="edit"${x.r==='edit'?' selected':''}>kann bearbeiten</option></select><button type="button" class="btn sm" data-sdel="${i}" title="Freigabe entfernen">✕</button></div>`).join(''):'<p class="hint">Noch mit niemandem geteilt.</p>';
+  const p=modal('👥 „'+pb.name+'“ freigeben',`<p class="hint" style="margin-top:0">Trag die E-Mail-Adresse ein, mit der sich der Coach (oder Spieler) in der App angemeldet hat. Er sieht das Playbook, sobald er seine Adresse bestätigt hat.</p>
+    <div id="shareList">${rows()}</div>
+    <div class="row" style="margin-top:10px;align-items:flex-end"><div style="flex:2"><label>E-Mail</label><input type="email" id="sEmail" placeholder="coach@beispiel.de"></div>
+      <div style="flex:1"><label>Rechte</label><select id="sRole"><option value="read">kann lesen</option><option value="edit">kann bearbeiten</option></select></div>
+      <button type="button" class="btn sm" data-sadd="1">Hinzufügen</button></div>
+    <p class="hint" style="font-size:12px">„Kann bearbeiten“ heißt: Plays ändern, anlegen und löschen. Freigeben und das Playbook löschen kannst nur du.</p>`,
+    [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  const add=()=>{const i=back.querySelector('#sEmail');const em=i.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em))return toast('Bitte eine gültige E-Mail-Adresse eingeben.');
+    if(em===Sync.user.email)return toast('Das bist du selbst.');if(list.length>=50)return toast('Höchstens 50 Freigaben pro Playbook.');
+    const o=list.find(x=>x.e===em);const r=back.querySelector('#sRole').value;if(o)o.r=r;else list.push({e:em,r});i.value='';back.querySelector('#shareList').innerHTML=rows()};
+  back.addEventListener('click',e=>{if(e.target.closest('[data-sadd]'))return add();const d=e.target.closest('[data-sdel]');if(d){list.splice(+d.dataset.sdel,1);back.querySelector('#shareList').innerHTML=rows()}});
+  back.addEventListener('change',e=>{const s=e.target.closest('[data-srole]');if(s)list[+s.dataset.srole].r=s.value});
+  back.addEventListener('keydown',e=>{if(e.target.id==='sEmail'&&e.key==='Enter'){e.preventDefault();e.stopPropagation();add()}},true);
+  const r=await p;if(r.value!=='ok')return;
+  {const i=r.el.querySelector('#sEmail');if(i&&i.value.trim())add()}
+  c.readers=list.filter(x=>x.r==='read').map(x=>x.e);c.editors=list.filter(x=>x.r==='edit').map(x=>x.e);
+  Sync.touch(pb);await Sync.push(pb.id);renderSide();
+  toast(Sync.state==='ok'?(list.length?`Geteilt mit ${list.length} ${list.length===1?'Person':'Personen'}`:'Freigaben entfernt'):'Gespeichert – wird übertragen, sobald du online bist');
+}
+
 /* ---------- unexpected errors: tell the user, keep the data ---------- */
 let crashAt=0;
 function crash(err){
@@ -1947,7 +2218,7 @@ window.addEventListener('storage',e=>{
 async function backupAll(){
   if(!state.pbs.length)return toast('Noch keine Playbooks vorhanden.');
   const d=new Date(),ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const ok=await saveFile(`Playbook-Sicherung_${ds}.json`,JSON.stringify({app:'playbook-builder',v:1,fieldV:FLAG_V,backup:true,at:Date.now(),playbooks:state.pbs}));
+  const ok=await saveFile(`Playbook-Sicherung_${ds}.json`,JSON.stringify({app:'playbook-builder',v:1,fieldV:FLAG_V,backup:true,at:Date.now(),playbooks:state.pbs.map(noCloud)}));
   if(ok){try{localStorage.setItem('pbb-lastBackup',String(Date.now()))}catch(e){}showBanner();toast('Sicherung gespeichert – heb die Datei gut auf')}
 }
 function backupDue(){
@@ -1979,7 +2250,7 @@ async function historyDialog(){
   const back=[...document.querySelectorAll('.mback')].pop();
   back.addEventListener('click',async e=>{const b=e.target.closest('[data-hrest]');if(!b)return;
     const h=l[+b.dataset.hrest];let old;try{old=cleanPlay(JSON.parse(h.json),true)}catch(err){return toast('Dieser Stand ist beschädigt.')}
-    if(pl.locked){toast('🔒 Play ist gesperrt.');return}
+    if(isLk(pl)){toast('🔒 Play ist gesperrt.');return}
     await Hist.push(pl,true);commit();old.id=pl.id;const i=pb.plays.indexOf(pl);if(i<0)return;pb.plays[i]=old;
     state.sel=null;Store.savePlay(pb,old);back.remove();renderAll();toast('Früherer Stand wiederhergestellt');});
   await r;
@@ -2079,6 +2350,7 @@ function helpDialog(){
     <li><b>▣ Präsentieren:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
     <li><b>🎓 Lernen</b> (im Präsentationsmodus): Die eigenen Aufgaben sind verdeckt, bis du mit „Aufdecken“ oder Taste A auflöst.</li>
     <li><b>💾 Alles sichern</b> speichert alle Playbooks in eine Datei. <b>🕘 Verlauf</b> holt frühere Stände eines Plays zurück.</li>
+    <li><b>👤 Konto:</b> Mit E-Mail und Passwort sind deine Playbooks auf allen Geräten gleich. Über ⋯ → „👥 Freigeben“ teilst du ein Playbook mit anderen Coaches – zum Lesen oder Bearbeiten.</li>
     <li><b>🗑 Papierkorb:</b> Gelöschtes bleibt 30 Tage und lässt sich wiederherstellen.</li>
     <li><b>🔴 Laser</b> (Taste L): roter Laserpunkt zum Präsentieren – solange er an ist, wird nichts verändert. Esc beendet.</li>
     <li>Tastatur: V/R/M/P = Werkzeuge, Entf = Spieler löschen, Strg+Z / Strg+Y, Enter = Zeichnen beenden.</li></ul>
@@ -2110,10 +2382,12 @@ document.addEventListener('click',async e=>{
   const tg=e.target.closest('[data-tag]');if(tg){toggleTag(tg.dataset.tag);return}
   const a=e.target.closest('[data-a]');if(!a)return;
   const act=a.dataset.a;const p=selPlayer();
+  if(isRO(curPb())&&RO_BLOCK.has(act))return toast('👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.');
   switch(act){
     case 'newPb':return newPbDialog();
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
+    case 'account':return accountDialog();
     case 'togSide':return toggleMin('side');
     case 'togInsp':return toggleMin('insp');
     case 'present':return setPresent(true);
@@ -2143,7 +2417,7 @@ document.addEventListener('click',async e=>{
     case 'anim':return state.anim?stopAnim():startAnim();
     case 'snap':state.snap=!state.snap;saveUI();return renderCenter();
     case 'style':state.style={light:'grass',grass:'dark',dark:'light'}[state.style]||'light';saveUI();return renderCenter();
-    case 'lock':{const pb=curPb(),pl=curPlay();if(!pl)return;
+    case 'lock':{const pb=curPb(),pl=curPlay();if(!pl)return;if(isRO(pb))return toast('👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.');
       if(pl.locked){if(!await confirmBox('Play entsperren?',`„${esc(pl.name)}“ kann danach wieder verändert werden.`,'Entsperren'))return;pl.locked=false;toast('🔓 Entsperrt')}
       else{if(state.drawing)finishDrawing(true);pl.locked=true;state.sel=null;state.mode='select';toast('🔒 Play gesperrt')}
       Store.savePlay(pb,pl);renderAll();return}
@@ -2208,7 +2482,7 @@ function copyRoute(){const p=selPlayer();const key=p&&!isOpp(p.id)&&curRouteKey(
 function pasteRoute(mirror){
   if(!state.clip)return;const ids=(state.multi.length>1?state.multi:[state.sel]).filter(id=>id&&findP(id)&&!isOpp(id));if(!ids.length)return toast('Wähle zuerst einen eigenen Spieler.');
   commit();ids.forEach(id=>{const p=findP(id);const r=clone(state.clip.r);if(mirror)r.pts.forEach(q=>{q.x=-q.x});
-    if(state.clip.k==='motion')p.motion=r;else if(state.tplAlt&&p.route&&p.route.pts.length&&ids.length===1){(p.alts=p.alts||[]).push(r);state.selRoute={k:'alt',j:p.alts.length-1}}else p.route=r});
+    if(state.clip.k==='motion')p.motion=r;else if(state.tplAlt&&hasLine(p.route)&&ids.length===1){(p.alts=p.alts||[]).push(r);state.selRoute={k:'alt',j:p.alts.length-1}}else p.route=r});
   changed({insp:true});toast(ids.length>1?`Bei ${ids.length} Spielern eingefügt`:'Eingefügt');
 }
 function multiAct(act){
@@ -2273,7 +2547,7 @@ document.addEventListener('keydown',e=>{
     if(k==='Escape'){return setPresent(false)}}
   if(!e.ctrlKey&&!e.metaKey&&!e.altKey&&e.key.toLowerCase()==='l'){Laser.toggle();return}
   if(!curPlay())return;
-  if(curPlay().locked)return;
+  if(isLk(curPlay()))return;
   const k=e.key.toLowerCase();
   if((e.ctrlKey||e.metaKey)&&k==='z'){e.preventDefault();return e.shiftKey?redo():undo()}
   if((e.ctrlKey||e.metaKey)&&k==='y'){e.preventDefault();return redo()}
@@ -2297,6 +2571,7 @@ document.addEventListener('keydown',e=>{
   const data=await Store.init();
   state.pbs=Array.isArray(data)?data:[];
   state.pbs.forEach(pb=>{if(migrateFlag(pb)){Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl))}});
+  Sync.start();
   let last=null;try{last=JSON.parse(localStorage.getItem('pbb-ui')||'{}').pb}catch(e){}
   const pb=state.pbs.find(p=>p.id===last)||state.pbs[0];
   state.pbId=pb?pb.id:null;state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;
