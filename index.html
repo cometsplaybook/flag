@@ -247,9 +247,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-14.3';
+const APP_VERSION='2026-11-14.4';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -2193,7 +2193,10 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
         if(loc&&loc.cloud&&loc.cloud.ut===d.ut){Object.assign(loc.cloud,meta);continue}
         const rp=this.parse(d);if(!rp)continue;
         if(!loc){rp.cloud={...meta,ut:d.ut};state.pbs.push(rp);changed=true;continue}
-        if(loc.cloud&&loc.cloud.dirty&&role!=='read'){mergePb(loc,rp);loc.cloud={...loc.cloud,...meta,ut:d.ut};this.touch(loc)}
+        // never overwrite blindly: whatever this device had goes into the play history first
+        loc.plays.forEach(pl=>{const r2=rp.plays.find(x=>x.id===pl.id);if(!r2||JSON.stringify(r2)!==JSON.stringify(pl))Hist.push(pl,true)});
+        if(role!=='read'&&(!loc.cloud||loc.cloud.dirty)){   // first sync on this device or unsent changes: newer version of each play wins
+          mergePb(loc,rp);loc.cloud={...(loc.cloud||{}),...meta,ut:d.ut};this.touch(loc);if(loc.plays.some(pl=>{const r2=rp.plays.find(x=>x.id===pl.id);return !r2||(pl.updated||0)>(r2.updated||0)}))news.push([loc.name,'diesem Gerät'])}
         else{rp.cloud={...meta,ut:d.ut};state.pbs[i]=rp;if(!first&&d.updatedBy&&d.updatedBy!==this.user.email)news.push([rp.name,d.updatedBy])}
         changed=true;
       }
