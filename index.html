@@ -173,6 +173,7 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 .tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 .tpl button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 2px;font-size:13px;font-weight:600}
 .tpl button:hover{border-color:var(--accent);color:var(--accent)}
+.tprow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}.tpthumb{width:120px;flex:none;border:1px solid var(--line);border-radius:6px;overflow:hidden}.tpthumb svg{display:block;width:100%;height:auto}
 .otpl{display:flex;min-width:0}.otpl button:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px 0 0 6px;color:#92400e;background:#fffbeb}
 .otpl .x{border-left:0;border-radius:0 6px 6px 0;padding:5px 6px;color:var(--muted)}
 .hint{font-size:13px;color:var(--muted);line-height:1.4}
@@ -268,9 +269,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-15.12';
+const APP_VERSION='2026-11-16.1';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -663,6 +664,9 @@ async function installApp(){
   if(installEvt){installEvt.prompt();try{await installEvt.userChoice}catch(e){}installEvt=null;return renderSide()}
   modal('Als App installieren',`<p>So kommt der Playbook Builder auf deinen Home-Bildschirm:</p><ol><li>Öffne diese Seite in <b>Safari</b>.</li><li>Tippe unten auf <b>Teilen</b> (Quadrat mit Pfeil nach oben).</li><li>Wähle <b>„Zum Home-Bildschirm“</b>.</li></ol><p class="hint">Danach startet die App wie jede andere – auch ohne Internet. Deine Playbooks bleiben auf diesem Gerät.</p>`,[{label:'Alles klar',value:null,cls:'primary'}]);
 }
+function tpSideBtn(){if(!Sync.user||!TP.can())return '';const n=TP.newCount();
+  return `<button class="btn sm" data-a="teamPlays" style="grid-column:1/-1" title="Plays, die Coaches mit dem Team geteilt haben">👥 Team-Plays${TP.list.length?` (${TP.list.length})`:''}${n?` <span class="chip" style="background:#dc2626;color:#fff">${n} neu</span>`:''}</button>`}
+function tpBtn(){return Sync.user&&TP.can()?`<div class="row" style="margin-top:6px"><button class="btn sm" data-a="playToTeam" title="Dieses Play für alle Coaches im Team sichtbar machen">👥 Mit Team teilen${TP.mine(curPlay())?' ✓':''}</button></div>`:''}
 function trashBtn(){const n=Trash.items.length;return `<button class="btn sm" data-a="trash" style="grid-column:1/-1" title="Gelöschte Plays und Playbooks wiederherstellen">🗑 Papierkorb${n?` (${n})`:''}</button>`}
 function folderUI(){
   if(!Folder.supported())return '';
@@ -928,8 +932,8 @@ function renderSide(){
     var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
       ${isRO(pb)?'':'<div class="newrow"><button class="btn primary" data-a="newPlay">＋ Neues Play</button><button class="btn" data-a="newForm" title="Reine Formation ohne Routen anlegen">＋ Formation</button></div>'}
       <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
-      <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
-  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${trashBtn()}</div>`;
+      <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`;
+  } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`;
   const items=pb&&LI?LI.items:[];
   const nlx=el.querySelector('.plays');
   if(h===el._h&&el.firstChild&&nlx&&el._items&&el._items.length===items.length){
@@ -1053,7 +1057,7 @@ function renderInsp0(){
       <label>Notizen / Coaching Points</label><textarea>${esc(pl.notes)}</textarea></fieldset>
       <h4>Aktionen</h4>
       <div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="png">Als PNG</button></div>
-      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>${tpBtn()}
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>`;
     return}
   state.multi=state.multi.filter(id=>findP(id));
@@ -1094,7 +1098,7 @@ function renderInsp0(){
       <label>Notizen</label><textarea data-f="notes" placeholder="Aufstellung, Splits, Merkhilfe…">${esc(pl.notes)}</textarea>
       ${pl.opp.length?`<label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-a="toggleOpp" ${pl.showOpp?'checked':''}> Gegner anzeigen</label>`:''}
       <h4>Aktionen</h4><div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="mirrorH">Spiegeln ⇋</button></div>
-      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="toPlay" title="Wieder zu einem normalen Play machen">Ist ein Play</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="toPlay" title="Wieder zu einem normalen Play machen">Ist ein Play</button></div>${tpBtn()}
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="history">🕘 Verlauf</button><button class="btn sm danger" data-a="delPlay">Löschen</button></div>`:`<h3>Play ${playNo(pb,pl)}</h3>
       <label>Name</label><input type="text" data-f="name" value="${esc(pl.name)}">
       <label>Kategorie</label><input type="text" data-f="cat" list="catList" value="${esc(pl.cat)}" placeholder="z. B. ${CATS[pb.type][0]}">
@@ -1113,7 +1117,7 @@ function renderInsp0(){
         :`<div class="row"><button class="btn sm" data-a="setLayout">⭐ Als Layout-Vorlage festlegen</button>${pb.layoutPlayId&&pb.plays.some(x=>x.id===pb.layoutPlayId)?`<button class="btn sm" data-a="applyLayoutHere">Vorlage hier anwenden</button>`:''}</div>`}
       <h4>Aktionen</h4>
       <div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="mirror">Spiegeln ⇋</button><button class="btn sm" data-a="flipV">Spiegeln ⇅</button></div>
-      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>${tpBtn()}
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="history" title="Frühere Stände dieses Plays">🕘 Verlauf</button><button class="btn sm danger" data-a="delPlay">Play löschen</button></div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="toForm" title="Diesen Eintrag als reine Formation führen">Ist eine Formation</button></div>
@@ -1823,7 +1827,7 @@ async function pbMenu(){
   const own=!pb.cloud||pb.cloud.role==='own';
   if(!own){const c=pb.cloud;
     const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</span></p>
-      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> – du kannst es ${c.role==='edit'?'<b>bearbeiten</b>':c.role==='coach'?'als <b>Coach lesen</b> und den Fortschritt der Spieler sehen':'nur <b>lesen</b>'}.</div>
+      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> ${c.role==='read'?' – du kannst es <b>lesen</b>':' – du bist hier <b>Coach</b>'}.</div>
       ${c.role==='read'?'<p class="hint">Dein Coach sieht, wie lange du im Playbook warst und deine Ergebnisse im 🎓 Lern-Modus.</p>':'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>'}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>':''}`,
       [{label:'Aus meiner Liste entfernen',value:'unshare',cls:'danger'},{label:'Schließen',value:null,cls:'primary'}]);
@@ -1835,7 +1839,8 @@ async function pbMenu(){
     ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>':''}
     <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="tasksCheck" title="Alle Aufgaben für den Lern-Modus auf einen Blick">📋 Aufgaben prüfen</button></div>
     <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben für Lernen vorschlagen</button></div>
-    ${Sync.on()?`<p class="hint" style="margin:0">${nShare(pb.cloud)?`👥 Geteilt mit ${nShare(pb.cloud)} ${nShare(pb.cloud)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
+    ${Sync.user&&Team.auto()&&!(pb.cloud&&pb.cloud.team)?`<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm primary" data-a="pbToTeam">👥 Mit Team „${esc(Team.auto().name)}“ teilen</button></div>`:''}
+    ${Sync.on()?`<p class="hint" style="margin:0">${pb.cloud&&pb.cloud.team?'👥 Mit dem Team geteilt':nShare(pb.cloud)?`👥 Geteilt mit ${nShare(pb.cloud)} ${nShare(pb.cloud)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
     [{label:'Löschen',value:'del',cls:'danger'},...(Sync.on()?[{label:'👥 Freigeben',value:'share'}]:[]),{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
   if(r.value==='save'){pb.name=r.el.querySelector('#pbName').value.trim()||pb.name;Store.savePb(pb);renderSide();}
   if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);return toast('Aus deiner Liste entfernt')}
@@ -2400,7 +2405,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   // ----- push a playbook (after changes, 2.5 s later) -----
   touch(pb){
     if(!this.user||!pb||isRO(pb))return;
-    if(!pb.cloud){pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[],coaches:[]};const t=Team.auto();if(t)Team.apply(pb,t)}
+    if(!pb.cloud)pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[],coaches:[]};
     pb.cloud.dirty=true;schedule('cloud:'+pb.id,()=>this.push(pb.id),2500);
   },
   async push(id,retry){
@@ -2457,6 +2462,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
       // own playbooks not uploaded yet (e.g. the first login on this device)
       state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
       if(Team.reconcile())changed=true;
+      await TP.pull();
       await Q.pull();
       this.state='ok';this.last=Date.now();
     }catch(e){console.warn('sync pull',e);this.state=e.offline||e.message==='offline'?'offline':'error';if(e.status===401||e.status===403)this.state='error'}
@@ -2618,7 +2624,7 @@ function mergePb(loc,rem){
   const tl=[...tm.values()].filter(t=>!(del['tpl:'+t.id]&&del['tpl:'+t.id]>=(t.t||0)));if(tl.length)loc.tpls=tl;else delete loc.tpls;
 }
 function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
-  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='edit'?'bearbeiten':c.role==='coach'?'Coach':'nur lesen'}</span>`;
+  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='read'?'nur lesen':'Coach'}</span>`;
   const n=nShare(c);return n?` <span class="chip shared" title="${c.team?'Über die Team-Liste geteilt':'Mit '+n+' Personen geteilt'}">👥 ${c.team?'Team':n}</span>`:'';}
 async function accountDialog(){
   if(!Sync.on())return;
@@ -2680,7 +2686,7 @@ const Team={list:[],ok:false,
     catch(e){this.ok=false;if(e.offline||e.message==='offline')throw e;console.warn('teams',e)}},   // e.g. rules without teams yet: everything else keeps working
   role(t){const u=Sync.user;return !u?null:t.owner===u.uid?'own':t.editors.includes(u.email)?'edit':t.coaches.includes(u.email)?'coach':'read'},
   mine(){const u=Sync.user;return u?this.list.find(t=>t.owner===u.uid)||null:null},
-  auto(){return this.mine()||this.list.find(t=>this.role(t)==='edit')||null},   // team that new playbooks of this coach go to
+  auto(){return this.mine()||this.list.find(t=>this.role(t)==='edit')||this.list.find(t=>this.role(t)==='coach')||null},   // team a coach shares with
   of(pb){return pb&&pb.cloud&&pb.cloud.team?this.list.find(t=>t.id===pb.cloud.team)||null:null},
   arrays(t,ownerEmail){const m=new Map();m.set(t.ownerEmail,'edit');t.editors.forEach(e=>m.set(e,'edit'));t.coaches.forEach(e=>{if(!m.has(e))m.set(e,'coach')});t.readers.forEach(e=>{if(!m.has(e))m.set(e,'read')});
     m.delete((ownerEmail||'').toLowerCase());const g=r=>[...m].filter(x=>x[1]===r).map(x=>x[0]).sort();return {readers:g('read'),editors:g('edit'),coaches:g('coach')}},
@@ -2695,14 +2701,80 @@ const Team={list:[],ok:false,
     return ch},
   async save(t,isNew){const j=await Sync.req('PATCH','/teams/'+encodeURIComponent(t.id),this.enc(t),isNew?'currentDocument.exists=false':'');Object.assign(t,{ut:j.updateTime})}
 };
+/* ---------- 👥 team plays: a coach shares one play, coaches with edit rights take it into a team playbook ---------- */
+const TP={list:[],ok:false,
+  can(){return Team.list.some(t=>Team.role(t)!=='read')},
+  members(t){return [...new Set([t.ownerEmail,...t.editors,...t.coaches].map(e=>(e||'').toLowerCase()).filter(Boolean))].sort()},
+  dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue);
+    let d=null;try{d=JSON.parse(s('data'))}catch(e){}
+    return {id:doc.name.split('/').pop(),ut:doc.updateTime,team:s('team'),author:s('author'),authorEmail:s('authorEmail'),name:s('name'),type:s('type'),variant:s('variant'),members:a('members'),updated:+(f.updated&&f.updated.integerValue||0),d}},
+  enc(x){const arr=a=>({arrayValue:{values:a.map(v=>({stringValue:v}))}});
+    return {fields:{team:{stringValue:x.team},author:{stringValue:x.author},authorEmail:{stringValue:x.authorEmail},name:{stringValue:String(x.name).slice(0,120)},type:{stringValue:x.type},variant:{stringValue:x.variant},
+      members:arr(x.members),data:{stringValue:JSON.stringify(x.d)},updated:{integerValue:String(x.updated||Date.now())}}}},
+  async pull(){const u=Sync.user;if(!u||!u.verified||!this.can()){this.list=[];return}
+    try{const j=await Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'teamplays'}],where:{fieldFilter:{field:{fieldPath:'members'},op:'ARRAY_CONTAINS',value:{stringValue:u.email}}}}});
+      this.list=(Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document)).filter(x=>x.d&&x.d.play&&Team.list.some(t=>t.id===x.team)).sort((a,b)=>b.updated-a.updated);this.ok=true;this.reconcile()}
+    catch(e){this.ok=false;if(e.offline||e.message==='offline')throw e;console.warn('teamplays',e)}},
+  // author and team owner keep the member list in line with the team list
+  reconcile(){const u=Sync.user;if(!u)return;this.list.forEach(x=>{const t=Team.list.find(y=>y.id===x.team);if(!t||!(x.author===u.uid||t.owner===u.uid))return;
+    const m=this.members(t);if(JSON.stringify(m)!==JSON.stringify([...x.members].sort())){x.members=m;Sync.req('PATCH','/teamplays/'+encodeURIComponent(x.id),this.enc(x)).catch(e=>console.warn('teamplay members',e))}})},
+  mine(pl){return pl&&this.list.find(x=>x.d&&x.d.src===pl.id&&x.author===(Sync.user&&Sync.user.uid))},
+  seen(){try{return +localStorage.getItem('pb_tpSeen')||0}catch(e){return 0}},
+  newCount(){const u=Sync.user,t=this.seen();return this.list.filter(x=>x.author!==(u&&u.uid)&&x.updated>t).length},
+  markSeen(){try{localStorage.setItem('pb_tpSeen',String(Date.now()))}catch(e){}}
+};
+async function playToTeam(){const pb=curPb(),pl=curPlay();const u=Sync.user;if(!pb||!pl||!u)return;
+  if(!u.verified)return toast('Bitte zuerst deine E-Mail-Adresse bestätigen.');
+  const teams=Team.list.filter(t=>Team.role(t)!=='read');if(!teams.length)return toast('Du bist in keinem Team als Coach.');
+  const ex=TP.mine(pl);const t=(ex&&teams.find(x=>x.id===ex.team))||teams[0];
+  const r=await modal('👥 Play mit Team teilen',`<p style="margin-top:0"><b>${esc(callName(pl))}</b></p>
+    <div style="max-width:320px;margin:0 auto 8px">${thumbFor(pb,pl)}</div>
+    <p class="hint">${ex?'Du hast dieses Play schon geteilt. „Aktualisieren“ ersetzt es durch den jetzigen Stand.':`Das Play wird für alle Coaches im Team „${esc(t.name)}“ unter „👥 Team-Plays“ sichtbar. Coaches mit Bearbeiten-Recht können es in ein Team-Playbook übernehmen. Spieler sehen es nicht.`}</p>
+    ${teams.length>1&&!ex?`<label>Team</label><select id="tpTeam">${teams.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('')}</select>`:''}`,
+    [...(ex?[{label:'Nicht mehr teilen',value:'del',cls:'danger'}]:[]),{label:'Abbrechen',value:null},{label:ex?'Aktualisieren':'Teilen',value:'ok',cls:'primary'}]);
+  if(!r||!r.value)return;
+  if(r.value==='del'){try{await Sync.req('DELETE','/teamplays/'+encodeURIComponent(ex.id));TP.list=TP.list.filter(x=>x!==ex);renderAll();toast('Nicht mehr mit dem Team geteilt')}catch(e){toast('Nicht möglich: '+e.message)}return}
+  const sel=r.el.querySelector('#tpTeam');const team=sel?teams.find(x=>x.id===sel.value)||t:t;
+  const play=clone(pl);delete play.locked;const fm=!isF(pl)&&(pl.formation||'').trim()?pb.plays.find(x=>isF(x)&&x.name.trim()===pl.formation.trim()):null;
+  const x={id:ex?ex.id:uid('tp'),team:team.id,author:u.uid,authorEmail:u.email,name:callName(pl),type:pb.type,variant:pb.variant,members:TP.members(team),updated:Date.now(),
+    d:{src:pl.id,pbName:pb.name,play,form:fm?clone(fm):null}};
+  try{await Sync.req('PATCH','/teamplays/'+encodeURIComponent(x.id),TP.enc(x),ex?'':'currentDocument.exists=false');TP.list=[x,...TP.list.filter(y=>y.id!==x.id)];renderAll();
+    toast(ex?'Team-Play aktualisiert':`Mit dem Team „${team.name}“ geteilt`)}
+  catch(e){toast(/denied|PERMISSION|403/i.test(String(e.message)+e.status)?'Nicht erlaubt – bitte die neuen Firebase-Regeln veröffentlichen.':'Teilen nicht möglich: '+e.message)}}
+async function teamPlaysDialog(){
+  await TP.pull().catch(()=>{});const u=Sync.user;if(!u)return;const seen=TP.seen();TP.markSeen();renderSide();
+  const pb=curPb();const canTake=pb&&!isRO(pb);
+  const fit=x=>!!pb&&x.type===pb.type&&x.variant===pb.variant;
+  const items=[...TP.list].sort((a,b)=>(fit(b)-fit(a))||(b.updated-a.updated));
+  const fakePb=x=>({type:x.type,variant:x.variant,plays:[x.d.play]});
+  const row=(x,i)=>`<div class="tprow"><div class="tpthumb">${svgFor(fakePb(x),x.d.play,{style:'light'})}</div><div style="min-width:0;flex:1">
+      <b>${esc(x.name)}</b>${x.updated>seen&&x.author!==u.uid?' <span class="chip" style="background:#dc2626;color:#fff">neu</span>':''}<br>
+      <span class="hint">${x.type==='defense'?'Defense':'Offense'} · ${esc(VAR[x.variant]?VAR[x.variant].name:x.variant)} · von ${x.author===u.uid?'dir':esc(x.authorEmail)} · ${new Date(x.updated).toLocaleDateString('de-DE')}${x.d.pbName?` · aus „${esc(x.d.pbName)}“`:''}</span>
+      <div class="row" style="margin-top:4px">${canTake&&fit(x)?`<button type="button" class="btn sm primary" data-tptake="${i}">In „${esc(pb.name)}“ übernehmen</button>`:''}
+        ${x.author===u.uid||(Team.list.find(t=>t.id===x.team)||{}).owner===u.uid?`<button type="button" class="btn sm" data-tpdel="${i}">Entfernen</button>`:''}</div></div></div>`;
+  const body=()=>items.length?items.map(row).join(''):'<p class="hint">Noch keine Team-Plays. Ein Coach teilt ein Play über „👥 Mit Team teilen“ rechts beim Play.</p>';
+  const p=modal('👥 Team-Plays',`<p class="hint" style="margin-top:0">${!pb?'':canTake?`„Übernehmen“ fügt eine Kopie am Ende von „${esc(pb.name)}“ ein. Passend sind ${pb.type==='defense'?'Defense':'Offense'}-Plays für ${esc(VAR[pb.variant].name)}.`:`„${esc(pb.name)}“ darfst du nicht bearbeiten – zum Übernehmen ein Playbook öffnen, das du bearbeiten darfst.`}</p><div id="tpList">${body()}</div>`,[{label:'Schließen',value:null,cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('click',async e=>{const tk=e.target.closest('[data-tptake]');const dl=e.target.closest('[data-tpdel]');
+    if(tk){const x=items[+tk.dataset.tptake];takeTeamPlay(pb,x);tk.disabled=true;tk.textContent='✓ Übernommen'}
+    if(dl){const x=items[+dl.dataset.tpdel];if(!await confirmBox('Team-Play entfernen?',`„${esc(x.name)}“ wird für das Team nicht mehr angezeigt. Bereits übernommene Kopien bleiben.`,'Entfernen'))return;
+      try{await Sync.req('DELETE','/teamplays/'+encodeURIComponent(x.id));items.splice(items.indexOf(x),1);TP.list=TP.list.filter(y=>y!==x);back.querySelector('#tpList').innerHTML=body();renderSide()}catch(err){toast('Nicht möglich: '+err.message)}}});
+  await p;
+}
+function takeTeamPlay(pb,x){if(!pb||isRO(pb)||!x)return;
+  const c=normPlay(clone(x.d.play));delete c.locked;let extra='';
+  if(x.d.form&&!pb.plays.some(y=>isF(y)&&y.name.trim()===x.d.form.name.trim())){const f=normPlay(clone(x.d.form));delete f.locked;
+    const li=pb.plays.reduce((a,y,i)=>isF(y)?i:a,-1);pb.plays.splice(li+1,0,f);Store.savePlay(pb,f);extra=` (mit Formation „${x.d.form.name}“)`}
+  pb.plays.push(c);Store.savePlay(pb,c);Store.savePb(pb);renderAll();toast(`„${x.name}“ übernommen${extra}`);
+}
 async function teamDialog(){
   if(!Sync.user)return accountDialog();
   if(!Sync.user.verified)return toast('Bitte zuerst deine E-Mail-Adresse bestätigen.');
   await Team.pull().catch(()=>{});
   if(!Team.ok)return modal('👥 Team',`<p>Die Team-Liste ist noch nicht freigeschaltet. Bitte in Firebase die neuen Regeln aus <b>firestore-regeln.txt</b> veröffentlichen.</p>`,[{label:'OK',value:null,cls:'primary'}]);
   const u=Sync.user;let t=Team.mine();const other=Team.list.filter(x=>x.owner!==u.uid);
-  const otherHtml=other.length?`<p class="hint" style="margin-top:0">${other.map(x=>`Du bist im Team <b>${esc(x.name||'Team')}</b> von ${esc(x.ownerEmail)} – ${esc((TROLES.find(r=>r[0]===Team.role(x))||[])[1]||'')}.`).join('<br>')}</p>`:'';
-  if(!t){const r=await modal('👥 Team',`${otherHtml}<p${other.length?'':' style="margin-top:0"'}>Mit einer Team-Liste trägst du Coaches und Spieler mit ihrer Rolle <b>einmal</b> ein. Alle Playbooks des Teams werden automatisch damit geteilt – auch die, die ein anderer Coach mit „Coach – bearbeiten“ neu anlegt.</p>`,
+  const otherHtml=other.length?`<p class="hint" style="margin-top:0">${other.map(x=>`Du bist im Team <b>${esc(x.name||'Team')}</b> von ${esc(x.ownerEmail)} als ${Team.role(x)==='read'?'Spieler':'<b>Coach</b>'}.${Team.role(x)==='read'?'':' Mit „👥 Mit Team teilen“ machst du eigene Playbooks oder einzelne Plays für das Team sichtbar.'}`).join('<br>')}</p>`:'';
+  if(!t){const r=await modal('👥 Team',`${otherHtml}<p${other.length?'':' style="margin-top:0"'}>Mit einer Team-Liste trägst du Coaches und Spieler mit ihrer Rolle <b>einmal</b> ein. Jeder Coach kann dann ein eigenes Playbook oder ein einzelnes Play mit „👥 Mit Team teilen“ für alle sichtbar machen.</p>`,
       [{label:'Schließen',value:null},{label:'Eigenes Team erstellen',value:'new',cls:'primary'}]);
     if(!r||r.value!=='new')return;t={id:uid('tm'),owner:u.uid,ownerEmail:u.email,name:'Mein Team',readers:[],editors:[],coaches:[],isNew:true}}
   let list=[...t.editors.map(e=>({e,r:'edit'})),...t.coaches.map(e=>({e,r:'coach'})),...t.readers.map(e=>({e,r:'read'}))];
@@ -2713,7 +2785,7 @@ async function teamDialog(){
     <div class="row" style="margin-top:10px;align-items:flex-end"><div style="flex:2"><label>E-Mail</label><input type="email" id="tEmail" placeholder="coach@beispiel.de"></div>
       <div style="flex:1"><label>Rolle</label><select id="tRole">${TROLES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select></div>
       <button type="button" class="btn sm" data-tadd="1">Hinzufügen</button></div>
-    <p class="hint" style="font-size:12px">Alle Playbooks des Teams werden mit dieser Liste geteilt. Änderst du hier eine Rolle, gilt sie sofort in allen Team-Playbooks. Neue Playbooks von dir und von Coaches mit „Coach – bearbeiten“ kommen automatisch ins Team. Du selbst bist in allen Team-Playbooks Bearbeiter.</p>
+    <p class="hint" style="font-size:12px">Alle Playbooks des Teams werden mit dieser Liste geteilt. Änderst du hier eine Rolle, gilt sie sofort in allen Team-Playbooks. Playbooks kommen über „👥 Mit Team teilen“ im Playbook-Menü ⋯ ins Team, einzelne Plays über „👥 Mit Team teilen“ beim Play – Coaches mit „bearbeiten“ können sie dann unter „👥 Team-Plays“ in ein Team-Playbook übernehmen. Die Coaches selbst sehen nur „Coach“, nicht die genaue Rolle. Du selbst bist in allen Team-Playbooks Bearbeiter.</p>
     ${mineN?`<label class="chk"><input type="checkbox" id="tAll"> Auch meine ${mineN} bisherigen Playbooks ins Team nehmen</label>`:''}
     ${t.isNew?'':'<details style="margin-top:8px"><summary class="hint">Team auflösen</summary><p class="hint">Die Playbooks bleiben mit allen geteilt, wie sie gerade sind – nur die gemeinsame Liste fällt weg.</p><button type="button" class="btn sm danger" data-tdissolve="1">Team auflösen</button></details>'}`,
     [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
@@ -2738,7 +2810,7 @@ async function teamDialog(){
   state.pbs.forEach(pb=>{const c=pb.cloud;if(c&&c.team===t.id&&Team.apply(pb,t))Sync.touch(pb)});
   if(takeAll)state.pbs.forEach(pb=>{if(pb.cloud&&pb.cloud.role==='own'&&pb.cloud.team===t.id)Sync.touch(pb)});
   await Promise.all(state.pbs.filter(pb=>pb.cloud&&pb.cloud.dirty).map(pb=>Sync.push(pb.id)));
-  Team.reconcile();renderSide();toast(`Team „${t.name}“ gespeichert – ${list.length} ${list.length===1?'Person':'Personen'}`);
+  Team.reconcile();TP.reconcile();renderSide();toast(`Team „${t.name}“ gespeichert – ${list.length} ${list.length===1?'Person':'Personen'}`);
 }
 // after sharing changed: questions and progress of this playbook get the new coach lists, so new coaches see older entries too
 async function refreshAccess(pb){
@@ -3036,6 +3108,10 @@ document.addEventListener('click',async e=>{
     case 'progress':return progressDialog(curPb());
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
+    case 'teamPlays':return teamPlaysDialog();
+    case 'playToTeam':return playToTeam();
+    case 'pbToTeam':{const pb=curPb(),t=Team.auto();if(!pb||!t)return;document.querySelectorAll('.mback').forEach(x=>x.remove());Sync.touch(pb);Team.apply(pb,t);Sync.touch(pb);await Sync.push(pb.id);renderSide();
+      if(Sync.state==='ok')refreshAccess(pb).catch(e=>console.warn('access refresh',e));return toast(Sync.state==='ok'?`„${pb.name}“ ist jetzt mit dem Team „${t.name}“ geteilt`:'Gespeichert – wird übertragen, sobald du online bist')}
     case 'account':return accountDialog();
     case 'togSide':return toggleMin('side');
     case 'togInsp':return toggleMin('insp');
