@@ -173,6 +173,8 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 .tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 .tpl button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 2px;font-size:13px;font-weight:600}
 .tpl button:hover{border-color:var(--accent);color:var(--accent)}
+.otpl{display:flex;min-width:0}.otpl button:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:6px 0 0 6px;color:#92400e;background:#fffbeb}
+.otpl .x{border-left:0;border-radius:0 6px 6px 0;padding:5px 6px;color:var(--muted)}
 .hint{font-size:13px;color:var(--muted);line-height:1.4}
 .welcome{max-width:520px;margin:40px auto;text-align:center}
 .welcome h2{font-family:var(--cond);font-stretch:condensed;font-size:34px;text-transform:uppercase;margin:0 0 8px}
@@ -266,9 +268,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-15.10';
+const APP_VERSION='2026-11-15.12';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -518,7 +520,7 @@ const Store={mode:'memory',db:null,uid:null,note:'',
     if(this.mode!=='local')return [];
     try{const j=JSON.parse(localStorage.getItem(LSK)||'null');return (j&&j.pbs)||[]}catch(e){return []}
   },
-  meta(pb){const m={kind:'playbook',name:pb.name,type:pb.type,variant:pb.variant,created:pb.created||Date.now(),updated:Date.now(),order:pb.plays.map(p=>p.id)};if(pb.layoutPlayId)m.layoutPlayId=pb.layoutPlayId;if(pb.fieldV)m.fieldV=pb.fieldV;return m},
+  meta(pb){const m={kind:'playbook',name:pb.name,type:pb.type,variant:pb.variant,created:pb.created||Date.now(),updated:Date.now(),order:pb.plays.map(p=>p.id)};if(pb.layoutPlayId)m.layoutPlayId=pb.layoutPlayId;if(pb.fieldV)m.fieldV=pb.fieldV;if(pb.tpls)m.tpls=pb.tpls;return m},
   savePb(pb){
     pb.updated=Date.now();Sync.touch(pb);
     if(this.mode==='cloud'){const ref=this.col().doc(pb.id);schedule('pb:'+pb.id,()=>ref.set(this.meta(pb)));}
@@ -1132,6 +1134,7 @@ function renderInsp0(){
     <h4>${pb.type==='defense'?'Auftrag':'Route'} – Vorlagen</h4>
     <div class="chips" title="Was passiert beim Antippen einer Vorlage?"><button data-a="tplReplace" class="${state.tplAlt?'':'on'}">${p.route&&p.route.pts.length?'Route ersetzen':'als Route'}</button><button data-a="tplAlt" class="${state.tplAlt?'on':''}">＋ als Alternative</button></div>
     <div class="tpl">${(pb.type==='defense'?DEF_T:OFF_T).map((t,i)=>`<button data-tpl="${i}">${esc(t.n)}</button>`).join('')}</div>
+    ${(pb.tpls||[]).length?`<div class="tpl own" style="margin-top:5px">${pb.tpls.map(t=>`<span class="otpl"><button data-otpl="${esc(t.id)}" title="Eigene Vorlage">★ ${esc(t.n)}</button>${isRO(pb)?'':`<button class="x" data-otpldel="${esc(t.id)}" title="Vorlage „${esc(t.n)}“ löschen">×</button>`}</span>`).join('')}</div>`:''}
     <h4>Selbst zeichnen</h4>
     <div class="row"><button class="btn sm" data-a="drawRoute">↗ Route</button><button class="btn sm" data-a="drawMotion">⇢ Motion</button></div>
     ${state.clip?`<div class="row" style="margin-top:6px"><button class="btn sm" data-a="pasteRoute" title="Strg+V">⧉ Kopierte Linie einfügen</button><button class="btn sm" data-a="pasteRouteM" title="links ↔ rechts gespiegelt">⧉ gespiegelt</button></div>`:''}
@@ -1148,7 +1151,7 @@ function renderInsp0(){
         <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
         ${cur.k==='motion'?'':`<label>Aufgabe <span class="hint" style="font-weight:400">– für 🎓 Lernen</span></label><input type="text" data-rf="task" list="taskList" maxlength="30" value="${esc(r.task||'')}" placeholder="z. B. ${pb.type==='defense'?'Deep ½':'Slant'}"><datalist id="taskList">${taskOptions(pb).map(n=>`<option value="${esc(n)}">`).join('')}</datalist>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
-        <div class="row" style="margin-top:6px"><button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="contRoute" title="Weitere Punkte an diese Linie anhängen, z. B. ums Eck">✎ Weiterzeichnen</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
+        <div class="row" style="margin-top:6px">${cur.k==='motion'||isRO(pb)?'':`<button class="btn sm" data-a="saveTpl" title="Diese Linie mit Namen als eigene Vorlage speichern – der Name wird im Lern-Modus abgefragt">★ Als Vorlage</button>`}<button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="contRoute" title="Weitere Punkte an diese Linie anhängen, z. B. ums Eck">✎ Weiterzeichnen</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
   } else h+=`<p class="hint" style="margin-top:12px">Gegner-Spieler kannst du verschieben und gestalten, damit die Aufstellung zu deinem Play passt.</p>`;
   h+=`<h4>&nbsp;</h4><button class="btn sm danger" data-a="delPlayer">Spieler entfernen</button>`;
@@ -1171,7 +1174,8 @@ function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();ren
 /* ---------- 🎓 learn mode: tap a player, tap his task, then reveal ---------- */
 const normTask=t=>String(t||'').toLowerCase().replace(/mitte/g,'middle').replace(/½/g,'1/2').replace(/⅓/g,'1/3').replace(/¼/g,'1/4').replace(/\s+/g,' ').trim();
 function taskOptions(pb){
-  const base=pb.type==='defense'?DEF_T.map(t=>t.n):[...new Set(OFF_T.map(t=>t.n.replace(/ (links|rechts)$/,'')))];
+  const base0=pb.type==='defense'?DEF_T.map(t=>t.n):[...new Set(OFF_T.map(t=>t.n.replace(/ (links|rechts)$/,'')))];
+  const base=[...base0,...(pb.tpls||[]).map(t=>t.n).filter(n=>!base0.some(b=>normTask(b)===normTask(n)))];
   const used=new Set();pb.plays.forEach(pl=>pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(r&&r.task)used.add(r.task)})));
   const extra=[...used].filter(u=>!base.some(b=>normTask(b)===normTask(u))).sort();
   return [...base,...extra];
@@ -1189,6 +1193,7 @@ function suggestTask(pb,pl,p,r,deepCount){
   if(!r||!hasLine(r))return null;
   if(r.end==='bolt')return 'Blitz';
   const L=r.pts[r.pts.length-1];
+  const own=ownTplMatch(pb,p,r);if(own)return own;
   if(pb.type==='defense'){
     if(r.end==='zone'){const cx=p.x+L.x,depth=-(p.y+L.y);
       if(depth>=9){if(deepCount>=4)return 'Deep ¼';if(deepCount===3)return 'Deep ⅓';if(deepCount===2)return Math.abs(cx)<6&&r!==p.route?'Deep Middle':'Deep ½';return 'Deep Middle'}
@@ -1207,6 +1212,11 @@ function suggestTask(pb,pl,p,r,deepCount){
     dn/=14;da/=14;const sc=dn*10+da*0.15;if(dn<0.16&&(!best||sc<best.sc))best={n:t.n,sc}})});
   return best&&best.n;
 }
+function tplSx(p){return p.x>=0.01?1:(p.x<=-0.01?-1:1)}
+function ownTplMatch(pb,p,r){const sx=tplSx(p);let best=null;
+  (pb.tpls||[]).forEach(t=>{if(t.p.length!==r.pts.length)return;if((t.e||'arrow')!==(r.end||'arrow'))return;
+    let d=0;t.p.forEach(([o,u],k)=>{d=Math.max(d,Math.hypot(o*sx-r.pts[k].x,-u-r.pts[k].y))});if(d<=2.5&&(!best||d<best.d))best={n:t.n,d}});
+  return best&&best.n}
 function suggestTasks(pb){const changed=[];
   pb.plays.forEach(pl=>{if(isF(pl)||pl.locked)return;
     const deepCount=pl.players.filter(p=>p.route&&p.route.end==='zone'&&hasLine(p.route)&&-(p.y+p.route.pts[p.route.pts.length-1].y)>=9).length;
@@ -1544,6 +1554,35 @@ function onMove(e){
 function onUp(){const d=state.drag;state.drag=null;if(d&&d.moved)changed({field:false,center:true})}
 
 /* ---------- templates ---------- */
+function applyOwnTpl(id){
+  const pb=curPb(),pl=curPlay(),p=pl&&pl.players.find(x=>x.id===state.sel);const t=(pb.tpls||[]).find(x=>x.id===id);if(!p||!t||isLk(pl))return;
+  const sx=tplSx(p);const pts=t.p.map(([o,u])=>{const [x,y]=clampYd(p.x+o*sx,p.y-u);return {x:r1(x-p.x),y:r1(y-p.y)}});
+  const route={pts,style:t.s||'solid',end:t.e||'arrow',curve:!!t.c,task:t.n};if(t.zw)route.zw=t.zw;
+  route.color=(p.route&&p.route.color)||defRouteColor(p);route.w=defW(p);
+  commit();
+  if(state.tplAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  else{p.route=route;state.selRoute={k:'route',j:0}}
+  changed({insp:true});
+}
+async function saveOwnTpl(){
+  const pb=curPb(),pl=curPlay(),p=selPlayer();if(!pb||!p||isRO(pb))return;const cur=curRouteKey(p);const r=getRoute(p,cur);
+  if(!r||cur.k==='motion'||!hasLine(r))return toast('Erst eine Linie zeichnen');
+  const res=await modal('★ Als Vorlage speichern',`<label>Name der Route / Aufgabe</label><input type="text" id="tplName" maxlength="30" value="${esc(r.task||'')}" placeholder="z. B. Whip">
+    <p class="hint">Die Vorlage gilt für dieses Playbook und alle Coaches, mit denen es geteilt ist. Sie wird für Spieler links und rechts automatisch gespiegelt. Der Name ist die Aufgabe, die im 🎓 Lern-Modus abgefragt wird.</p>`,
+    [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary',validate:el=>{const i=el.querySelector('#tplName');if(i.value.trim())return true;i.focus();i.style.borderColor='#dc2626';toast('Bitte einen Namen eingeben');return false}}]);
+  if(!res||res.value!=='ok')return;const n=res.el.querySelector('#tplName').value.trim().slice(0,30);
+  const sx=tplSx(p);const t={id:uid('tp'),n,p:r.pts.map(q=>[r1(q.x*sx),r1(-q.y)]),t:Date.now()};
+  if(r.end&&r.end!=='arrow')t.e=r.end;if(r.style&&r.style!=='solid'&&cur.k==='route')t.s=r.style;if(r.curve)t.c=1;if(r.zw)t.zw=r.zw;
+  pb.tpls=pb.tpls||[];const ex=pb.tpls.findIndex(x=>normTask(x.n)===normTask(n));
+  if(ex>=0){const ok=await modal('Vorlage ersetzen?',`<p>Es gibt schon eine Vorlage „${esc(pb.tpls[ex].n)}“. Ersetzen?</p>`,[{label:'Abbrechen',value:null},{label:'Ersetzen',value:'y',cls:'primary'}]);
+    if(!ok||ok.value!=='y')return;t.id=pb.tpls[ex].id;pb.tpls[ex]=t}else pb.tpls.push(t);
+  if(!isLk(pl)&&r.task!==n){commit();r.task=n;Store.savePlay(pb,pl)}
+  Store.savePb(pb);renderInsp();toast(`Vorlage „${n}“ gespeichert`);
+}
+async function delOwnTpl(id){const pb=curPb();const t=(pb.tpls||[]).find(x=>x.id===id);if(!t||isRO(pb))return;
+  const ok=await modal('Vorlage löschen?',`<p>Eigene Vorlage „${esc(t.n)}“ löschen? Bereits gezeichnete Routen und ihre Aufgabe bleiben erhalten.</p>`,[{label:'Abbrechen',value:null},{label:'Löschen',value:'y',cls:'danger'}]);
+  if(!ok||ok.value!=='y')return;pb.tpls=pb.tpls.filter(x=>x.id!==id);if(!pb.tpls.length)delete pb.tpls;pb.del=pb.del||{};pb.del['tpl:'+id]=Date.now();
+  Store.savePb(pb);renderInsp();toast('Vorlage gelöscht')}
 function applyTemplate(i){
   const pb=curPb(),pl=curPlay(),p=pl.players.find(x=>x.id===state.sel);if(!p)return;
   const v=VP(pb,pl);const sx=p.x>=0.01?1:(p.x<=-0.01?-1:1);
@@ -2137,8 +2176,15 @@ function cleanPb(src,keep){
   if(src.fieldV===FLAG_V)pb.fieldV=FLAG_V;
   if(src.del&&typeof src.del==='object'){pb.del={};Object.keys(src.del).slice(0,3000).forEach(k=>{if(/^[\w.\-:@+~]{1,80}$/.test(k))pb.del[k]=cNum(src.del[k],0,0,1e14)})}
   const li=ids.indexOf(src.layoutPlayId);if(li>=0)pb.layoutPlayId=pb.plays[li].id;
+  const tp=cleanTpls(src.tpls);if(tp.length)pb.tpls=tp;
   return pb;
 }
+// own route templates of a playbook: points as [outside, upfield] like OFF_T, the name is the task for 🎓 Lernen
+function cleanTpls(a){const ok=['arrow','block','dot','bolt','zone','none'],st=['solid','dashed','dotted'];
+  return cArr(a,60).map(t=>{if(!t||typeof t!=='object')return null;const n=cStr(t.n,30).trim();
+    const p=cArr(t.p,30).filter(q=>Array.isArray(q)&&q.length===2).map(([o,u])=>[r1(cNum(o,0,-80,80)),r1(cNum(u,0,-80,80))]);
+    if(!n||!p.length)return null;const o={id:cId(t.id,'tp',true),n,p,t:cNum(t.t,0,0,1e14)};
+    if(ok.includes(t.e))o.e=t.e;if(st.includes(t.s))o.s=t.s;if(t.c)o.c=1;if(t.zw)o.zw=cNum(t.zw,0,0,60);return o}).filter(Boolean)}
 function normPlay(pl){
   pl.id=uid('pl');pl.players=(pl.players||[]).map(p=>({...p,id:uid('p')}));pl.opp=(pl.opp||[]).map(p=>({...p,id:uid('p')}));
   pl.name=pl.name||'Play';pl.cat=pl.cat||'';pl.formation=pl.formation||'';pl.notes=pl.notes||'';pl.showOpp=pl.showOpp!==false;pl.oppForm=pl.oppForm||'';return pl;
@@ -2338,10 +2384,11 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   enc(pb){const c=pb.cloud;const data=clone(pb);delete data.cloud;
     const arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
     return {fields:{owner:{stringValue:c.owner},ownerEmail:{stringValue:c.ownerEmail||''},name:{stringValue:pb.name||''},type:{stringValue:pb.type},variant:{stringValue:pb.variant},
-      readers:arr(c.readers),editors:arr(c.editors),coaches:arr(c.coaches),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email}}};
+      readers:arr(c.readers),editors:arr(c.editors),coaches:arr(c.coaches),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email},
+      ...(c.team?{team:{stringValue:c.team}}:{})}};
   },
   dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue).filter(Boolean);
-    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),readers:a('readers'),editors:a('editors'),coaches:a('coaches'),data:s('data'),updatedBy:s('updatedBy')}},
+    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),readers:a('readers'),editors:a('editors'),coaches:a('coaches'),data:s('data'),updatedBy:s('updatedBy'),team:s('team')}},
   async query(field,op,value){
     const j=await this.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'playbooks'}],where:{fieldFilter:{field:{fieldPath:field},op,value:{stringValue:value}}}}});
     return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document));
@@ -2353,7 +2400,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   // ----- push a playbook (after changes, 2.5 s later) -----
   touch(pb){
     if(!this.user||!pb||isRO(pb))return;
-    if(!pb.cloud)pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[],coaches:[]};
+    if(!pb.cloud){pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[],coaches:[]};const t=Team.auto();if(t)Team.apply(pb,t)}
     pb.cloud.dirty=true;schedule('cloud:'+pb.id,()=>this.push(pb.id),2500);
   },
   async push(id,retry){
@@ -2385,13 +2432,14 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     this.pulling=true;let changed=false;const news=[];
     try{
       if(first||!this.user.verified)try{await this.token(true)}catch(e){}
+      await Team.pull();
       const lists=[await this.query('owner','EQUAL',this.user.uid)];
       if(this.user.verified){for(const f of ['readers','editors','coaches']){try{lists.push(await this.query(f,'ARRAY_CONTAINS',this.user.email))}catch(e){if(e.offline||e.message==='offline')throw e;console.warn('shared list',f,e)}}}
       const seen=new Map();lists.flat().forEach(d=>seen.set(d.id,d));
       const hid=this.hidden();
       for(const d of seen.values()){
         const role=this.role(d);if(role!=='own'&&hid.includes(d.id))continue;
-        const meta={role,owner:d.owner,ownerEmail:d.ownerEmail,readers:d.readers,editors:d.editors,coaches:d.coaches};
+        const meta={role,owner:d.owner,ownerEmail:d.ownerEmail,readers:d.readers,editors:d.editors,coaches:d.coaches,team:d.team||undefined};
         const i=state.pbs.findIndex(x=>x.id===d.id);const loc=state.pbs[i];
         if(loc&&loc.cloud&&loc.cloud.ut===d.ut){Object.assign(loc.cloud,meta);continue}
         const rp=this.parse(d);if(!rp)continue;
@@ -2408,6 +2456,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
         if(pb.cloud.role==='own'&&(!pb.cloud.ut||pb.cloud.dirty))return true;changed=true;return false});
       // own playbooks not uploaded yet (e.g. the first login on this device)
       state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
+      if(Team.reconcile())changed=true;
       await Q.pull();
       this.state='ok';this.last=Date.now();
     }catch(e){console.warn('sync pull',e);this.state=e.offline||e.message==='offline'?'offline':'error';if(e.status===401||e.status===403)this.state='error'}
@@ -2565,17 +2614,20 @@ function mergePb(loc,rem){
   loc.plays=order.map(id=>map.get(id)).filter(pl=>pl&&!(del[pl.id]&&del[pl.id]>=(pl.updated||0)));
   const cut=Date.now()-90*864e5;Object.keys(del).forEach(k=>{if(del[k]<cut)delete del[k]});loc.del=del;
   if((rem.updated||0)>(loc.updated||0)){loc.name=rem.name;if(rem.layoutPlayId)loc.layoutPlayId=rem.layoutPlayId}
+  const tm=new Map();[...(rem.tpls||[]),...(loc.tpls||[])].forEach(t=>{const o=tm.get(t.id);if(!o||(t.t||0)>(o.t||0))tm.set(t.id,t)});
+  const tl=[...tm.values()].filter(t=>!(del['tpl:'+t.id]&&del['tpl:'+t.id]>=(t.t||0)));if(tl.length)loc.tpls=tl;else delete loc.tpls;
 }
 function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
   if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='edit'?'bearbeiten':c.role==='coach'?'Coach':'nur lesen'}</span>`;
-  const n=nShare(c);return n?` <span class="chip shared" title="Mit ${n} Coaches geteilt">👥 ${n}</span>`:'';}
+  const n=nShare(c);return n?` <span class="chip shared" title="${c.team?'Über die Team-Liste geteilt':'Mit '+n+' Personen geteilt'}">👥 ${c.team?'Team':n}</span>`:'';}
 async function accountDialog(){
   if(!Sync.on())return;
   if(Sync.user){const u=Sync.user;
     const r=await modal('Dein Konto',`<p style="margin-top:0">Angemeldet als <b>${esc(u.email)}</b></p>
       ${u.verified?'':`<div class="banner" style="margin-bottom:10px">📧 Bitte bestätige deine E-Mail-Adresse über den Link in der Mail von Firebase (auch im Spam-Ordner nachsehen). Erst dann siehst du Playbooks, die andere mit dir teilen.</div>`}
       <p class="hint">Status: ${Sync.state==='offline'?'offline – Änderungen werden synchronisiert, sobald du wieder online bist':Sync.state==='error'?'Synchronisierung gestört':'synchronisiert'}${Sync.last?` · zuletzt ${new Date(Sync.last).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr`:''}</p>
-      <p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“.</p>
+      <p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“ – oder für alle Playbooks auf einmal über die Team-Liste.</p>
+      <div class="row" style="margin:0 0 8px"><button type="button" class="btn sm" data-acct="team">👥 Team-Liste${Team.mine()?' – '+esc(Team.mine().name):''}</button></div>
       <details><summary class="hint">Konto löschen</summary><p class="hint">Löscht dein Konto und deine Playbooks auf dem Server. Auf diesem Gerät bleiben sie erhalten.</p><button class="btn sm danger" data-acct="delete">Konto endgültig löschen</button></details>`,
       [...(u.verified?[]:[{label:'Mail erneut senden',value:'resend'},{label:'Ich habe bestätigt',value:'check'}]),{label:'Abmelden',value:'out'},{label:'Jetzt synchronisieren',value:'sync',cls:'primary'}]);
     if(r.value==='out')return Sync.signOut();
@@ -2608,9 +2660,86 @@ async function accountDialog(){
     else await Sync.signIn(email,pw)}
   catch(err){toast(err.message);setTimeout(accountDialog,50)}
 }
+document.addEventListener('click',e=>{if(!e.target.closest('[data-acct="team"]'))return;document.querySelectorAll('.mback').forEach(x=>x.remove());teamDialog()});
 document.addEventListener('click',async e=>{const d=e.target.closest('[data-acct="delete"]');if(!d)return;
   if(!await confirmBox('Konto löschen?','Dein Konto und deine Playbooks auf dem Server werden endgültig gelöscht. Geteilte Playbooks sehen die anderen Coaches danach nicht mehr. Auf diesem Gerät bleiben deine Playbooks erhalten.','Endgültig löschen'))return;
   document.querySelectorAll('.mback').forEach(x=>x.remove());try{await Sync.deleteAccount()}catch(err){toast(err.message)}});
+/* ---------- 👥 team list: one list of coaches/players with roles for all playbooks of the team ---------- */
+const TROLES=[['read','Spieler – lesen'],['coach','Coach – lesen + Fortschritt'],['edit','Coach – bearbeiten']];
+const Team={list:[],ok:false,
+  dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue).filter(Boolean);
+    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),name:s('name'),readers:a('readers'),editors:a('editors'),coaches:a('coaches')}},
+  enc(t){const arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
+    return {fields:{owner:{stringValue:t.owner},ownerEmail:{stringValue:t.ownerEmail||''},name:{stringValue:t.name||''},readers:arr(t.readers),editors:arr(t.editors),coaches:arr(t.coaches),updated:{integerValue:String(Date.now())}}}},
+  async q(field,op,value){const j=await Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'teams'}],where:{fieldFilter:{field:{fieldPath:field},op,value:{stringValue:value}}}}});
+    return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document))},
+  async pull(){const u=Sync.user;if(!u)return;
+    try{const lists=[await this.q('owner','EQUAL',u.uid)];
+      if(u.verified)for(const f of ['editors','coaches','readers'])lists.push(await this.q(f,'ARRAY_CONTAINS',u.email));
+      const m=new Map();lists.flat().forEach(t=>m.set(t.id,t));this.list=[...m.values()];this.ok=true}
+    catch(e){this.ok=false;if(e.offline||e.message==='offline')throw e;console.warn('teams',e)}},   // e.g. rules without teams yet: everything else keeps working
+  role(t){const u=Sync.user;return !u?null:t.owner===u.uid?'own':t.editors.includes(u.email)?'edit':t.coaches.includes(u.email)?'coach':'read'},
+  mine(){const u=Sync.user;return u?this.list.find(t=>t.owner===u.uid)||null:null},
+  auto(){return this.mine()||this.list.find(t=>this.role(t)==='edit')||null},   // team that new playbooks of this coach go to
+  of(pb){return pb&&pb.cloud&&pb.cloud.team?this.list.find(t=>t.id===pb.cloud.team)||null:null},
+  arrays(t,ownerEmail){const m=new Map();m.set(t.ownerEmail,'edit');t.editors.forEach(e=>m.set(e,'edit'));t.coaches.forEach(e=>{if(!m.has(e))m.set(e,'coach')});t.readers.forEach(e=>{if(!m.has(e))m.set(e,'read')});
+    m.delete((ownerEmail||'').toLowerCase());const g=r=>[...m].filter(x=>x[1]===r).map(x=>x[0]).sort();return {readers:g('read'),editors:g('edit'),coaches:g('coach')}},
+  apply(pb,t){const c=pb.cloud,a=this.arrays(t,c.ownerEmail),k=x=>JSON.stringify([[...(x.readers||[])].sort(),[...(x.editors||[])].sort(),[...(x.coaches||[])].sort()]);
+    const same=c.team===t.id&&k(c)===k(a);c.team=t.id;Object.assign(c,a);return !same},
+  // keep every team playbook in line with its team list (done by the playbook owner and by the team owner)
+  reconcile(){if(!this.ok||!Sync.user)return false;let ch=false;const u=Sync.user;
+    state.pbs.forEach(pb=>{const c=pb.cloud;if(!c||!c.team||!c.ut)return;const t=this.of(pb);
+      if(!t){if(c.role==='own'){delete c.team;Sync.touch(pb);ch=true}return}   // team dissolved: shares stay as they are
+      if((c.role==='own'||t.owner===u.uid)&&this.apply(pb,t)){Sync.touch(pb);ch=true}
+      if(c.role==='own'){const sig=JSON.stringify([c.editors,c.coaches]);if(c.accSig!==sig){c.accSig=sig;setTimeout(()=>refreshAccess(pb).catch(e=>console.warn('access',e)),3500)}}});
+    return ch},
+  async save(t,isNew){const j=await Sync.req('PATCH','/teams/'+encodeURIComponent(t.id),this.enc(t),isNew?'currentDocument.exists=false':'');Object.assign(t,{ut:j.updateTime})}
+};
+async function teamDialog(){
+  if(!Sync.user)return accountDialog();
+  if(!Sync.user.verified)return toast('Bitte zuerst deine E-Mail-Adresse bestätigen.');
+  await Team.pull().catch(()=>{});
+  if(!Team.ok)return modal('👥 Team',`<p>Die Team-Liste ist noch nicht freigeschaltet. Bitte in Firebase die neuen Regeln aus <b>firestore-regeln.txt</b> veröffentlichen.</p>`,[{label:'OK',value:null,cls:'primary'}]);
+  const u=Sync.user;let t=Team.mine();const other=Team.list.filter(x=>x.owner!==u.uid);
+  const otherHtml=other.length?`<p class="hint" style="margin-top:0">${other.map(x=>`Du bist im Team <b>${esc(x.name||'Team')}</b> von ${esc(x.ownerEmail)} – ${esc((TROLES.find(r=>r[0]===Team.role(x))||[])[1]||'')}.`).join('<br>')}</p>`:'';
+  if(!t){const r=await modal('👥 Team',`${otherHtml}<p${other.length?'':' style="margin-top:0"'}>Mit einer Team-Liste trägst du Coaches und Spieler mit ihrer Rolle <b>einmal</b> ein. Alle Playbooks des Teams werden automatisch damit geteilt – auch die, die ein anderer Coach mit „Coach – bearbeiten“ neu anlegt.</p>`,
+      [{label:'Schließen',value:null},{label:'Eigenes Team erstellen',value:'new',cls:'primary'}]);
+    if(!r||r.value!=='new')return;t={id:uid('tm'),owner:u.uid,ownerEmail:u.email,name:'Mein Team',readers:[],editors:[],coaches:[],isNew:true}}
+  let list=[...t.editors.map(e=>({e,r:'edit'})),...t.coaches.map(e=>({e,r:'coach'})),...t.readers.map(e=>({e,r:'read'}))];
+  const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}">${esc(x.e)}</span><select data-trole="${i}">${TROLES.map(([v,n])=>`<option value="${v}"${x.r===v?' selected':''}>${n}</option>`).join('')}</select><button type="button" class="btn sm" data-tdel="${i}" title="Aus dem Team entfernen">✕</button></div>`).join(''):'<p class="hint">Noch niemand im Team.</p>';
+  const mineN=state.pbs.filter(pb=>pb.cloud&&pb.cloud.role==='own'&&pb.cloud.team!==t.id).length;
+  const p=modal('👥 Team-Liste',`${otherHtml}<label style="margin-top:0">Name des Teams</label><input type="text" id="tName" maxlength="60" value="${esc(t.name)}">
+    <div id="teamList" style="margin-top:8px">${rows()}</div>
+    <div class="row" style="margin-top:10px;align-items:flex-end"><div style="flex:2"><label>E-Mail</label><input type="email" id="tEmail" placeholder="coach@beispiel.de"></div>
+      <div style="flex:1"><label>Rolle</label><select id="tRole">${TROLES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select></div>
+      <button type="button" class="btn sm" data-tadd="1">Hinzufügen</button></div>
+    <p class="hint" style="font-size:12px">Alle Playbooks des Teams werden mit dieser Liste geteilt. Änderst du hier eine Rolle, gilt sie sofort in allen Team-Playbooks. Neue Playbooks von dir und von Coaches mit „Coach – bearbeiten“ kommen automatisch ins Team. Du selbst bist in allen Team-Playbooks Bearbeiter.</p>
+    ${mineN?`<label class="chk"><input type="checkbox" id="tAll"> Auch meine ${mineN} bisherigen Playbooks ins Team nehmen</label>`:''}
+    ${t.isNew?'':'<details style="margin-top:8px"><summary class="hint">Team auflösen</summary><p class="hint">Die Playbooks bleiben mit allen geteilt, wie sie gerade sind – nur die gemeinsame Liste fällt weg.</p><button type="button" class="btn sm danger" data-tdissolve="1">Team auflösen</button></details>'}`,
+    [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();let dissolve=false;
+  const add=()=>{const i=back.querySelector('#tEmail');const em=i.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em))return toast('Bitte eine gültige E-Mail-Adresse eingeben.');
+    if(em===u.email)return toast('Das bist du selbst.');if(list.length>=49)return toast('Höchstens 49 Personen im Team.');
+    const o=list.find(x=>x.e===em);const r=back.querySelector('#tRole').value;if(o)o.r=r;else list.push({e:em,r});i.value='';back.querySelector('#teamList').innerHTML=rows()};
+  back.addEventListener('click',async e=>{if(e.target.closest('[data-tadd]'))return add();const d=e.target.closest('[data-tdel]');if(d){list.splice(+d.dataset.tdel,1);back.querySelector('#teamList').innerHTML=rows()}
+    if(e.target.closest('[data-tdissolve]')){if(!await confirmBox('Team auflösen?','Die gemeinsame Liste wird gelöscht. Alle Playbooks bleiben so geteilt, wie sie gerade sind.','Auflösen'))return;dissolve=true;back.remove()}});
+  back.addEventListener('change',e=>{const s=e.target.closest('[data-trole]');if(s)list[+s.dataset.trole].r=s.value});
+  back.addEventListener('keydown',e=>{if(e.target.id==='tEmail'&&e.key==='Enter'){e.preventDefault();e.stopPropagation();add()}},true);
+  const r=await Promise.race([p,new Promise(res=>{const iv=setInterval(()=>{if(dissolve){clearInterval(iv);res({value:'dissolve'})}else if(!back.isConnected)clearInterval(iv)},200)})]);
+  if(r.value==='dissolve'){try{await Sync.req('DELETE','/teams/'+encodeURIComponent(t.id));Team.list=Team.list.filter(x=>x.id!==t.id);
+      state.pbs.forEach(pb=>{if(pb.cloud&&pb.cloud.team===t.id&&pb.cloud.role==='own'){delete pb.cloud.team;Sync.touch(pb)}});renderSide();toast('Team aufgelöst')}catch(e){toast('Nicht möglich: '+e.message)}return}
+  if(r.value!=='ok')return;
+  {const i=r.el.querySelector('#tEmail');if(i&&i.value.trim())add()}
+  const all=r.el.querySelector('#tAll');const takeAll=!!(all&&all.checked);
+  t.name=r.el.querySelector('#tName').value.trim().slice(0,60)||'Team';
+  t.editors=list.filter(x=>x.r==='edit').map(x=>x.e);t.coaches=list.filter(x=>x.r==='coach').map(x=>x.e);t.readers=list.filter(x=>x.r==='read').map(x=>x.e);
+  try{await Team.save(t,t.isNew);delete t.isNew;if(!Team.list.includes(t))Team.list.push(t)}catch(e){return toast('Speichern nicht möglich: '+e.message)}
+  if(takeAll)state.pbs.forEach(pb=>{if(pb.cloud&&pb.cloud.role==='own'&&pb.cloud.ut){Team.apply(pb,t)}});
+  state.pbs.forEach(pb=>{const c=pb.cloud;if(c&&c.team===t.id&&Team.apply(pb,t))Sync.touch(pb)});
+  if(takeAll)state.pbs.forEach(pb=>{if(pb.cloud&&pb.cloud.role==='own'&&pb.cloud.team===t.id)Sync.touch(pb)});
+  await Promise.all(state.pbs.filter(pb=>pb.cloud&&pb.cloud.dirty).map(pb=>Sync.push(pb.id)));
+  Team.reconcile();renderSide();toast(`Team „${t.name}“ gespeichert – ${list.length} ${list.length===1?'Person':'Personen'}`);
+}
 // after sharing changed: questions and progress of this playbook get the new coach lists, so new coaches see older entries too
 async function refreshAccess(pb){
   const c=pb.cloud,arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
@@ -2625,6 +2754,14 @@ async function refreshAccess(pb){
 async function shareDialog(pb){
   if(!Sync.user){return accountDialog()}
   if(!pb.cloud)Sync.touch(pb);
+  {const t=Team.of(pb);if(t){const c=pb.cloud,n=nShare(c);const rl=v=>(TROLES.find(x=>x[0]===v)||[])[1];
+    const r=await modal('👥 „'+pb.name+'“ freigeben',`<div class="banner">Dieses Playbook ist über das Team <b>${esc(t.name)}</b> geteilt. Rollen änderst du in der Team-Liste – sie gelten dann in allen Team-Playbooks.</div>
+      <div style="margin-top:8px">${[...c.editors.map(e=>[e,'edit']),...c.coaches.map(e=>[e,'coach']),...c.readers.map(e=>[e,'read'])].map(([e,v])=>`<div class="share-row" style="grid-template-columns:1fr auto"><span>${esc(e)}</span><span class="hint">${rl(v)}</span></div>`).join('')||'<p class="hint">Noch niemand im Team.</p>'}</div>
+      <p class="hint">${n} ${n===1?'Person':'Personen'}. „Aus dem Team lösen“ behält die Freigaben, du kannst sie dann einzeln ändern.</p>`,
+      [{label:'Aus dem Team lösen',value:'leave'},...(t.owner===Sync.user.uid?[{label:'Team-Liste bearbeiten',value:'team'}]:[]),{label:'Schließen',value:null,cls:'primary'}]);
+    if(r.value==='team')return teamDialog();
+    if(r.value==='leave'){delete c.team;Sync.touch(pb);await Sync.push(pb.id);toast('Aus dem Team gelöst');return shareDialog(pb)}
+    return}}
   const c=pb.cloud;let list=[...(c.editors||[]).map(e=>({e,r:'edit'})),...(c.coaches||[]).map(e=>({e,r:'coach'})),...(c.readers||[]).map(e=>({e,r:'read'}))];
   const ROLES=[['read','Spieler – lesen'],['coach','Coach – lesen + Fortschritt'],['edit','Coach – bearbeiten']];
   const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}">${esc(x.e)}</span><select data-srole="${i}">${ROLES.map(([v,n])=>`<option value="${v}"${x.r===v?' selected':''}>${n}</option>`).join('')}</select><button type="button" class="btn sm" data-sdel="${i}" title="Freigabe entfernen">✕</button></div>`).join(''):'<p class="hint">Noch mit niemandem geteilt.</p>';
@@ -2634,7 +2771,7 @@ async function shareDialog(pb){
       <div style="flex:1"><label>Rechte</label><select id="sRole">${ROLES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select></div>
       <button type="button" class="btn sm" data-sadd="1">Hinzufügen</button></div>
     <p class="hint" style="font-size:12px"><b>Spieler – lesen:</b> sieht das Playbook, lernt, stellt Fragen; Zeit und Lern-Ergebnisse werden für die Coaches erfasst.<br><b>Coach – lesen + Fortschritt:</b> sieht das Playbook, den Fortschritt der Spieler und beantwortet Fragen, ändert aber nichts.<br><b>Coach – bearbeiten:</b> zusätzlich Plays ändern, anlegen und löschen. Freigeben und das Playbook löschen kannst nur du.</p>`,
-    [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
+    [...(Team.auto()?[{label:'Mit Team „'+Team.auto().name+'“ teilen',value:'team'}]:[]),{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
   const back=[...document.querySelectorAll('.mback')].pop();
   const add=()=>{const i=back.querySelector('#sEmail');const em=i.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em))return toast('Bitte eine gültige E-Mail-Adresse eingeben.');
     if(em===Sync.user.email)return toast('Das bist du selbst.');if(list.length>=50)return toast('Höchstens 50 Freigaben pro Playbook.');
@@ -2642,7 +2779,10 @@ async function shareDialog(pb){
   back.addEventListener('click',e=>{if(e.target.closest('[data-sadd]'))return add();const d=e.target.closest('[data-sdel]');if(d){list.splice(+d.dataset.sdel,1);back.querySelector('#shareList').innerHTML=rows()}});
   back.addEventListener('change',e=>{const s=e.target.closest('[data-srole]');if(s)list[+s.dataset.srole].r=s.value});
   back.addEventListener('keydown',e=>{if(e.target.id==='sEmail'&&e.key==='Enter'){e.preventDefault();e.stopPropagation();add()}},true);
-  const r=await p;if(r.value!=='ok')return;
+  const r=await p;
+  if(r.value==='team'){const t=Team.auto();if(!t)return;Team.apply(pb,t);Sync.touch(pb);await Sync.push(pb.id);renderSide();if(Sync.state==='ok')refreshAccess(pb).catch(e=>console.warn('access refresh',e));
+    return toast(Sync.state==='ok'?`Mit Team „${t.name}“ geteilt`:'Gespeichert – wird übertragen, sobald du online bist')}
+  if(r.value!=='ok')return;
   {const i=r.el.querySelector('#sEmail');if(i&&i.value.trim())add()}
   c.readers=list.filter(x=>x.r==='read').map(x=>x.e);c.editors=list.filter(x=>x.r==='edit').map(x=>x.e);c.coaches=list.filter(x=>x.r==='coach').map(x=>x.e);
   Sync.touch(pb);await Sync.push(pb.id);renderSide();
@@ -2876,6 +3016,8 @@ document.addEventListener('click',async e=>{
   const msw=e.target.closest('[data-mcolor]');
   if(msw){const m=findMark(state.sel);if(m){commit();m.color=msw.dataset.mcolor;changed({insp:true})}return}
   const tp=e.target.closest('[data-tpl]');if(tp){applyTemplate(+tp.dataset.tpl);return}
+  const otd=e.target.closest('[data-otpldel]');if(otd){delOwnTpl(otd.dataset.otpldel);return}
+  const ot=e.target.closest('[data-otpl]');if(ot){applyOwnTpl(ot.dataset.otpl);return}
   const tg=e.target.closest('[data-tag]');if(tg){toggleTag(tg.dataset.tag);return}
   const kd=e.target.closest('[data-kind]');if(kd){state.kindF=kd.dataset.kind;return renderSide()}
   const gp=e.target.closest('[data-grp]');if(gp){const k=gp.dataset.grp;state.collapsed[k]=!state.collapsed[k];try{localStorage.setItem('pbb-fold',JSON.stringify(state.collapsed))}catch(err){}return renderSide()}
@@ -2929,6 +3071,7 @@ document.addEventListener('click',async e=>{
       else{if(state.drawing)finishDrawing(true);pl.locked=true;state.sel=null;state.mode='select';toast('🔒 Play gesperrt')}
       Store.savePlay(pb,pl);renderAll();return}
     case 'dupPlay':return dupPlay();
+    case 'saveTpl':return saveOwnTpl();
     case 'setLayout':{const pb=curPb(),pl=curPlay();pb.layoutPlayId=pl.id;Store.savePb(pb);renderInsp();renderSide();
       if(pb.plays.length>1&&await confirmBox('Layout auf alle Plays anwenden?',`Farben und Formen von „${esc(pl.name)}“ werden auf alle ${pb.plays.length-1} anderen Plays übertragen (Spieler werden über ihre Bezeichnung zugeordnet, z. B. CB → CB). Neue Plays bekommen das Layout automatisch.`,'Anwenden'))applyLayoutAll();
       else toast('Layout-Vorlage festgelegt – neue Plays übernehmen sie automatisch.');return}
