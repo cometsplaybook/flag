@@ -128,6 +128,9 @@ body.presenting.quizzing .app{padding-left:256px}
 .phead{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:0 0 4px 16px}
 .prow{border-top:1px solid var(--line);padding:6px 0}.prow summary{cursor:pointer;list-style-position:outside}
 .pdet{padding:4px 0 2px 16px}.pdet div{display:grid;grid-template-columns:2fr 1fr 1.4fr .5fr;gap:6px;font-size:12px;padding:2px 0;border-bottom:1px dashed var(--line)}
+.tklist{max-height:62vh;overflow:auto}.tkrow{padding:8px 0;border-bottom:1px solid var(--line)}.tkplay{font-weight:700;margin-bottom:4px}.tkplay a{color:var(--ink);text-decoration:none}
+.tkcells{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px 10px}.tkp{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}.tkp b{min-width:26px}
+.tk{display:inline-flex;gap:3px;align-items:center}.tk input{width:110px;padding:3px 6px;font-size:13px}.tk input.miss{border-color:#dc2626;background:#fef2f2}.tk small{color:var(--muted);font-size:11px}
 .hrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .hrow svg{width:110px;border:1px solid var(--line);border-radius:4px}.hrow .hint{display:block;font-size:12px}
 .trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -263,9 +266,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-15.8';
+const APP_VERSION='2026-11-15.9';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1210,6 +1213,23 @@ function suggestTasks(pb){const changed=[];
     if(got.length){changed.push([pl,got])}});
   return changed;
 }
+async function tasksDialog(){
+  const pb=curPb();if(!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
+  const plays=pb.plays.filter(pl=>!isF(pl));const opts=taskOptions(pb);
+  const cell=(pl,p,r,k)=>{const auto=!r.task?taskOf(pl,{...p,route:r,alts:[]})[0]:null;const mt=(r.task?normTask(r.task)==='man':auto==='Man')?manTarget(pl,{...p,route:r,alts:[]}):null;const o=mt&&(pl.opp||[]).find(x=>x.id===mt);
+    return `<span class="tk"><input type="text" list="tkList" data-tk="${pl.id}|${p.id}|${k}" value="${esc(r.task||'')}" placeholder="${auto?esc(auto):'– fehlt –'}" class="${r.task||auto?'':'miss'}"${pl.locked||isRO(pb)?' disabled':''}>${o?`<small>→ ${esc(o.label)}</small>`:''}${auto&&!r.task?'<small title="von der App erkannt">auto</small>':''}${k!=='route'?'<small>Alt.</small>':''}</span>`};
+  const rows=plays.map(pl=>{const ps=pl.players.filter(p=>hasLine(p.route)||(p.alts||[]).some(hasLine));
+    const miss=ps.filter(p=>!taskOf(pl,p).length).length;
+    return `<div class="tkrow"><div class="tkplay"><a href="#" data-tkgo="${pl.id}">${playNo(pb,pl)}. ${esc(callName(pl))}</a>${miss?` <span class="qbadge">${miss} fehlt</span>`:''}${pl.locked?' 🔒':''}</div>
+      <div class="tkcells">${ps.map(p=>`<div class="tkp"><b>${esc(p.label)}</b>${[[p.route,'route'],...(p.alts||[]).map((r,j)=>[r,'alt'+j])].filter(([r])=>hasLine(r)).map(([r,k])=>cell(pl,p,r,k)).join('')}</div>`).join('')}</div></div>`}).join('');
+  const r=modal('📋 Aufgaben prüfen',`<p class="hint" style="margin-top:0">Das wird im 🎓 Lern-Modus abgefragt. Graue Einträge erkennt die App von selbst (Blitz, Man), <span style="color:#dc2626">rot</span> fehlt noch. Einfach hineinschreiben – wird sofort gespeichert. Auf den Play-Namen tippen öffnet das Play.</p>
+    <datalist id="tkList">${opts.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="tklist">${rows||'<p class="hint">Keine Plays.</p>'}</div>`,[{label:'Fertig',value:null,cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('change',e=>{const i=e.target.closest('[data-tk]');if(!i)return;const [plId,pid,k]=i.dataset.tk.split('|');const pl=pb.plays.find(x=>x.id===plId);const p=pl&&pl.players.find(x=>x.id===pid);if(!p||pl.locked)return;
+    const r=k==='route'?p.route:(p.alts||[])[+k.slice(3)];if(!r)return;const v=i.value.trim().slice(0,30);if(v)r.task=v;else delete r.task;i.classList.toggle('miss',!v&&!taskOf(pl,{...p,route:r,alts:[]}).length);Store.savePlay(pb,pl)});
+  back.addEventListener('click',e=>{const a=e.target.closest('[data-tkgo]');if(!a)return;e.preventDefault();back.remove();selectPlay(a.dataset.tkgo)});
+  await r;renderAll();
+}
 async function suggestDialog(){
   const pb=curPb();if(!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
   const before=new Map(pb.plays.map(pl=>[pl.id,JSON.stringify(pl)]));
@@ -1220,6 +1240,12 @@ async function suggestDialog(){
     <div class="picklist" style="max-height:50vh">${ch.map(([pl,g])=>`<div style="padding:4px 0;border-bottom:1px solid var(--line)"><b>${playNo(pb,pl)}. ${esc(callName(pl))}</b><br><span class="hint">${g.map(esc).join(' · ')}</span></div>`).join('')}</div>
     <p class="hint">Der vorherige Stand liegt bei jedem Play im 🕘 Verlauf.</p>`,[{label:'OK',value:null,cls:'primary'}]);
 }
+// whom does a man defender cover? linked receiver, else the receiver at the end of his line
+function manTarget(pl,p){for(const r of [p.route,...(p.alts||[])]){if(!r||!hasLine(r))continue;
+    const isMan=(r.task&&normTask(r.task)==='man')||(!r.task&&taskOf(pl,p).includes('Man'));if(!isMan)continue;
+    if(r.man&&(pl.opp||[]).some(o=>o.id===r.man))return r.man;
+    const L=r.pts[r.pts.length-1];let best=null,bd=2.6;(pl.opp||[]).forEach(o=>{const d=Math.hypot(o.x-(p.x+L.x),o.y-(p.y+L.y));if(d<bd){bd=d;best=o.id}});if(best)return best}
+  return null}
 function quizInfo(pb,pl){
   const isQB=p=>(p.label||'').toUpperCase()==='QB';
   const hasReads=pb.type==='offense'&&pl.players.some(p=>p.read>0);
@@ -1227,9 +1253,11 @@ function quizInfo(pb,pl){
   const missing=pl.players.filter(p=>!asked.includes(p)&&(hasLine(p.route)||(p.alts||[]).some(hasLine)));
   return {asked,missing,hasReads,isQB};
 }
-function qaState(){const pl=curPlay();if(!state.qa||state.qa.playId!==(pl&&pl.id))state.qa={playId:pl&&pl.id,pick:null,ans:{},reads:[],readMode:false};return state.qa}
+function qaState(){const pl=curPlay();if(!state.qa||state.qa.playId!==(pl&&pl.id))state.qa={playId:pl&&pl.id,pick:null,ans:{},man:{},manPick:null,reads:[],readMode:false};return state.qa}
 function quizResult(pb,pl){const qa=qaState(),qi=quizInfo(pb,pl);const res={};let ok=0,n=0;
-  qi.asked.forEach(p=>{const right=taskOf(pl,p);if(!right.length)return;n++;const a=qa.ans[p.id];const good=!!a&&right.some(r=>normTask(r)===normTask(a));if(good)ok++;res[p.id]={good,a,right}});
+  qi.asked.forEach(p=>{const right=taskOf(pl,p);if(!right.length)return;n++;const a=qa.ans[p.id];const mt=manTarget(pl,p);
+    let good=!!a&&right.some(r=>normTask(r)===normTask(a));const manWrong=good&&normTask(a)==='man'&&mt&&qa.man[p.id]!==mt;if(manWrong)good=false;
+    if(good)ok++;res[p.id]={good,a,right,mt,manWrong}});
   let reads=null;if(qi.hasReads){const want=pl.players.filter(p=>p.read>0).sort((a,b)=>a.read-b.read).map(p=>p.id);n++;
     const good=want.length===qa.reads.length&&want.every((id,i)=>qa.reads[i]===id);if(good)ok++;reads={good,want}}
   return {res,reads,ok,n}}
@@ -1241,16 +1269,25 @@ function quizOverlay(pb,pl,base,flip){
     const b=base(p);if(qa.pick===p.id)s+=`<circle cx="${b[0].toFixed(1)}" cy="${b[1].toFixed(1)}" r="15" fill="none" stroke="#f59e0b" stroke-width="3" pointer-events="none"/>`;
     if(qi.isQB(p)&&!taskOf(pl,p).length)return;
     const a=qa.ans[p.id];
-    if(!shown)s+=tag(p,a||'?',a?'#dbeafe':'#fff','#1d4ed8',11);
-    else{const r=R.res[p.id];if(!r)return;s+=tag(p,(r.good?'✓ ':'✗ ')+(r.good?r.a:(r.a?r.a+' → ':'')+r.right[0]),r.good?'#16a34a':'#dc2626','#fff',11)}});
+    const oL=id=>{const o=(pl.opp||[]).find(x=>x.id===id);return o?o.label:'?'};
+    const mine=qa.man[p.id];
+    if(mine&&normTask(a)==='man'){const o=(pl.opp||[]).find(x=>x.id===mine);if(o){const b1=base(p),b2=base(o);
+      s+=`<line x1="${b1[0].toFixed(1)}" y1="${b1[1].toFixed(1)}" x2="${b2[0].toFixed(1)}" y2="${b2[1].toFixed(1)}" stroke="${shown?(R.res[p.id]&&!R.res[p.id].manWrong&&R.res[p.id].good?'#16a34a':'#dc2626'):'#1d4ed8'}" stroke-width="2" stroke-dasharray="5 4" pointer-events="none"/>`}}
+    const lbl=x=>x&&normTask(x)==='man'&&mine?x+' → '+oL(mine):x;
+    if(!shown)s+=tag(p,a?lbl(a):'?',a?'#dbeafe':'#fff','#1d4ed8',11);
+    else{const r=R.res[p.id];if(!r)return;
+      const want=r.right[0]+(normTask(r.right[0])==='man'&&r.mt?' → '+oL(r.mt):'');
+      s+=tag(p,(r.good?'✓ '+lbl(r.a):'✗ '+(r.a?lbl(r.a)+' – richtig: ':'')+want),r.good?'#16a34a':'#dc2626','#fff',11)}});
   if(qi.hasReads){
     qa.reads.forEach((id,i)=>{const p=pl.players.find(x=>x.id===id);if(!p)return;const good=shown?R.reads.want[i]===id:null;
       s+=tag(p,'R'+(i+1),shown?(good?'#16a34a':'#dc2626'):'#fde68a',shown?'#fff':'#92400e',-26)});
     if(shown&&!R.reads.good)R.reads.want.forEach((id,i)=>{if(qa.reads[i]===id)return;const p=pl.players.find(x=>x.id===id);if(p)s+=tag(p,'richtig: R'+(i+1),'#fff','#16a34a',-40)})}
   return s;
 }
+function quizPickOpp(oid){const qa=qaState();if(state.quizShown||!qa.manPick)return;qa.man[qa.manPick]=oid;qa.manPick=null;quizNext();renderField();quizPanel()}
+function quizNext(){const qa=qaState(),pl=curPlay(),qi=quizInfo(curPb(),pl);const next=qi.asked.find(x=>!qa.ans[x.id]&&!(qi.isQB(x)&&!taskOf(pl,x).length));qa.pick=next?next.id:null}
 function quizPick(pid){
-  const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;
+  const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;qa.manPick=null;
   const p=pl.players.find(x=>x.id===pid);if(!p)return;
   if(qa.readMode&&!qi.isQB(p)){const i=qa.reads.indexOf(pid);if(i>=0)qa.reads.splice(i,1);else qa.reads.push(pid);renderField();return renderPresentBar()}
   if(!qi.asked.includes(p)){toast('Für diesen Spieler ist keine Aufgabe hinterlegt.');return}
@@ -1266,9 +1303,10 @@ function quizPanel(){
       <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="presNext">Nächstes Play ▶</button>`;
     return}
   if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
-  const done=qi.asked.filter(x=>qa.ans[x.id]||(qi.isQB(x)&&qa.reads.length)).length;
+  const done=qi.asked.filter(x=>(qa.ans[x.id]&&!(qa.manPick===x.id))||(qi.isQB(x)&&qa.reads.length)).length;
   let h=`<h4>🎓 Was macht wer?</h4><p class="hint" style="margin-top:0">${done} von ${qi.asked.length} beantwortet</p>`;
-  if(!p)h+=`<p>Tippe zuerst auf einen <b>Spieler</b> auf dem Feld.</p>`;
+  if(qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick);h+=`<p><b>${esc(mp?mp.label:'')}</b> spielt Man – tippe jetzt den <b>Gegenspieler</b> an, den er deckt.</p>`}
+  else if(!p)h+=`<p>Tippe zuerst auf einen <b>Spieler</b> auf dem Feld.</p>`;
   else if(qa.readMode)h+=`<p><b>${esc(p.label)}</b>: Tippe die Receiver in der Reihenfolge an, in der der QB liest (Read 1, 2, 3 …).</p>
     <p class="hint">${qa.reads.length?qa.reads.map((id,i)=>'R'+(i+1)+' '+esc((pl.players.find(x=>x.id===id)||{}).label||'')).join(' · '):'noch keine Reads'}</p>
     <button class="btn sm" data-qr="clear">Reads zurücksetzen</button> <button class="btn sm primary" data-qr="done">Fertig</button>`;
@@ -1281,7 +1319,8 @@ function quizPanel(){
 }
 document.addEventListener('click',e=>{
   const o=e.target.closest('[data-qopt]');if(o){const qa=qaState();if(!qa.pick)return;qa.ans[qa.pick]=o.dataset.qopt;
-    const qi=quizInfo(curPb(),curPlay());const next=qi.asked.find(x=>!qa.ans[x.id]&&!(qi.isQB(x)&&!taskOf(curPlay(),x).length));qa.pick=next?next.id:null;renderField();return quizPanel()}
+    if(normTask(o.dataset.qopt)==='man'&&(curPlay().opp||[]).length&&curPlay().showOpp){qa.manPick=qa.pick;renderField();return quizPanel()}   // then: whom?
+    delete qa.man[qa.pick];quizNext();renderField();return quizPanel()}
   const r=e.target.closest('[data-qr]');if(r){const qa=qaState();const k=r.dataset.qr;
     if(k==='clear')qa.reads=[];if(k==='done'){qa.readMode=false;qa.pick=null}if(k==='start'){qa.readMode=true;qa.pick=curPlay().players.find(x=>(x.label||'').toUpperCase()==='QB').id}
     renderField();return quizPanel()}
@@ -1397,7 +1436,7 @@ function addPoint(q){
 }
 
 function onDown(e){
-  if(state.present&&state.quiz&&!state.anim&&!Laser.on){const t=e.target.closest('[data-p]');if(t&&t.dataset.opp==='0')quizPick(t.dataset.p);return}
+  if(state.present&&state.quiz&&!state.anim&&!Laser.on){const t=e.target.closest('[data-p]');if(t&&t.dataset.opp==='0')quizPick(t.dataset.p);else if(t&&t.dataset.opp==='1')quizPickOpp(t.dataset.p);return}
   if(Laser.on||state.present||state.anim||!curPlay())return;
   if(isLk(curPlay())){toast(isRO(curPb())?'👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.':'🔒 Play ist gesperrt – oben auf das Schloss klicken zum Entsperren.');return}
   const q=toField(e);if(!q)return;
@@ -1746,6 +1785,7 @@ async function pbMenu(){
     <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>
     <div class="row" style="margin:6px 0"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>
     ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>':''}
+    <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="tasksCheck" title="Alle Aufgaben für den Lern-Modus auf einen Blick">📋 Aufgaben prüfen</button></div>
     <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben für Lernen vorschlagen</button></div>
     ${Sync.on()?`<p class="hint" style="margin:0">${nShare(pb.cloud)?`👥 Geteilt mit ${nShare(pb.cloud)} ${nShare(pb.cloud)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
     [{label:'Löschen',value:'del',cls:'danger'},...(Sync.on()?[{label:'👥 Freigeben',value:'share'}]:[]),{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
@@ -2841,6 +2881,7 @@ document.addEventListener('click',async e=>{
     case 'toPlay':return setKind(false);
     case 'lockAll':case 'unlockAll':return lockAll(act==='lockAll');
     case 'suggestTasks':return suggestDialog();
+    case 'tasksCheck':return tasksDialog();
     case 'progress':return progressDialog(curPb());
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
