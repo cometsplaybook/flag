@@ -269,9 +269,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.1';
+const APP_VERSION='2026-11-16.4';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -835,7 +835,7 @@ function playMarkup(pb,pl,o={}){
   const marks=pl.marks||[];
   if(!o.hide)marks.filter(m=>m.type==='zone').forEach(m=>{s+=markMarkup(m,v,o)});
   if(o.interactive&&!o.anim)s+=`<rect data-los="1" x="0" y="${los-4}" width="${dims(v).fw}" height="8" fill="#000" fill-opacity="0" style="cursor:ns-resize"/>`;
-  const showOpp=pl.showOpp&&pl.opp&&pl.opp.length;
+  const showOpp=(pl.showOpp||(o.quiz&&quizNeedsOpp(pl)))&&pl.opp&&pl.opp.length;
   // layer order: routes (opponent, own) -> opponent players -> own players
   if(showOpp){s+='<g opacity=".5">';pl.opp.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,'#9ca3af')});s+='</g>';}
   if(o.quiz&&state.quizShown)o={...o,qcol:quizColors(pb,pl)};
@@ -1239,11 +1239,17 @@ async function tasksDialog(){
     return `<div class="tkrow"><div class="tkplay"><a href="#" data-tkgo="${pl.id}">${playNo(pb,pl)}. ${esc(callName(pl))}</a>${miss?` <span class="qbadge">${miss} fehlt</span>`:''}${pl.locked?' 🔒':''}</div>
       <div class="tkcells">${ps.map(p=>`<div class="tkp"><b>${esc(p.label)}</b>${[[p.route,'route'],...(p.alts||[]).map((r,j)=>[r,'alt'+j])].filter(([r])=>hasLine(r)).map(([r,k])=>cell(pl,p,r,k)).join('')}</div>`).join('')}</div></div>`}).join('');
   const r=modal('📋 Aufgaben prüfen',`<p class="hint" style="margin-top:0">Das wird im 🎓 Lern-Modus abgefragt. Graue Einträge erkennt die App von selbst (Blitz, Man), <span style="color:#dc2626">rot</span> fehlt noch. Einfach hineinschreiben – wird sofort gespeichert. Auf den Play-Namen tippen öffnet das Play.</p>
+    ${isRO(pb)?'':`<div class="row" style="margin:0 0 8px"><button type="button" class="btn sm" data-tkrest="1" title="Aufgaben-Namen, die verloren gingen, aus den früheren Ständen (🕘 Verlauf) auf diesem Gerät zurückholen">🕘 Fehlende aus dem Verlauf holen</button><button type="button" class="btn sm" data-tksug="1" title="Für Linien ohne Aufgabe einen Namen vorschlagen">🎓 Fehlende vorschlagen</button></div>`}
     <datalist id="tkList">${opts.map(n=>`<option value="${esc(n)}">`).join('')}</datalist><div class="tklist">${rows||'<p class="hint">Keine Plays.</p>'}</div>`,[{label:'Fertig',value:null,cls:'primary'}]);
   const back=[...document.querySelectorAll('.mback')].pop();
   back.addEventListener('change',e=>{const i=e.target.closest('[data-tk]');if(!i)return;const [plId,pid,k]=i.dataset.tk.split('|');const pl=pb.plays.find(x=>x.id===plId);const p=pl&&pl.players.find(x=>x.id===pid);if(!p||pl.locked)return;
     const r=k==='route'?p.route:(p.alts||[])[+k.slice(3)];if(!r)return;const v=i.value.trim().slice(0,30);if(v)r.task=v;else delete r.task;i.classList.toggle('miss',!v&&!taskOf(pl,{...p,route:r,alts:[]}).length);Store.savePlay(pb,pl)});
-  back.addEventListener('click',e=>{const a=e.target.closest('[data-tkgo]');if(!a)return;e.preventDefault();back.remove();selectPlay(a.dataset.tkgo)});
+  back.addEventListener('click',async e=>{
+    if(e.target.closest('[data-tkrest]')){const [n,pls]=await restoreTasksFromHistory(pb);back.remove();renderAll();
+      if(!n)return toast('Im Verlauf auf diesem Gerät waren keine passenden Aufgaben – probier „🎓 Fehlende vorschlagen“ oder ein anderes Gerät.');
+      toast(`${n} Aufgaben in ${pls} Plays zurückgeholt`);return tasksDialog()}
+    if(e.target.closest('[data-tksug]')){back.remove();await suggestDialog();return}
+    const a=e.target.closest('[data-tkgo]');if(!a)return;e.preventDefault();back.remove();selectPlay(a.dataset.tkgo)});
   await r;renderAll();
 }
 async function suggestDialog(){
@@ -1308,10 +1314,16 @@ function quizOverlay(pb,pl,base,flip){
   return s;
 }
 function quizPickOpp(oid){const qa=qaState();if(state.quizShown||!qa.manPick)return;qa.man[qa.manPick]=oid;qa.manPick=null;quizNext();renderField();quizPanel()}
+// learn mode: Man is only answered once the opponent is tapped as well
+const manOpen=(pl,qa,id)=>normTask(qa.ans[id]||'')==='man'&&(pl.opp||[]).length>0&&!qa.man[id];
+function quizNeedsOpp(pl){const qa=state.qa&&state.qa.playId===pl.id?state.qa:null;
+  return pl.players.some(p=>manTarget(pl,p))||!!(qa&&Object.values(qa.ans).some(a=>normTask(a)==='man'))}
 function quizNext(){const qa=qaState(),pl=curPlay(),qi=quizInfo(curPb(),pl);const next=qi.asked.find(x=>!qa.ans[x.id]&&!(qi.isQB(x)&&!taskOf(pl,x).length));qa.pick=next?next.id:null}
 function quizPick(pid){
-  const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;qa.manPick=null;
+  const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;
   const p=pl.players.find(x=>x.id===pid);if(!p)return;
+  if(qa.manPick&&pid!==qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick);toast(`Erst den Gegenspieler antippen, den ${mp?mp.label:'er'} in Man deckt.`);return}
+  if(qa.manPick===pid){qa.manPick=null;delete qa.ans[pid];delete qa.man[pid]}   // same player again: choose his task anew
   if(qa.readMode&&!qi.isQB(p)){const i=qa.reads.indexOf(pid);if(i>=0)qa.reads.splice(i,1);else qa.reads.push(pid);renderField();return renderPresentBar()}
   if(!qi.asked.includes(p)){toast('Für diesen Spieler ist keine Aufgabe hinterlegt.');return}
   qa.pick=pid;qa.readMode=qi.isQB(p)&&qi.hasReads&&!taskOf(pl,p).length;renderField();renderPresentBar();
@@ -1326,14 +1338,14 @@ function quizPanel(){
       <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="presNext">Nächstes Play ▶</button>`;
     return}
   if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
-  const done=qi.asked.filter(x=>(qa.ans[x.id]&&!(qa.manPick===x.id))||(qi.isQB(x)&&qa.reads.length)).length;
+  const done=qi.asked.filter(x=>(qa.ans[x.id]&&!manOpen(pl,qa,x.id))||(qi.isQB(x)&&qa.reads.length)).length;
   let h=`<h4>🎓 Was macht wer?</h4><p class="hint" style="margin-top:0">${done} von ${qi.asked.length} beantwortet</p>`;
-  if(qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick);h+=`<p><b>${esc(mp?mp.label:'')}</b> spielt Man – tippe jetzt den <b>Gegenspieler</b> an, den er deckt.</p>`}
+  if(qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick);h+=`<p><b>${esc(mp?mp.label:'')}</b> spielt Man – tippe jetzt den <b>Gegenspieler</b> an, den er deckt.</p><p class="hint">Andere Aufgabe? ${esc(mp?mp.label:'')} nochmal antippen.</p>`}
   else if(!p)h+=`<p>Tippe zuerst auf einen <b>Spieler</b> auf dem Feld.</p>`;
   else if(qa.readMode)h+=`<p><b>${esc(p.label)}</b>: Tippe die Receiver in der Reihenfolge an, in der der QB liest (Read 1, 2, 3 …).</p>
     <p class="hint">${qa.reads.length?qa.reads.map((id,i)=>'R'+(i+1)+' '+esc((pl.players.find(x=>x.id===id)||{}).label||'')).join(' · '):'noch keine Reads'}</p>
     <button class="btn sm" data-qr="clear">Reads zurücksetzen</button> <button class="btn sm primary" data-qr="done">Fertig</button>`;
-  else h+=`<p>Aufgabe von <b>${esc(p.label)}</b>:</p><div class="qopts">${taskOptions(pb).map(n=>`<button class="qopt${qa.ans[p.id]===n?' on':''}" data-qopt="${esc(n)}">${esc(n)}</button>`).join('')}</div>`;
+  else h+=`<p>Aufgabe von <b>${esc(p.label)}</b>:</p>${qa.man[p.id]?`<p class="hint" style="margin-top:-4px">Man gegen <b>${esc(((pl.opp||[]).find(x=>x.id===qa.man[p.id])||{}).label||'?')}</b> – zum Ändern nochmal „Man“ wählen.</p>`:''}<div class="qopts">${taskOptions(pb).map(n=>`<button class="qopt${qa.ans[p.id]===n?' on':''}" data-qopt="${esc(n)}">${esc(n)}</button>`).join('')}</div>`;
   if(qi.hasReads&&!qa.readMode){const qb=pl.players.find(qi.isQB);if(qb&&taskOf(pl,qb).length)h+=`<p style="margin-top:10px"><button class="btn sm" data-qr="start">QB-Reads festlegen</button></p>`}
   if(qi.missing.length)h+=`<p class="hint" style="margin-top:10px;font-size:11px">Nicht abgefragt (keine Aufgabe hinterlegt): ${qi.missing.map(x=>esc(x.label)).join(', ')}</p>`;
   h+=`<button class="btn primary" data-a="quizShow" style="width:100%;margin-top:10px">👁 Aufdecken</button>`;
@@ -1342,7 +1354,7 @@ function quizPanel(){
 }
 document.addEventListener('click',e=>{
   const o=e.target.closest('[data-qopt]');if(o){const qa=qaState();if(!qa.pick)return;qa.ans[qa.pick]=o.dataset.qopt;
-    if(normTask(o.dataset.qopt)==='man'&&(curPlay().opp||[]).length&&curPlay().showOpp){qa.manPick=qa.pick;renderField();return quizPanel()}   // then: whom?
+    if(normTask(o.dataset.qopt)==='man'&&(curPlay().opp||[]).length){delete qa.man[qa.pick];qa.manPick=qa.pick;renderField();return quizPanel()}   // then: whom?
     delete qa.man[qa.pick];quizNext();renderField();return quizPanel()}
   const r=e.target.closest('[data-qr]');if(r){const qa=qaState();const k=r.dataset.qr;
     if(k==='clear')qa.reads=[];if(k==='done'){qa.readMode=false;qa.pick=null}if(k==='start'){qa.readMode=true;qa.pick=curPlay().players.find(x=>(x.label||'').toUpperCase()==='QB').id}
@@ -1829,6 +1841,7 @@ async function pbMenu(){
     const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</span></p>
       <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> ${c.role==='read'?' – du kannst es <b>lesen</b>':' – du bist hier <b>Coach</b>'}.</div>
       ${c.role==='read'?'<p class="hint">Dein Coach sieht, wie lange du im Playbook warst und deine Ergebnisse im 🎓 Lern-Modus.</p>':'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>'}
+      ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="snaps">🗄 Cloud-Sicherungen</button></div>':''}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>':''}`,
       [{label:'Aus meiner Liste entfernen',value:'unshare',cls:'danger'},{label:'Schließen',value:null,cls:'primary'}]);
     if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);toast('Aus deiner Liste entfernt')}
@@ -1837,6 +1850,7 @@ async function pbMenu(){
     <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>
     <div class="row" style="margin:6px 0"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>
     ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>':''}
+    ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="snaps" title="Tägliche Sicherungen dieses Playbooks in der Cloud">🗄 Cloud-Sicherungen</button></div>':''}
     <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="tasksCheck" title="Alle Aufgaben für den Lern-Modus auf einen Blick">📋 Aufgaben prüfen</button></div>
     <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben für Lernen vorschlagen</button></div>
     ${Sync.user&&Team.auto()&&!(pb.cloud&&pb.cloud.team)?`<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm primary" data-a="pbToTeam">👥 Mit Team „${esc(Team.auto().name)}“ teilen</button></div>`:''}
@@ -2386,10 +2400,10 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     if(!r.ok){const er=new Error((j&&j.error&&j.error.message)||('HTTP '+r.status));er.status=r.status;er.code=j&&j.error&&j.error.status;throw er}
     return j;
   },
-  enc(pb){const c=pb.cloud;const data=clone(pb);delete data.cloud;
+  enc(pb){const c=pb.cloud;const data=clone(pb);delete data.cloud;data.fmt=2;   // fmt 2: written by a version that knows task names
     const arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
     return {fields:{owner:{stringValue:c.owner},ownerEmail:{stringValue:c.ownerEmail||''},name:{stringValue:pb.name||''},type:{stringValue:pb.type},variant:{stringValue:pb.variant},
-      readers:arr(c.readers),editors:arr(c.editors),coaches:arr(c.coaches),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email},
+      readers:arr(c.readers),editors:arr(c.editors),coaches:arr(c.coaches),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email},fmt:{integerValue:'2'},
       ...(c.team?{team:{stringValue:c.team}}:{})}};
   },
   dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue).filter(Boolean);
@@ -2399,7 +2413,10 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document));
   },
   parse(d){let src;try{src=JSON.parse(d.data)}catch(e){return null}
-    try{const pb=cleanPb({...src,id:d.id},true);migrateFlag(pb);return pb}catch(e){console.warn('skip shared playbook',e);return null}},
+    try{const pb=cleanPb({...src,id:d.id},true);migrateFlag(pb);
+      // saved by an old app version that drops task names: keep the names this device still has
+      if(src.fmt!==2){const loc=state.pbs.find(x=>x.id===d.id);if(loc)pb.plays.forEach(pl=>{const lp=loc.plays.find(x=>x.id===pl.id);if(lp)keepTasks(pl,lp)})}
+      return pb}catch(e){console.warn('skip shared playbook',e);return null}},
   role(d){const e=this.user.email;return d.owner===this.user.uid?'own':d.editors.includes(e)?'edit':(d.coaches||[]).includes(e)?'coach':'read'},
   hidden(){try{return JSON.parse(localStorage.getItem('pbb-hidden')||'[]')}catch(e){return []}},
   // ----- push a playbook (after changes, 2.5 s later) -----
@@ -2414,7 +2431,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     try{
       const q=pb.cloud.ut?'currentDocument.updateTime='+encodeURIComponent(pb.cloud.ut):'currentDocument.exists=false';
       const j=await this.req('PATCH',`/playbooks/${encodeURIComponent(pb.id)}`,this.enc(pb),q);
-      pb.cloud.ut=j.updateTime;pb.cloud.dirty=false;this.state='ok';Store.saveLocal();
+      pb.cloud.ut=j.updateTime;pb.cloud.dirty=false;this.state='ok';Store.saveLocal();Snap.save(pb);
     }catch(e){
       if(e.offline||e.message==='offline'){this.state='offline';this.later();}
       else if(!retry&&(e.code==='FAILED_PRECONDITION'||e.status===409||e.code==='ALREADY_EXISTS'||e.code==='NOT_FOUND')){   // someone else saved in between: merge and try again
@@ -2613,6 +2630,47 @@ function authMsg(m){m=String(m||'');
   return 'Das hat nicht geklappt'+(m?' ('+m+')':'')+'. Bist du online?';
 }
 // newer version of each play wins; deletions (tombstones) win over older versions
+// copy task names from another state of the same play onto lines that lost them (only where the line itself is unchanged)
+function keepTasks(pl,src){let n=0;
+  const same=(a,b)=>a&&b&&a.pts.length===b.pts.length&&a.pts.every((q,i)=>Math.abs(q.x-b.pts[i].x)<0.05&&Math.abs(q.y-b.pts[i].y)<0.05)&&(a.end||'arrow')===(b.end||'arrow');
+  pl.players.forEach(p=>{const o=(src.players||[]).find(x=>x.id===p.id)||(src.players||[]).find(x=>x.label===p.label&&Math.abs(x.x-p.x)<0.05&&Math.abs(x.y-p.y)<0.05);if(!o)return;
+    const L=[p.route,...(p.alts||[])],O=[o.route,...(o.alts||[])].filter(Boolean);
+    L.forEach(r=>{if(!r||r.task)return;const m=O.find(x=>x.task&&same(r,x));if(m){r.task=m.task;n++}})});
+  return n}
+async function restoreTasksFromHistory(pb){let n=0,pls=0;
+  for(const pl of pb.plays){if(isF(pl)||pl.locked)continue;const l=await Hist.list(pl.id);let k=0;
+    for(const h of l){let old;try{old=JSON.parse(h.json)}catch(e){continue}k+=keepTasks(pl,old)}
+    if(k){n+=k;pls++;Store.savePlay(pb,pl)}}
+  return [n,pls]}
+/* ---------- 🗄 cloud snapshots: one copy per playbook and day (the last state of that day), never deleted by the app ---------- */
+const Snap={at:{},
+  day(t=Date.now()){const d=new Date(t);return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')},
+  async save(pb){const u=Sync.user,c=pb.cloud;if(!u||!c||!(c.role==='own'||c.role==='edit'))return;
+    const now=Date.now(),wait=5*60000-(now-(this.at[pb.id]||0));   // at most every 5 minutes, the last change of a burst follows
+    if(wait>0){this.tm=this.tm||{};if(!this.tm[pb.id])this.tm[pb.id]=setTimeout(()=>{delete this.tm[pb.id];const p=state.pbs.find(x=>x.id===pb.id);if(p)this.save(p)},wait);return}
+    this.at[pb.id]=now;
+    const data=clone(pb);delete data.cloud;data.fmt=2;
+    const doc={fields:{pb:{stringValue:pb.id},owner:{stringValue:c.owner||u.uid},editors:{arrayValue:{values:(c.editors||[]).map(v=>({stringValue:v}))}},name:{stringValue:pb.name||''},
+      at:{integerValue:String(now)},by:{stringValue:u.email},n:{integerValue:String(pb.plays.length)},data:{stringValue:JSON.stringify(data)}}};
+    try{await Sync.req('PATCH','/snapshots/'+encodeURIComponent(pb.id+'_'+this.day(now)),doc)}catch(e){this.at[pb.id]=0;console.warn('snapshot',e)}},
+  async list(pb,days=21){const base='projects/'+FIREBASE.projectId+'/databases/(default)/documents/snapshots/';
+    const names=[...Array(days)].map((_,i)=>base+pb.id+'_'+this.day(Date.now()-i*864e5));
+    const j=await Sync.req('POST',':batchGet',{documents:names,mask:{fieldPaths:['pb','at','by','n','name']}});
+    return (Array.isArray(j)?j:[]).filter(x=>x.found).map(x=>{const f=x.found.fields||{};return {id:x.found.name.split('/').pop(),at:+(f.at&&f.at.integerValue||0),by:f.by&&f.by.stringValue||'',n:+(f.n&&f.n.integerValue||0),name:f.name&&f.name.stringValue||''}}).sort((a,b)=>b.at-a.at)},
+  async load(id){const j=await Sync.req('GET','/snapshots/'+encodeURIComponent(id));return JSON.parse(j.fields.data.stringValue)}
+};
+async function snapDialog(pb){if(!Sync.user||!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
+  let l;try{l=await Snap.list(pb)}catch(e){return toast(/denied|PERMISSION|403/i.test(e.message+e.status)?'Cloud-Sicherungen noch nicht freigeschaltet – bitte die neuen Firebase-Regeln veröffentlichen.':'Sicherungen nicht erreichbar: '+e.message)}
+  const fmt=t=>new Date(t).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'})+', '+new Date(t).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr';
+  const r=modal('🗄 Cloud-Sicherungen – '+esc(pb.name),`<p class="hint" style="margin-top:0">Für jeden Tag mit Änderungen liegt der letzte Stand dieses Playbooks in der Cloud (die letzten 3 Wochen werden angezeigt). Wiederherstellen legt eine <b>Kopie</b> als neues Playbook an – das aktuelle bleibt unverändert, du kannst also nichts kaputt machen.</p>
+    ${l.length?l.map((x,i)=>`<div class="trow"><div><b>${fmt(x.at)}</b><span class="hint">${x.n} Einträge · gespeichert von ${esc(x.by)}</span></div><span></span><button type="button" class="btn sm primary" data-snap="${i}">Als Kopie wiederherstellen</button></div>`).join(''):'<p class="hint">Noch keine Sicherung – sie entsteht automatisch, sobald das Playbook synchronisiert wird.</p>'}`,
+    [{label:'Schließen',value:null,cls:'primary'}]);
+  const back=[...document.querySelectorAll('.mback')].pop();
+  back.addEventListener('click',async e=>{const b=e.target.closest('[data-snap]');if(!b)return;const x=l[+b.dataset.snap];b.disabled=true;
+    try{const src=await Snap.load(x.id);const np=cleanPb({...src,id:uid('pb')},false);migrateFlag(np);np.name=(src.name||pb.name)+' (Sicherung '+new Date(x.at).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})+')';
+      delete np.cloud;state.pbs.push(np);Store.savePb(np);np.plays.forEach(pl=>Store.savePlay(np,pl));back.remove();selectPb(np.id);renderAll();
+      toast('Sicherung als neues Playbook „'+np.name+'“ angelegt')}catch(err){b.disabled=false;toast('Wiederherstellen nicht möglich: '+err.message)}});
+  await r}
 function mergePb(loc,rem){
   const del={...(rem.del||{})};Object.entries(loc.del||{}).forEach(([k,v])=>{if(!del[k]||v>del[k])del[k]=v});
   const map=new Map();[...rem.plays,...loc.plays].forEach(pl=>{const o=map.get(pl.id);if(!o||(pl.updated||0)>(o.updated||0))map.set(pl.id,pl)});
@@ -3109,6 +3167,7 @@ document.addEventListener('click',async e=>{
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
     case 'teamPlays':return teamPlaysDialog();
+    case 'snaps':return snapDialog(curPb());
     case 'playToTeam':return playToTeam();
     case 'pbToTeam':{const pb=curPb(),t=Team.auto();if(!pb||!t)return;document.querySelectorAll('.mback').forEach(x=>x.remove());Sync.touch(pb);Team.apply(pb,t);Sync.touch(pb);await Sync.push(pb.id);renderSide();
       if(Sync.state==='ok')refreshAccess(pb).catch(e=>console.warn('access refresh',e));return toast(Sync.state==='ok'?`„${pb.name}“ ist jetzt mit dem Team „${t.name}“ geteilt`:'Gespeichert – wird übertragen, sobald du online bist')}
@@ -3183,7 +3242,9 @@ document.addEventListener('click',async e=>{
     case 'video':return exportAnim('video');
     case 'gif':return exportAnim('gif');
     case 'quiz':state.quiz=!state.quiz;state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
-    case 'quizShow':if(state.quizShown)state.qa=null;else{const R=quizResult(curPb(),curPlay());Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
+    case 'quizShow':if(!state.quizShown){const pl=curPlay(),qa=qaState();const open=pl&&pl.players.find(p=>manOpen(pl,qa,p.id));
+      if(open){qa.pick=open.id;qa.manPick=open.id;renderField();quizPanel();return toast(`${open.label} spielt Man – erst den Gegenspieler antippen.`)}}
+    if(state.quizShown)state.qa=null;else{const R=quizResult(curPb(),curPlay());Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
     case 'quizRand':{const pb=curPb();if(pb.plays.length>1){let i;do{i=Math.floor(Math.random()*pb.plays.length)}while(pb.plays[i].id===state.playId);selectPlay(pb.plays[i].id)}return}
     case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
