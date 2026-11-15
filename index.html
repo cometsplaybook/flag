@@ -266,9 +266,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-15.9';
+const APP_VERSION='2026-11-15.10';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -332,7 +332,7 @@ const OFF_T=[
 ];
 const DEF_T=[
   {n:'Blitz',k:'blitz'},{n:'Contain',k:'contain'},{n:'Deep ½',k:'deep2'},
-  {n:'Deep ⅓',k:'deep3'},{n:'Deep ¼',k:'deep4'},{n:'Deep Mitte',k:'deepm'},{n:'Flat',k:'flat'},
+  {n:'Deep ⅓',k:'deep3'},{n:'Deep ¼',k:'deep4'},{n:'Deep Middle',k:'deepm'},{n:'Flat',k:'flat'},
   {n:'Hook/Curl',k:'hook'},{n:'Hole',k:'hole'},{n:'Man',k:'man'}
 ];
 const CATS={
@@ -794,13 +794,14 @@ function routeMarkup(p,base,faded,force,o){
   const hit=!!(o&&o.interactive&&!force&&!faded);
   const sr=(o&&o.sel===p.id&&o.selRoute)||null;
   const meta=(k,j)=>({pid:p.id,k,j,hit,sel:!!(sr&&sr.k===k&&(sr.j||0)===j)});
-  (p.alts||[]).forEach((r,j)=>{s+=oneRoute(r,base,base,col,op,force,meta('alt',j))});
+  const qc=(o&&o.qcol&&o.qcol[p.id])||{};   // learn mode result: the answered line green / red
+  (p.alts||[]).forEach((r,j)=>{const c=qc['alt'+j];s+=oneRoute(r,base,base,c||col,op,c||force,meta('alt',j))});
   let start=base;
   if(p.motion&&p.motion.pts&&p.motion.pts.length){
     const m=absPts(p,p.motion.pts,base);start=m[m.length-1];
     s+=oneRoute(p.motion,base,base,col,op,force,meta('motion',0));
   }
-  s+=oneRoute(p.route,start,base,col,op,force,meta('route',0));
+  s+=oneRoute(p.route,start,base,qc.route||col,op,qc.route||force,meta('route',0));
   return s;
 }
 function playerMarkup(p,pos,opp,o){
@@ -831,6 +832,7 @@ function playMarkup(pb,pl,o={}){
   const showOpp=pl.showOpp&&pl.opp&&pl.opp.length;
   // layer order: routes (opponent, own) -> opponent players -> own players
   if(showOpp){s+='<g opacity=".5">';pl.opp.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,'#9ca3af')});s+='</g>';}
+  if(o.quiz&&state.quizShown)o={...o,qcol:quizColors(pb,pl)};
   if(!o.hide)pl.players.forEach(p=>{s+=routeMarkup(p,base(p),!!o.anim,null,o)});
   if(showOpp)pl.opp.forEach(p=>{s+=playerMarkup(p,pos(p),true,o)});
   pl.players.forEach(p=>{s+=playerMarkup(p,pos(p),false,o)});
@@ -1167,7 +1169,7 @@ function toggleTag(t){
 }
 function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar()}
 /* ---------- 🎓 learn mode: tap a player, tap his task, then reveal ---------- */
-const normTask=t=>String(t||'').toLowerCase().replace(/½/g,'1/2').replace(/⅓/g,'1/3').replace(/¼/g,'1/4').replace(/\s+/g,' ').trim();
+const normTask=t=>String(t||'').toLowerCase().replace(/mitte/g,'middle').replace(/½/g,'1/2').replace(/⅓/g,'1/3').replace(/¼/g,'1/4').replace(/\s+/g,' ').trim();
 function taskOptions(pb){
   const base=pb.type==='defense'?DEF_T.map(t=>t.n):[...new Set(OFF_T.map(t=>t.n.replace(/ (links|rechts)$/,'')))];
   const used=new Set();pb.plays.forEach(pl=>pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(r&&r.task)used.add(r.task)})));
@@ -1189,7 +1191,7 @@ function suggestTask(pb,pl,p,r,deepCount){
   const L=r.pts[r.pts.length-1];
   if(pb.type==='defense'){
     if(r.end==='zone'){const cx=p.x+L.x,depth=-(p.y+L.y);
-      if(depth>=9){if(deepCount>=4)return 'Deep ¼';if(deepCount===3)return 'Deep ⅓';if(deepCount===2)return Math.abs(cx)<6&&r!==p.route?'Deep Mitte':'Deep ½';return 'Deep Mitte'}
+      if(depth>=9){if(deepCount>=4)return 'Deep ¼';if(deepCount===3)return 'Deep ⅓';if(deepCount===2)return Math.abs(cx)<6&&r!==p.route?'Deep Middle':'Deep ½';return 'Deep Middle'}
       return Math.abs(cx)>=13?'Flat':Math.abs(cx)<=5?'Hole':'Hook/Curl'}
     if(r.man||(pl.opp||[]).some(o=>Math.hypot(o.x-(p.x+L.x),o.y-(p.y+L.y))<2.5))return 'Man';
     return null}
@@ -1261,6 +1263,13 @@ function quizResult(pb,pl){const qa=qaState(),qi=quizInfo(pb,pl);const res={};le
   let reads=null;if(qi.hasReads){const want=pl.players.filter(p=>p.read>0).sort((a,b)=>a.read-b.read).map(p=>p.id);n++;
     const good=want.length===qa.reads.length&&want.every((id,i)=>qa.reads[i]===id);if(good)ok++;reads={good,want}}
   return {res,reads,ok,n}}
+function quizColors(pb,pl){const R=quizResult(pb,pl),out={};
+  pl.players.forEach(p=>{const r=R.res[p.id];if(!r)return;const lines=[[p.route,'route'],...(p.alts||[]).map((x,j)=>[x,'alt'+j])].filter(([x])=>hasLine(x));
+    const name=x=>taskOf(pl,{...p,route:x,alts:[]})[0];const c={};
+    if(r.good){const m=lines.find(([x])=>normTask(name(x))===normTask(r.a));if(m)c[m[1]]='#16a34a'}
+    else{const m=lines.find(([x])=>r.a&&normTask(name(x))===normTask(r.a))||lines[0];if(m)c[m[1]]='#dc2626'}
+    out[p.id]=c});
+  return out}
 function quizOverlay(pb,pl,base,flip){
   const qa=qaState(),qi=quizInfo(pb,pl),shown=state.quizShown,R=shown?quizResult(pb,pl):null;let s='';
   const tag=(p,txt,fill,stroke,dy)=>{const b=base(p);const w=Math.max(18,txt.length*4.6+8);
@@ -1271,7 +1280,7 @@ function quizOverlay(pb,pl,base,flip){
     const a=qa.ans[p.id];
     const oL=id=>{const o=(pl.opp||[]).find(x=>x.id===id);return o?o.label:'?'};
     const mine=qa.man[p.id];
-    if(mine&&normTask(a)==='man'){const o=(pl.opp||[]).find(x=>x.id===mine);if(o){const b1=base(p),b2=base(o);
+    if(mine&&normTask(a)==='man'&&!shown){const o=(pl.opp||[]).find(x=>x.id===mine);if(o){const b1=base(p),b2=base(o);
       s+=`<line x1="${b1[0].toFixed(1)}" y1="${b1[1].toFixed(1)}" x2="${b2[0].toFixed(1)}" y2="${b2[1].toFixed(1)}" stroke="${shown?(R.res[p.id]&&!R.res[p.id].manWrong&&R.res[p.id].good?'#16a34a':'#dc2626'):'#1d4ed8'}" stroke-width="2" stroke-dasharray="5 4" pointer-events="none"/>`}}
     const lbl=x=>x&&normTask(x)==='man'&&mine?x+' → '+oL(mine):x;
     if(!shown)s+=tag(p,a?lbl(a):'?',a?'#dbeafe':'#fff','#1d4ed8',11);
@@ -2091,7 +2100,7 @@ function cleanRoute(r){
   if(!r||typeof r!=='object')return null;const pts=cArr(r.pts,80).filter(q=>q&&typeof q==='object').map(q=>({x:cNum(q.x),y:cNum(q.y)}));if(!pts.length)return null;
   const o={pts,style:cOne(r.style,['solid','dashed','dotted'],'solid'),end:cOne(r.end,['arrow','block','dot','bolt','zone','none'],'arrow'),curve:!!r.curve};
   if(r.color!=null)o.color=cCol(r.color,INK);if(r.w!=null)o.w=cNum(r.w,1.4,0.5,7);if(r.zw!=null)o.zw=cNum(r.zw,7.6,1,80);if(r.zh!=null)o.zh=cNum(r.zh,4.4,1,80);
-  if(typeof r.task==='string'&&r.task.trim())o.task=r.task.trim().slice(0,30);
+  if(typeof r.task==='string'&&r.task.trim())o.task=r.task.trim().slice(0,30).replace(/^Deep Mitte$/i,'Deep Middle');
   if(typeof r.man==='string'&&/^[\w.\-:@+~]{1,80}$/.test(r.man))o.man=r.man;
   if(r.speed!=null)o.speed=cNum(r.speed,1,0.3,3);if(r.delay!=null)o.delay=cNum(r.delay,0,0,10);return o;
 }
