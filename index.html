@@ -112,6 +112,22 @@ body.lasering,body.lasering *{cursor:none!important}
 .cpick{display:inline-block;width:26px;height:26px;border-radius:50%;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);position:relative;cursor:pointer;vertical-align:middle;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}
 .cpick input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
 .chk{display:flex;gap:6px;align-items:center;color:var(--ink);font-weight:400;margin-top:6px}
+.qitem{border:1px solid var(--line);border-radius:8px;padding:6px 8px;margin:0 0 6px;background:#fff}
+.qitem.done{opacity:.6}.qhead{display:flex;gap:6px;align-items:center;font-size:12px}.qhead span{color:var(--muted);flex:1}
+.qdel{border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px}
+.qtext{font-size:14px;white-space:pre-wrap;margin-top:2px}.qans{font-size:13px;margin-top:4px;padding:4px 6px;background:#eef2ff;border-radius:6px;white-space:pre-wrap}
+.qact{display:flex;gap:4px;align-items:center;margin-top:4px}.qact input[type=text]{flex:1;min-width:0;padding:4px 6px;font-size:13px}.qact label{font-size:12px;display:flex;gap:3px;align-items:center;white-space:nowrap;color:var(--ink)}
+#qNew{width:100%;font-size:13px}.qbadge{font-size:11px;background:#fde68a;color:#7c2d12;border-radius:8px;padding:0 5px;font-weight:700}
+#quizPanel{position:fixed;left:12px;top:64px;width:230px;max-height:calc(100vh - 80px);overflow:auto;z-index:41;background:rgba(255,253,248,.97);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#quizPanel h4{margin:0 0 6px}#quizPanel p{font-size:14px;margin:6px 0}
+.qopts{display:flex;flex-direction:column;gap:5px}.qopt{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font:inherit;font-size:15px;font-weight:600;text-align:left;cursor:pointer}
+.qopt:hover{border-color:var(--ink)}.qopt.on{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+.qscore{font-size:34px;font-weight:800;font-family:var(--cond)}
+body.presenting.quizzing .app{padding-left:256px}
+.phead,.prow summary{display:grid;grid-template-columns:1.3fr .8fr .7fr 1.6fr;gap:6px;align-items:center;font-size:13px}
+.phead{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;padding:0 0 4px 16px}
+.prow{border-top:1px solid var(--line);padding:6px 0}.prow summary{cursor:pointer;list-style-position:outside}
+.pdet{padding:4px 0 2px 16px}.pdet div{display:grid;grid-template-columns:2fr 1fr 1.4fr .5fr;gap:6px;font-size:12px;padding:2px 0;border-bottom:1px dashed var(--line)}
 .hrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
 .hrow svg{width:110px;border:1px solid var(--line);border-radius:4px}.hrow .hint{display:block;font-size:12px}
 .trow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
@@ -247,9 +263,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-15.3';
+const APP_VERSION='2026-11-15.8';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -383,9 +399,10 @@ function fixRoutes(pb){let n=0;
   }));
   return n>0;
 }
-const isRO=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
+const isRO=pb=>!!(pb&&pb.cloud&&(pb.cloud.role==='read'||pb.cloud.role==='coach'));
+const nShare=c=>c?(c.readers||[]).length+(c.editors||[]).length+(c.coaches||[]).length:0;
 const isLk=pl=>!!(pl&&(pl.locked||isRO(curPb())));
-const RO_BLOCK=new Set(['newForm','playFromForm','toForm','toPlay','lockAll','unlockAll','newPlay','delPlay','dupPlay','up','down','applyLayoutAll','setLayout','backupLater_','multiDel','pasteRoute','pasteRouteM','history','contRoute']);
+const RO_BLOCK=new Set(['suggestTasks','newForm','playFromForm','toForm','toPlay','lockAll','unlockAll','newPlay','delPlay','dupPlay','up','down','applyLayoutAll','setLayout','backupLater_','multiDel','pasteRoute','pasteRouteM','history','contRoute']);
 function migrateFlag(pb){
   const fixed=fixRoutes(pb);
   if(pb.variant!=='flag5'||pb.fieldV===FLAG_V)return fixed;
@@ -850,6 +867,7 @@ function playMarkup(pb,pl,o={}){
         s+=`<line x1="${last[0]}" y1="${last[1]}" x2="${state.cursor[0]}" y2="${state.cursor[1]}" stroke="${(drawRoute(dp)||{}).color||dp.color}" stroke-width="2" stroke-dasharray="4 4" opacity=".7" pointer-events="none"/>`;}
     }
   }
+  if(o.quiz)s+=quizOverlay(pb,pl,base,flip);
   if(flip)s=`<g transform="matrix(1 0 0 -1 0 ${dims(v).fh})">${s}</g>`;
   return s;
 }
@@ -888,7 +906,7 @@ function playItems(pb){
 function playRow(pb,pl,filt){
   return `<div class="play${isF(pl)?' isform':''}" data-play="${pl.id}">
       <div class="num">${playNo(pb,pl)}</div>${thumbFor(pb,pl)}
-      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(callName(pl)||'Ohne Namen')}</div><div class="ct">${esc(pl.cat||'')}</div></div>
+      <div style="min-width:0"><div class="nm">${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}${esc(callName(pl)||'Ohne Namen')}${(n=>n?` <span class="qbadge" title="${n} offene ${n===1?'Frage':'Fragen'}">💬${n}</span>`:'')(Sync.user?Q.open(pb,pl):0)}</div><div class="ct">${esc(pl.cat||'')}</div></div>
       <div class="mv">${filt?'':`<button data-a="up" data-id="${pl.id}" title="nach oben">▲</button><button data-a="down" data-id="${pl.id}" title="nach unten">▼</button>`}</div></div>`;
 }
 function renderSide(){
@@ -974,7 +992,7 @@ function renderField(){
   const {fw,fh}=dims(VP(pb,pl));
   svg.setAttribute('viewBox',`-34 0 ${fw+68} ${fh}`);
   const mu=state.multi.length>1?state.multi:null;const a=state.anim;
-  svg.innerHTML=playMarkup(pb,pl,{interactive:true,sel:mu?null:state.sel,multi:mu,selRoute:state.selRoute,anim:a&&a.pos,ball:a&&a.ball,bs:a&&a.bs,style:state.style,hide:state.present&&state.quiz&&!state.quizShown});
+  svg.innerHTML=playMarkup(pb,pl,{interactive:true,sel:mu?null:state.sel,multi:mu,selRoute:state.selRoute,anim:a&&a.pos,ball:a&&a.ball,bs:a&&a.bs,style:state.style,hide:state.present&&state.quiz&&!state.quizShown,quiz:state.present&&state.quiz&&!state.anim});
   const hb=$('#hintbar');if(hb)hb.innerHTML=hintText();
 }
 function hintText(){
@@ -1014,7 +1032,7 @@ function addPickers(){document.querySelectorAll('#insp .sw').forEach(sw=>{if(sw.
   const l=document.createElement('label');l.className='cpick';l.title='Eigene Farbe wählen';l.innerHTML=`<input type="color" data-cpick="${k}">`;sw.appendChild(l)})}
 document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||!t.dataset.cpick)return;const b=document.createElement('button');b.dataset[t.dataset.cpick]=t.value;b.hidden=true;
   t.closest('.sw').appendChild(b);b.click();b.remove()});
-function renderInsp(){renderInsp0();addPickers()}
+function renderInsp(){renderInsp0();addPickers();qBox()}
 function renderInsp0(){
   const el=$('#insp');const pb=curPb(),pl=curPlay();
   if(!pb||!pl){el.innerHTML=`<h3>Info</h3><p class="hint">Hier bearbeitest du Details zu Plays und Spielern.</p>`;return}
@@ -1123,6 +1141,7 @@ function renderInsp0(){
         <label>Stärke der Linie <span class="rv">${fmtNum(r.w||1.4)}</span></label><input type="range" min="0.5" max="7" step="0.1" data-rw="1" value="${r.w||1.4}" style="width:100%;border:0;padding:0;accent-color:var(--accent)">
         ${cur.k==='motion'?'':`<div class="row"><div><label>Tempo</label><select data-rf="speed">${[[0.6,'langsam'],[1,'normal'],[1.5,'schnell'],[2,'sehr schnell']].map(([v,n])=>`<option value="${v}"${(r.speed||1)==v?' selected':''}>${n}</option>`).join('')}</select></div>
         <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
+        ${cur.k==='motion'?'':`<label>Aufgabe <span class="hint" style="font-weight:400">– für 🎓 Lernen</span></label><input type="text" data-rf="task" list="taskList" maxlength="30" value="${esc(r.task||'')}" placeholder="z. B. ${pb.type==='defense'?'Deep ½':'Slant'}"><datalist id="taskList">${taskOptions(pb).map(n=>`<option value="${esc(n)}">`).join('')}</datalist>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
         <div class="row" style="margin-top:6px"><button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="contRoute" title="Weitere Punkte an diese Linie anhängen, z. B. ums Eck">✎ Weiterzeichnen</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
@@ -1144,7 +1163,130 @@ function toggleTag(t){
   Store.savePlay(pb,pl);renderInsp();renderSide();
 }
 function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar()}
-function renderPresentBar(){
+/* ---------- 🎓 learn mode: tap a player, tap his task, then reveal ---------- */
+const normTask=t=>String(t||'').toLowerCase().replace(/½/g,'1/2').replace(/⅓/g,'1/3').replace(/¼/g,'1/4').replace(/\s+/g,' ').trim();
+function taskOptions(pb){
+  const base=pb.type==='defense'?DEF_T.map(t=>t.n):[...new Set(OFF_T.map(t=>t.n.replace(/ (links|rechts)$/,'')))];
+  const used=new Set();pb.plays.forEach(pl=>pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(r&&r.task)used.add(r.task)})));
+  const extra=[...used].filter(u=>!base.some(b=>normTask(b)===normTask(u))).sort();
+  return [...base,...extra];
+}
+// what counts as right for a player: the task names of his lines (main + alternatives); old lines without a name: Blitz / Man are recognised
+function taskOf(pl,p){
+  const out=[];[p.route,...(p.alts||[])].forEach(r=>{if(!r||!hasLine(r))return;
+    if(r.task)out.push(r.task);
+    else if(r.end==='bolt')out.push('Blitz');
+    else if(r.man||((pl.opp||[]).length&&r.end!=='zone'&&(()=>{const L=r.pts[r.pts.length-1];return pl.opp.some(o=>Math.hypot(o.x-(p.x+L.x),o.y-(p.y+L.y))<2.2)})()))out.push('Man')});
+  return [...new Set(out)];
+}
+// ---- suggest task names for lines that have none (coach checks them afterwards) ----
+function suggestTask(pb,pl,p,r,deepCount){
+  if(!r||!hasLine(r))return null;
+  if(r.end==='bolt')return 'Blitz';
+  const L=r.pts[r.pts.length-1];
+  if(pb.type==='defense'){
+    if(r.end==='zone'){const cx=p.x+L.x,depth=-(p.y+L.y);
+      if(depth>=9){if(deepCount>=4)return 'Deep ¼';if(deepCount===3)return 'Deep ⅓';if(deepCount===2)return Math.abs(cx)<6&&r!==p.route?'Deep Mitte':'Deep ½';return 'Deep Mitte'}
+      return Math.abs(cx)>=13?'Flat':Math.abs(cx)<=5?'Hole':'Hook/Curl'}
+    if(r.man||(pl.opp||[]).some(o=>Math.hypot(o.x-(p.x+L.x),o.y-(p.y+L.y))<2.5))return 'Man';
+    return null}
+  if(r.end==='block')return (p.label||'').toUpperCase()==='QB'?null:'Block';
+  // offense: compare the drawn shape with the route templates (both directions), shape first, then depth
+  const rs=(pts,n)=>{const a=[[0,0],...pts];let len=0;const seg=[];for(let i=1;i<a.length;i++){const d=Math.hypot(a[i][0]-a[i-1][0],a[i][1]-a[i-1][1]);seg.push(d);len+=d}
+    if(len<0.5)return null;const out=[];for(let k=0;k<n;k++){let t=len*k/(n-1),i=0;while(i<seg.length-1&&t>seg[i]){t-=seg[i];i++}const u=seg[i]?Math.min(1,t/seg[i]):0;
+      out.push([a[i][0]+(a[i+1][0]-a[i][0])*u,a[i][1]+(a[i+1][1]-a[i][1])*u])}return {out,len}};
+  const mine=rs(r.pts.map(q=>[q.x,q.y]),14);if(!mine)return null;
+  let best=null;
+  OFF_T.forEach(t=>{if(!t.p)return;[1,-1].forEach(sx=>{const tp=rs(t.p.map(([o,u])=>[o*sx,-u]),14);if(!tp)return;
+    let dn=0,da=0;for(let k=0;k<14;k++){dn+=Math.hypot(mine.out[k][0]/mine.len-tp.out[k][0]/tp.len,mine.out[k][1]/mine.len-tp.out[k][1]/tp.len);da+=Math.hypot(mine.out[k][0]-tp.out[k][0],mine.out[k][1]-tp.out[k][1])}
+    dn/=14;da/=14;const sc=dn*10+da*0.15;if(dn<0.16&&(!best||sc<best.sc))best={n:t.n,sc}})});
+  return best&&best.n;
+}
+function suggestTasks(pb){const changed=[];
+  pb.plays.forEach(pl=>{if(isF(pl)||pl.locked)return;
+    const deepCount=pl.players.filter(p=>p.route&&p.route.end==='zone'&&hasLine(p.route)&&-(p.y+p.route.pts[p.route.pts.length-1].y)>=9).length;
+    const got=[];
+    pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(!r||r.task||!hasLine(r))return;const n=suggestTask(pb,pl,p,r,deepCount);if(n){r.task=n;got.push(`${p.label} ${n}`)}}));
+    if(got.length){changed.push([pl,got])}});
+  return changed;
+}
+async function suggestDialog(){
+  const pb=curPb();if(!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
+  const before=new Map(pb.plays.map(pl=>[pl.id,JSON.stringify(pl)]));
+  const ch=suggestTasks(pb);
+  if(!ch.length)return toast('Keine Vorschläge – alle Linien haben schon eine Aufgabe oder passen zu keiner Vorlage.');
+  ch.forEach(([pl])=>{try{Hist.push(JSON.parse(before.get(pl.id)),true)}catch(e){}Store.savePlay(pb,pl)});renderAll();
+  modal('🎓 Aufgaben vorgeschlagen',`<p style="margin-top:0">Für <b>${ch.length} Plays</b> hab ich Aufgaben eingetragen – bitte kurz prüfen. Ändern kannst du jede Linie unter „Linie bearbeiten → Aufgabe“. Linien, die schon einen Namen hatten, bleiben unverändert.</p>
+    <div class="picklist" style="max-height:50vh">${ch.map(([pl,g])=>`<div style="padding:4px 0;border-bottom:1px solid var(--line)"><b>${playNo(pb,pl)}. ${esc(callName(pl))}</b><br><span class="hint">${g.map(esc).join(' · ')}</span></div>`).join('')}</div>
+    <p class="hint">Der vorherige Stand liegt bei jedem Play im 🕘 Verlauf.</p>`,[{label:'OK',value:null,cls:'primary'}]);
+}
+function quizInfo(pb,pl){
+  const isQB=p=>(p.label||'').toUpperCase()==='QB';
+  const hasReads=pb.type==='offense'&&pl.players.some(p=>p.read>0);
+  const asked=pl.players.filter(p=>taskOf(pl,p).length||(isQB(p)&&hasReads));
+  const missing=pl.players.filter(p=>!asked.includes(p)&&(hasLine(p.route)||(p.alts||[]).some(hasLine)));
+  return {asked,missing,hasReads,isQB};
+}
+function qaState(){const pl=curPlay();if(!state.qa||state.qa.playId!==(pl&&pl.id))state.qa={playId:pl&&pl.id,pick:null,ans:{},reads:[],readMode:false};return state.qa}
+function quizResult(pb,pl){const qa=qaState(),qi=quizInfo(pb,pl);const res={};let ok=0,n=0;
+  qi.asked.forEach(p=>{const right=taskOf(pl,p);if(!right.length)return;n++;const a=qa.ans[p.id];const good=!!a&&right.some(r=>normTask(r)===normTask(a));if(good)ok++;res[p.id]={good,a,right}});
+  let reads=null;if(qi.hasReads){const want=pl.players.filter(p=>p.read>0).sort((a,b)=>a.read-b.read).map(p=>p.id);n++;
+    const good=want.length===qa.reads.length&&want.every((id,i)=>qa.reads[i]===id);if(good)ok++;reads={good,want}}
+  return {res,reads,ok,n}}
+function quizOverlay(pb,pl,base,flip){
+  const qa=qaState(),qi=quizInfo(pb,pl),shown=state.quizShown,R=shown?quizResult(pb,pl):null;let s='';
+  const tag=(p,txt,fill,stroke,dy)=>{const b=base(p);const w=Math.max(18,txt.length*4.6+8);
+    return `<g transform="translate(${b[0].toFixed(1)},${b[1].toFixed(1)})${flip?' scale(1,-1)':''}" pointer-events="none"><rect x="${(-w/2).toFixed(1)}" y="${dy}" width="${w.toFixed(1)}" height="13" rx="6.5" fill="${fill}" stroke="${stroke}" stroke-width="1"/><text y="${dy+9.6}" text-anchor="middle" font-family="${FONT}" font-size="8.5" font-weight="700" fill="${stroke==='#fff'?'#fff':'#111'}">${esc(txt)}</text></g>`};
+  qi.asked.forEach(p=>{
+    const b=base(p);if(qa.pick===p.id)s+=`<circle cx="${b[0].toFixed(1)}" cy="${b[1].toFixed(1)}" r="15" fill="none" stroke="#f59e0b" stroke-width="3" pointer-events="none"/>`;
+    if(qi.isQB(p)&&!taskOf(pl,p).length)return;
+    const a=qa.ans[p.id];
+    if(!shown)s+=tag(p,a||'?',a?'#dbeafe':'#fff','#1d4ed8',11);
+    else{const r=R.res[p.id];if(!r)return;s+=tag(p,(r.good?'✓ ':'✗ ')+(r.good?r.a:(r.a?r.a+' → ':'')+r.right[0]),r.good?'#16a34a':'#dc2626','#fff',11)}});
+  if(qi.hasReads){
+    qa.reads.forEach((id,i)=>{const p=pl.players.find(x=>x.id===id);if(!p)return;const good=shown?R.reads.want[i]===id:null;
+      s+=tag(p,'R'+(i+1),shown?(good?'#16a34a':'#dc2626'):'#fde68a',shown?'#fff':'#92400e',-26)});
+    if(shown&&!R.reads.good)R.reads.want.forEach((id,i)=>{if(qa.reads[i]===id)return;const p=pl.players.find(x=>x.id===id);if(p)s+=tag(p,'richtig: R'+(i+1),'#fff','#16a34a',-40)})}
+  return s;
+}
+function quizPick(pid){
+  const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;
+  const p=pl.players.find(x=>x.id===pid);if(!p)return;
+  if(qa.readMode&&!qi.isQB(p)){const i=qa.reads.indexOf(pid);if(i>=0)qa.reads.splice(i,1);else qa.reads.push(pid);renderField();return renderPresentBar()}
+  if(!qi.asked.includes(p)){toast('Für diesen Spieler ist keine Aufgabe hinterlegt.');return}
+  qa.pick=pid;qa.readMode=qi.isQB(p)&&qi.hasReads&&!taskOf(pl,p).length;renderField();renderPresentBar();
+}
+function quizPanel(){
+  let el=$('#quizPanel');const pb=curPb(),pl=curPlay();
+  if(!state.present||!state.quiz||!pb||!pl){if(el)el.remove();return}
+  if(!el){el=document.createElement('div');el.id='quizPanel';document.body.appendChild(el)}
+  const qa=qaState(),qi=quizInfo(pb,pl);const p=qa.pick&&pl.players.find(x=>x.id===qa.pick);
+  if(state.quizShown){const R=quizResult(pb,pl);
+    el.innerHTML=`<h4>Ergebnis</h4><div class="qscore">${R.ok} / ${R.n}</div><p class="hint">${R.ok===R.n?'Alles richtig – stark! 💪':'Grün ist richtig, rot zeigt die richtige Aufgabe.'}</p>
+      <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="presNext">Nächstes Play ▶</button>`;
+    return}
+  if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
+  const done=qi.asked.filter(x=>qa.ans[x.id]||(qi.isQB(x)&&qa.reads.length)).length;
+  let h=`<h4>🎓 Was macht wer?</h4><p class="hint" style="margin-top:0">${done} von ${qi.asked.length} beantwortet</p>`;
+  if(!p)h+=`<p>Tippe zuerst auf einen <b>Spieler</b> auf dem Feld.</p>`;
+  else if(qa.readMode)h+=`<p><b>${esc(p.label)}</b>: Tippe die Receiver in der Reihenfolge an, in der der QB liest (Read 1, 2, 3 …).</p>
+    <p class="hint">${qa.reads.length?qa.reads.map((id,i)=>'R'+(i+1)+' '+esc((pl.players.find(x=>x.id===id)||{}).label||'')).join(' · '):'noch keine Reads'}</p>
+    <button class="btn sm" data-qr="clear">Reads zurücksetzen</button> <button class="btn sm primary" data-qr="done">Fertig</button>`;
+  else h+=`<p>Aufgabe von <b>${esc(p.label)}</b>:</p><div class="qopts">${taskOptions(pb).map(n=>`<button class="qopt${qa.ans[p.id]===n?' on':''}" data-qopt="${esc(n)}">${esc(n)}</button>`).join('')}</div>`;
+  if(qi.hasReads&&!qa.readMode){const qb=pl.players.find(qi.isQB);if(qb&&taskOf(pl,qb).length)h+=`<p style="margin-top:10px"><button class="btn sm" data-qr="start">QB-Reads festlegen</button></p>`}
+  if(qi.missing.length)h+=`<p class="hint" style="margin-top:10px;font-size:11px">Nicht abgefragt (keine Aufgabe hinterlegt): ${qi.missing.map(x=>esc(x.label)).join(', ')}</p>`;
+  h+=`<button class="btn primary" data-a="quizShow" style="width:100%;margin-top:10px">👁 Aufdecken</button>`;
+  if(Prog.on(pb))h+=`<p class="hint" style="font-size:11px;margin-top:8px">Dein Coach sieht deine Lern-Ergebnisse und wie lange du im Playbook warst.</p>`;
+  el.innerHTML=h;
+}
+document.addEventListener('click',e=>{
+  const o=e.target.closest('[data-qopt]');if(o){const qa=qaState();if(!qa.pick)return;qa.ans[qa.pick]=o.dataset.qopt;
+    const qi=quizInfo(curPb(),curPlay());const next=qi.asked.find(x=>!qa.ans[x.id]&&!(qi.isQB(x)&&!taskOf(curPlay(),x).length));qa.pick=next?next.id:null;renderField();return quizPanel()}
+  const r=e.target.closest('[data-qr]');if(r){const qa=qaState();const k=r.dataset.qr;
+    if(k==='clear')qa.reads=[];if(k==='done'){qa.readMode=false;qa.pick=null}if(k==='start'){qa.readMode=true;qa.pick=curPlay().players.find(x=>(x.label||'').toUpperCase()==='QB').id}
+    renderField();return quizPanel()}
+});
+function renderPresentBar(){document.body.classList.toggle('quizzing',!!(state.present&&state.quiz));quizPanel();
   let bar=$('#presentBar');
   if(!state.present){if(bar)bar.remove();return}
   const pb=curPb(),pl=curPlay();if(!pb||!pl)return;
@@ -1164,7 +1306,7 @@ function renderPresentBar(){
   if(state.presNotes&&pl.notes&&!(state.quiz&&!state.quizShown)){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}nb.textContent=pl.notes}else if(nb)nb.remove();
 }
 function setPresent(on){
-  state.present=on;document.body.classList.toggle('presenting',on);
+  state.present=on;document.body.classList.toggle('presenting',on);state.qa=null;
   if(on){state.sel=null;state.drawing=null;state.mode='select';const de=document.documentElement;try{if(de.requestFullscreen&&!document.fullscreenElement)de.requestFullscreen().catch(()=>{})}catch(e){}}
   else{try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}const nb=$('#presNotesBox');if(nb)nb.remove()}
   renderAll();
@@ -1192,7 +1334,7 @@ function restore(json){
 }
 function undo(){const pl=curPlay();if(!state.undo.length||!pl)return;state.redo.push(JSON.stringify(pl));restore(state.undo.pop())}
 function redo(){const pl=curPlay();if(!state.redo.length||!pl)return;state.undo.push(JSON.stringify(pl));restore(state.redo.pop())}
-function selectPlay(id){state.pickMan=null;state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
+function selectPlay(id){state.pickMan=null;state.qa=null;state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
 function selectPb(id){state.q='';state.tagF='';state.kindF='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.multi=[];state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
 
 /* ---------- field interaction ---------- */
@@ -1213,7 +1355,7 @@ function drawArr(p){const r=drawRoute(p);return r?r.pts:[]}
 function setMan(dpid,rid,asAlt){
   const pb=curPb(),pl=curPlay(),p=findP(dpid),o=findP(rid);if(!p||!o)return;
   const dx=p.x-o.x,dy=p.y-o.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,l*0.5);
-  const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,color:(p.route&&p.route.color)||defRouteColor(p),w:defW(p)};
+  const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,task:'Man',color:(p.route&&p.route.color)||defRouteColor(p),w:defW(p)};
   commit();
   if(asAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
   else{p.route=route;state.selRoute={k:'route',j:0}}
@@ -1233,9 +1375,9 @@ function startDrawing(kind,pid){
   let dotAlt=false;if(kind==='route'&&(state.tplAlt||(pe==='bolt'&&hasLine(p.route)))){kind='alt';dotAlt=true}   // keep the existing route, add an alternative (dotted)
   if(kind==='alt'&&pe==='bolt')dotAlt=true;
   if(kind==='alt'||state.tplAlt)dotAlt=true;   // alternatives are dotted – also when the player has no main route
-  if(kind==='alt'){p.alts=p.alts||[];p.alts.push({pts:[],style:dotAlt?'dotted':'solid',end:pe||'arrow',curve:false,color:dc,w:defW(p)});j=p.alts.length-1;}
+  if(kind==='alt'){p.alts=p.alts||[];p.alts.push({pts:[],style:dotAlt?'dotted':'solid',end:pe||'arrow',curve:false,color:dc,w:defW(p),...(pe==='bolt'?{task:'Blitz'}:{})});j=p.alts.length-1;}
   else{const prev=p[kind];
-    p[kind]=kind==='route'?{pts:[],style:prev&&prev.style||'solid',end:pe||(prev&&prev.end!=='bolt'&&prev.end)||'arrow',curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p)}:{pts:[],curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p)};}
+    p[kind]=kind==='route'?{pts:[],style:prev&&prev.style||'solid',end:pe||(prev&&prev.end!=='bolt'&&prev.end)||'arrow',curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p),...(pe==='bolt'?{task:'Blitz'}:{})}:{pts:[],curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p)};}
   state.sel=pid;state.selRoute={k:kind,j};state.drawing={kind,pid,j};renderField();renderInsp();
 }
 function finishDrawing(keepMode){
@@ -1255,6 +1397,7 @@ function addPoint(q){
 }
 
 function onDown(e){
+  if(state.present&&state.quiz&&!state.anim&&!Laser.on){const t=e.target.closest('[data-p]');if(t&&t.dataset.opp==='0')quizPick(t.dataset.p);return}
   if(Laser.on||state.present||state.anim||!curPlay())return;
   if(isLk(curPlay())){toast(isRO(curPb())?'👁 Nur Lesezugriff – dieses Playbook wurde mit dir geteilt.':'🔒 Play ist gesperrt – oben auf das Schloss klicken zum Entsperren.');return}
   const q=toField(e);if(!q)return;
@@ -1375,13 +1518,13 @@ function applyTemplate(i){
         state.pickMan={pid:p.id,alt:!!state.tplAlt};renderField();renderInsp();
         toast('Tippe jetzt den Gegenspieler an, den er decken soll');return;}
     }
-    route={pts,style,end,curve:!!(route&&route.curve)};if(zw)route.zw=zw;if(manId)route.man=manId;
+    route={pts,style,end,curve:!!(route&&route.curve),task:t.n};if(zw)route.zw=zw;if(manId)route.man=manId;
   } else {
     const t=OFF_T[i];let pts;
     if(t.abs)pts=t.abs.map(([x,y])=>toRel(x,y));
     else if(t.sweep){const s2=p.x<0?-1:1;pts=[toRel(p.x+s2*5,p.y+0.5),toRel(s2*v.W*0.3,0),toRel(s2*v.W*0.32,-5)]}
     else pts=t.p.map(([o,u])=>toRel(p.x+o*sx,p.y-u));
-    route={pts,style:'solid',end:t.e||'arrow',curve:!!t.c};
+    route={pts,style:'solid',end:t.e||'arrow',curve:!!t.c,task:t.n.replace(/ (links|rechts)$/,'')};
   }
   route.color=(p.route&&p.route.color)||defRouteColor(p);route.w=defW(p);
   commit();
@@ -1593,7 +1736,8 @@ async function pbMenu(){
   const own=!pb.cloud||pb.cloud.role==='own';
   if(!own){const c=pb.cloud;
     const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</span></p>
-      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> – du kannst es ${c.role==='edit'?'<b>bearbeiten</b>':'nur <b>lesen</b>'}.</div>
+      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> – du kannst es ${c.role==='edit'?'<b>bearbeiten</b>':c.role==='coach'?'als <b>Coach lesen</b> und den Fortschritt der Spieler sehen':'nur <b>lesen</b>'}.</div>
+      ${c.role==='read'?'<p class="hint">Dein Coach sieht, wie lange du im Playbook warst und deine Ergebnisse im 🎓 Lern-Modus.</p>':'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>'}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>':''}`,
       [{label:'Aus meiner Liste entfernen',value:'unshare',cls:'danger'},{label:'Schließen',value:null,cls:'primary'}]);
     if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);toast('Aus deiner Liste entfernt')}
@@ -1601,7 +1745,9 @@ async function pbMenu(){
   const r=await modal('Playbook',`<label>Name</label><input type="text" id="pbName" value="${esc(pb.name)}">
     <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>
     <div class="row" style="margin:6px 0"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>
-    ${Sync.on()?`<p class="hint" style="margin:0">${pb.cloud&&((pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length)?`👥 Geteilt mit ${(pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length} ${((pb.cloud.readers||[]).length+(pb.cloud.editors||[]).length)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
+    ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>':''}
+    <div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben für Lernen vorschlagen</button></div>
+    ${Sync.on()?`<p class="hint" style="margin:0">${nShare(pb.cloud)?`👥 Geteilt mit ${nShare(pb.cloud)} ${nShare(pb.cloud)===1?'Person':'Personen'}`:'Nur für dich sichtbar'}</p>`:''}`,
     [{label:'Löschen',value:'del',cls:'danger'},...(Sync.on()?[{label:'👥 Freigeben',value:'share'}]:[]),{label:'Abbrechen',value:null},{label:'Speichern',value:'save',cls:'primary'}]);
   if(r.value==='save'){pb.name=r.el.querySelector('#pbName').value.trim()||pb.name;Store.savePb(pb);renderSide();}
   if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);return toast('Aus deiner Liste entfernt')}
@@ -1768,7 +1914,7 @@ function overviewSVG(pb,list,part,parts){
 }
 // call name = formation first, then the play: "Base Raven"
 function callName(pl){const f=(isF(pl)?'':(pl.formation||'')).trim(),n=(pl.name||'').trim();
-  if(!f)return n;if(!n||n.toLowerCase()===f.toLowerCase())return f;if(n.toLowerCase().startsWith(f.toLowerCase()+' '))return n;return f+' '+n}
+  if(!f)return n;if(!n||n.toLowerCase()===f.toLowerCase())return f;if(n.toLowerCase().startsWith(f.toLowerCase())&&!/[\p{L}\d]/u.test(n.charAt(f.length)))return n;return f+' '+n}
 function callSheetSVG(pb,sel){
   const groups=[];const add=(t,pl)=>{let g=groups.find(x=>x.t===t);if(!g)groups.push(g={t,pl:[]});g.pl.push(pl)};
   const order=usedTags(pb);order.forEach(t=>sel.forEach(pl=>{if((pl.tags||[]).includes(t))add(t,pl)}));
@@ -1905,6 +2051,7 @@ function cleanRoute(r){
   if(!r||typeof r!=='object')return null;const pts=cArr(r.pts,80).filter(q=>q&&typeof q==='object').map(q=>({x:cNum(q.x),y:cNum(q.y)}));if(!pts.length)return null;
   const o={pts,style:cOne(r.style,['solid','dashed','dotted'],'solid'),end:cOne(r.end,['arrow','block','dot','bolt','zone','none'],'arrow'),curve:!!r.curve};
   if(r.color!=null)o.color=cCol(r.color,INK);if(r.w!=null)o.w=cNum(r.w,1.4,0.5,7);if(r.zw!=null)o.zw=cNum(r.zw,7.6,1,80);if(r.zh!=null)o.zh=cNum(r.zh,4.4,1,80);
+  if(typeof r.task==='string'&&r.task.trim())o.task=r.task.trim().slice(0,30);
   if(typeof r.man==='string'&&/^[\w.\-:@+~]{1,80}$/.test(r.man))o.man=r.man;
   if(r.speed!=null)o.speed=cNum(r.speed,1,0.3,3);if(r.delay!=null)o.delay=cNum(r.delay,0,0,10);return o;
 }
@@ -2118,7 +2265,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   async resendVerify(){await this.auth('accounts:sendOobCode',{requestType:'VERIFY_EMAIL',idToken:await this.token()})},
   async afterLogin(){toast('Angemeldet als '+this.user.email);this.state='busy';updateStatus();await this.pull(true)},
   signOut(silent){
-    const was=this.user;this.user=null;clearTimeout(this.timer);try{localStorage.removeItem('pbb-auth')}catch(e){}
+    Prog.flush();Prog.docs={};Q.list=[];Q.seen=null;const was=this.user;this.user=null;clearTimeout(this.timer);try{localStorage.removeItem('pbb-auth')}catch(e){}
     if(was){state.pbs=state.pbs.filter(pb=>!pb.cloud||pb.cloud.role==='own');state.pbs.forEach(pb=>{delete pb.cloud});   // shared ones leave this device
       if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;Store.saveLocal();renderAll()}
     this.btn();updateStatus();if(!silent)toast('Abgemeldet – deine eigenen Playbooks bleiben auf diesem Gerät.');
@@ -2142,22 +2289,22 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   enc(pb){const c=pb.cloud;const data=clone(pb);delete data.cloud;
     const arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
     return {fields:{owner:{stringValue:c.owner},ownerEmail:{stringValue:c.ownerEmail||''},name:{stringValue:pb.name||''},type:{stringValue:pb.type},variant:{stringValue:pb.variant},
-      readers:arr(c.readers),editors:arr(c.editors),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email}}};
+      readers:arr(c.readers),editors:arr(c.editors),coaches:arr(c.coaches),data:{stringValue:JSON.stringify(data)},updated:{integerValue:String(Date.now())},updatedBy:{stringValue:this.user.email}}};
   },
   dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'';const a=k=>((f[k]&&f[k].arrayValue&&f[k].arrayValue.values)||[]).map(v=>v.stringValue).filter(Boolean);
-    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),readers:a('readers'),editors:a('editors'),data:s('data'),updatedBy:s('updatedBy')}},
+    return {id:doc.name.split('/').pop(),ut:doc.updateTime,owner:s('owner'),ownerEmail:s('ownerEmail'),readers:a('readers'),editors:a('editors'),coaches:a('coaches'),data:s('data'),updatedBy:s('updatedBy')}},
   async query(field,op,value){
     const j=await this.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'playbooks'}],where:{fieldFilter:{field:{fieldPath:field},op,value:{stringValue:value}}}}});
     return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document));
   },
   parse(d){let src;try{src=JSON.parse(d.data)}catch(e){return null}
     try{const pb=cleanPb({...src,id:d.id},true);migrateFlag(pb);return pb}catch(e){console.warn('skip shared playbook',e);return null}},
-  role(d){return d.owner===this.user.uid?'own':d.editors.includes(this.user.email)?'edit':'read'},
+  role(d){const e=this.user.email;return d.owner===this.user.uid?'own':d.editors.includes(e)?'edit':(d.coaches||[]).includes(e)?'coach':'read'},
   hidden(){try{return JSON.parse(localStorage.getItem('pbb-hidden')||'[]')}catch(e){return []}},
   // ----- push a playbook (after changes, 2.5 s later) -----
   touch(pb){
     if(!this.user||!pb||isRO(pb))return;
-    if(!pb.cloud)pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[]};
+    if(!pb.cloud)pb.cloud={role:'own',owner:this.user.uid,ownerEmail:this.user.email,readers:[],editors:[],coaches:[]};
     pb.cloud.dirty=true;schedule('cloud:'+pb.id,()=>this.push(pb.id),2500);
   },
   async push(id,retry){
@@ -2171,7 +2318,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
       if(e.offline||e.message==='offline'){this.state='offline';this.later();}
       else if(!retry&&(e.code==='FAILED_PRECONDITION'||e.status===409||e.code==='ALREADY_EXISTS'||e.code==='NOT_FOUND')){   // someone else saved in between: merge and try again
         try{const d=this.dec(await this.req('GET',`/playbooks/${encodeURIComponent(pb.id)}`));const rp=this.parse(d);
-          if(rp){mergePb(pb,rp);pb.cloud.ut=d.ut;Object.assign(pb.cloud,{readers:pb.cloud.role==='own'?pb.cloud.readers:d.readers,editors:pb.cloud.role==='own'?pb.cloud.editors:d.editors});renderAll()}
+          if(rp){mergePb(pb,rp);pb.cloud.ut=d.ut;if(pb.cloud.role!=='own')Object.assign(pb.cloud,{readers:d.readers,editors:d.editors,coaches:d.coaches});renderAll()}
         }catch(err){if(err.status===404){pb.cloud.ut=null}else if(err.status===403&&pb.cloud.role==='own'&&!pb.cloud.ut){pb.id=uid('pb');}}
         return this.push(pb.id,true);
       } else {console.warn('sync push',e);this.state=e.status===403?'error':'offline';this.later();}
@@ -2190,19 +2337,19 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     try{
       if(first||!this.user.verified)try{await this.token(true)}catch(e){}
       const lists=[await this.query('owner','EQUAL',this.user.uid)];
-      if(this.user.verified){for(const f of ['readers','editors']){try{lists.push(await this.query(f,'ARRAY_CONTAINS',this.user.email))}catch(e){if(e.offline||e.message==='offline')throw e;console.warn('shared list',f,e)}}}
+      if(this.user.verified){for(const f of ['readers','editors','coaches']){try{lists.push(await this.query(f,'ARRAY_CONTAINS',this.user.email))}catch(e){if(e.offline||e.message==='offline')throw e;console.warn('shared list',f,e)}}}
       const seen=new Map();lists.flat().forEach(d=>seen.set(d.id,d));
       const hid=this.hidden();
       for(const d of seen.values()){
         const role=this.role(d);if(role!=='own'&&hid.includes(d.id))continue;
-        const meta={role,owner:d.owner,ownerEmail:d.ownerEmail,readers:d.readers,editors:d.editors};
+        const meta={role,owner:d.owner,ownerEmail:d.ownerEmail,readers:d.readers,editors:d.editors,coaches:d.coaches};
         const i=state.pbs.findIndex(x=>x.id===d.id);const loc=state.pbs[i];
         if(loc&&loc.cloud&&loc.cloud.ut===d.ut){Object.assign(loc.cloud,meta);continue}
         const rp=this.parse(d);if(!rp)continue;
         if(!loc){rp.cloud={...meta,ut:d.ut};state.pbs.push(rp);changed=true;continue}
         // never overwrite blindly: whatever this device had goes into the play history first
         loc.plays.forEach(pl=>{const r2=rp.plays.find(x=>x.id===pl.id);if(!r2||JSON.stringify(r2)!==JSON.stringify(pl))Hist.push(pl,true)});
-        if(role!=='read'&&(!loc.cloud||loc.cloud.dirty)){   // first sync on this device or unsent changes: newer version of each play wins
+        if(role!=='read'&&role!=='coach'&&(!loc.cloud||loc.cloud.dirty)){   // first sync on this device or unsent changes: newer version of each play wins
           mergePb(loc,rp);loc.cloud={...(loc.cloud||{}),...meta,ut:d.ut};this.touch(loc);if(loc.plays.some(pl=>{const r2=rp.plays.find(x=>x.id===pl.id);return !r2||(pl.updated||0)>(r2.updated||0)}))news.push([loc.name,'diesem Gerät'])}
         else{rp.cloud={...meta,ut:d.ut};state.pbs[i]=rp;if(!first&&d.updatedBy&&d.updatedBy!==this.user.email)news.push([rp.name,d.updatedBy])}
         changed=true;
@@ -2212,12 +2359,14 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
         if(pb.cloud.role==='own'&&(!pb.cloud.ut||pb.cloud.dirty))return true;changed=true;return false});
       // own playbooks not uploaded yet (e.g. the first login on this device)
       state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
+      await Q.pull();
       this.state='ok';this.last=Date.now();
     }catch(e){console.warn('sync pull',e);this.state=e.offline||e.message==='offline'?'offline':'error';if(e.status===401||e.status===403)this.state='error'}
     finally{this.pulling=false}
     if(changed){if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;const pb=curPb();
       if(pb&&!pb.plays.find(x=>x.id===state.playId)){state.playId=pb.plays[0]?pb.plays[0].id:null;state.sel=null}
       if(state.anim)stopAnim(true);Store.saveLocal();renderAll()}
+    if(Q.fresh){const n=Q.fresh;Q.fresh=0;setTimeout(()=>toast(n===1?'💬 Neue Frage zu einem Play':`💬 ${n} neue Fragen zu deinen Plays`),news.length?2800:0)}
     if(news.length)toast(news.length===1?`„${news[0][0]}“ wurde von ${news[0][1].split('@')[0]} aktualisiert`:`${news.length} geteilte Playbooks wurden aktualisiert`);
     updateStatus();this.later();
   },
@@ -2231,6 +2380,123 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   }
 };
 const noCloud=pb=>({...pb,cloud:undefined});   // sharing details (e-mails) never go into files
+/* ---------- questions per play: everyone who can see a shared playbook can ask, owner and editors answer ---------- */
+const Q={list:[],fresh:0,seen:null,
+  dec(doc){const f=doc.fields||{};const s=k=>f[k]&&f[k].stringValue||'',n=k=>+(f[k]&&f[k].integerValue||0);
+    return {id:doc.name.split('/').pop(),pbId:s('pbId'),playId:s('playId'),owner:s('owner'),author:s('author'),authorEmail:s('authorEmail'),text:s('text'),
+      answer:s('answer'),answeredBy:s('answeredBy'),done:!!(f.done&&f.done.booleanValue),created:n('created'),updated:n('updated'),
+      editors:((f.editors&&f.editors.arrayValue&&f.editors.arrayValue.values)||[]).map(v=>v.stringValue),coaches:((f.coaches&&f.coaches.arrayValue&&f.coaches.arrayValue.values)||[]).map(v=>v.stringValue)}},
+  enc(q){return {fields:{pbId:{stringValue:q.pbId},playId:{stringValue:q.playId},owner:{stringValue:q.owner},editors:{arrayValue:{values:(q.editors||[]).map(v=>({stringValue:v}))}},coaches:{arrayValue:{values:(q.coaches||[]).map(v=>({stringValue:v}))}},
+    author:{stringValue:q.author},authorEmail:{stringValue:q.authorEmail},text:{stringValue:q.text},answer:{stringValue:q.answer||''},answeredBy:{stringValue:q.answeredBy||''},
+    done:{booleanValue:!!q.done},created:{integerValue:String(q.created)},updated:{integerValue:String(q.updated)}}}},
+  async query(field,op,value){const j=await Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'questions'}],where:{fieldFilter:{field:{fieldPath:field},op,value:{stringValue:value}}}}});
+    return (Array.isArray(j)?j:[]).filter(x=>x.document).map(x=>this.dec(x.document))},
+  async pull(){
+    if(!Sync.user)return;const u=Sync.user,all=new Map();
+    const runs=[['author','EQUAL',u.uid],['owner','EQUAL',u.uid]];if(u.verified)runs.push(['editors','ARRAY_CONTAINS',u.email],['coaches','ARRAY_CONTAINS',u.email]);
+    for(const r of runs){try{(await this.query(...r)).forEach(q=>all.set(q.id,q))}catch(e){if(e.offline||e.message==='offline')throw e;console.warn('questions',e)}}
+    const list=[...all.values()].sort((a,b)=>a.created-b.created);
+    let seen=this.seenIds();const mine=q=>q.author===u.uid;
+    if(seen)this.fresh+=list.filter(q=>!mine(q)&&!q.done&&!seen.includes(q.id)&&this.canAnswer(q)).length;
+    this.list=list;this.saveSeen(list.map(q=>q.id));renderSide();if(!state.sel)qBox();
+  },
+  seenIds(){if(this.seen)return this.seen;try{const j=JSON.parse(localStorage.getItem('pbb-qseen-'+Sync.user.uid)||'null');return j}catch(e){return null}},
+  saveSeen(ids){this.seen=ids;try{localStorage.setItem('pbb-qseen-'+Sync.user.uid,JSON.stringify(ids.slice(-2000)))}catch(e){}},
+  canAnswer(q){const u=Sync.user;return !!u&&(q.owner===u.uid||(u.verified&&((q.editors||[]).includes(u.email)||(q.coaches||[]).includes(u.email))))},
+  forPlay(id){return this.list.filter(q=>q.playId===id)},
+  open(pb,pl){return this.list.filter(q=>q.pbId===pb.id&&(!pl||q.playId===pl.id)&&!q.done).length},
+  async ask(pb,pl,text){
+    const u=Sync.user,c=pb.cloud;const q={id:uid('q'),pbId:pb.id,playId:pl.id,owner:c.owner,editors:c.editors||[],coaches:c.coaches||[],author:u.uid,authorEmail:u.email,text,answer:'',answeredBy:'',done:false,created:Date.now(),updated:Date.now()};
+    await Sync.req('PATCH',`/questions/${q.id}`,this.enc(q),'currentDocument.exists=false');this.list.push(q);this.saveSeen([...(this.seenIds()||[]),q.id]);
+  },
+  async save(q){q.updated=Date.now();await Sync.req('PATCH',`/questions/${q.id}`,this.enc(q))},
+  async del(q){await Sync.req('DELETE',`/questions/${q.id}`);this.list=this.list.filter(x=>x!==q)}
+};
+/* ---------- learning progress of read-only accounts (kids): time in the playbook + learn results, visible to owner/editors ---------- */
+const Prog={docs:{},pend:{},lastAct:Date.now(),
+  on(pb){return !!(Sync.user&&pb&&pb.cloud&&pb.cloud.ut&&pb.cloud.role==='read')},
+  P(id){return this.pend[id]||(this.pend[id]={sec:0,res:{}})},
+  tick(){const pb=curPb();if(!this.on(pb)||document.visibilityState!=='visible')return;
+    if(Date.now()-this.lastAct<120000||state.present)this.P(pb.id).sec+=15},
+  result(pb,pl,ok,n){if(!this.on(pb)||!n)return;this.P(pb.id).res[pl.id]={ok,n,t:Date.now()};this.flush()},
+  dec(doc){const f=doc.fields||{};let res={};try{res=JSON.parse(f.results&&f.results.stringValue||'{}')}catch(e){}
+    return {ut:doc.updateTime,seconds:+(f.seconds&&f.seconds.integerValue||0),last:+(f.last&&f.last.integerValue||0),res,
+      user:f.user&&f.user.stringValue,email:f.email&&f.email.stringValue,pbId:f.pbId&&f.pbId.stringValue}},
+  enc(pb,d){return {fields:{pbId:{stringValue:pb.id},owner:{stringValue:pb.cloud.owner},editors:{arrayValue:{values:(pb.cloud.editors||[]).map(v=>({stringValue:v}))}},coaches:{arrayValue:{values:(pb.cloud.coaches||[]).map(v=>({stringValue:v}))}},
+    user:{stringValue:Sync.user.uid},email:{stringValue:Sync.user.email},seconds:{integerValue:String(Math.round(d.seconds))},last:{integerValue:String(d.last)},results:{stringValue:JSON.stringify(d.res)}}}},
+  busy:false,
+  async flush(){
+    if(this.busy||!Sync.user)return;this.busy=true;
+    try{for(const id of Object.keys(this.pend)){const pend=this.pend[id];const pb=state.pbs.find(x=>x.id===id);
+        if(!pb||!this.on(pb)){delete this.pend[id];continue}
+        if(!pend.sec&&!Object.keys(pend.res).length)continue;
+        const path=`/progress/${encodeURIComponent(id+'_'+Sync.user.uid)}`;
+        for(let attempt=0;attempt<2;attempt++){
+          let d=this.docs[id];
+          if(!d){try{d=this.dec(await Sync.req('GET',path))}catch(e){if(e.status===404)d={ut:null,seconds:0,last:0,res:{}};else throw e}}
+          const nd={seconds:d.seconds+pend.sec,last:Date.now(),res:{...d.res}};
+          Object.entries(pend.res).forEach(([pid,r])=>{const o=nd.res[pid]||{n:0,best:0};nd.res[pid]={last:r.ok+'/'+r.n,best:Math.max(o.best||0,r.ok/r.n),tries:(o.tries||0)+1,t:r.t}});
+          try{const j=await Sync.req('PATCH',path,this.enc(pb,nd),d.ut?'currentDocument.updateTime='+encodeURIComponent(d.ut):'currentDocument.exists=false');
+            this.docs[id]={...nd,ut:j.updateTime};delete this.pend[id];break}
+          catch(e){if(e.offline||e.message==='offline')throw e;delete this.docs[id];if(attempt)console.warn('progress',e)}
+        }}}
+    catch(e){}finally{this.busy=false}
+  },
+  async forPb(pb){const u=Sync.user,all=new Map();
+    const q=async(f,op,v)=>{const j=await Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:'progress'}],where:{fieldFilter:{field:{fieldPath:f},op,value:{stringValue:v}}}}});
+      (Array.isArray(j)?j:[]).filter(x=>x.document).forEach(x=>{const d=this.dec(x.document);if(d.pbId===pb.id)all.set(x.document.name,d)})};
+    await q('owner','EQUAL',u.uid).catch(e=>{if(pb.cloud.role==='own')throw e});
+    if(u.verified){await q('editors','ARRAY_CONTAINS',u.email).catch(()=>{});await q('coaches','ARRAY_CONTAINS',u.email).catch(()=>{})}
+    return [...all.values()].sort((a,b)=>b.last-a.last)}
+};
+['pointerdown','keydown','wheel','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{Prog.lastAct=Date.now()},{passive:true,capture:true}));
+setInterval(()=>Prog.tick(),15000);setInterval(()=>Prog.flush(),60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')Prog.flush()});
+const fmtMin=sec=>sec<60?'< 1 Min.':sec<3600?Math.round(sec/60)+' Min.':(sec/3600).toFixed(1).replace('.',',')+' Std.';
+async function progressDialog(pb){
+  document.querySelectorAll('.mback').forEach(x=>x.remove());
+  if(!Sync.user||!pb.cloud||!pb.cloud.ut)return toast('Fortschritt gibt es nur bei geteilten Playbooks mit Konto.');
+  let list;try{list=await Prog.forPb(pb)}catch(e){return toast(e.status===403?'Keine Berechtigung – sind die neuen Firebase-Regeln veröffentlicht?':'Laden nicht möglich – bist du online?')}
+  const quiz=pb.plays.filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
+  const row=(d,i)=>{const r=Object.entries(d.res).filter(([pid])=>pb.plays.some(x=>x.id===pid));
+    const learned=r.filter(([,x])=>x.best>=1).length,avg=r.length?Math.round(r.reduce((a,[,x])=>{const[o,n]=String(x.last).split('/').map(Number);return a+(n?o/n:0)},0)/r.length*100):null;
+    return `<details class="prow"><summary><b>${esc((d.email||'?').split('@')[0])}</b><span>${fmtMin(d.seconds)}</span><span>${d.last?new Date(d.last).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}):'–'}</span><span>${learned}/${quiz.length} gelernt${avg!=null?` · Ø ${avg} %`:''}</span></summary>
+      <div class="pdet">${r.length?r.sort((a,b)=>b[1].t-a[1].t).map(([pid,x])=>{const pl=pb.plays.find(y=>y.id===pid);return `<div><span>${playNo(pb,pl)}. ${esc(callName(pl))}</span><span>zuletzt ${esc(x.last)}</span><span>${x.best>=1?'✓ einmal fehlerfrei':'beste '+Math.round(x.best*100)+' %'}</span><span>${x.tries}×</span></div>`}).join(''):'<p class="hint">Noch kein Lern-Ergebnis.</p>'}</div></details>`};
+  modal('📊 Fortschritt – '+pb.name,`<p class="hint" style="margin-top:0">Alle mit Lesezugriff: Zeit im Playbook, zuletzt aktiv und Ergebnisse im 🎓 Lern-Modus (antippen für Details). „Gelernt“ = ein Play einmal komplett richtig gelöst. ${quiz.length} Plays haben Aufgaben zum Lernen.</p>
+    <div class="phead"><span>Name</span><span>Zeit</span><span>Zuletzt</span><span>Lernen</span></div>
+    ${list.length?list.map(row).join(''):'<p class="hint">Noch keine Daten. Sie erscheinen, sobald jemand mit Lesezugriff das Playbook öffnet.</p>'}`,[{label:'Schließen',value:null,cls:'primary'}]);
+}
+function qBox(){
+  const el=$('#insp');if(!el)return;const old=el.querySelector('#qbox');if(old)old.remove();
+  const pb=curPb(),pl=curPlay();if(!pb||!pl||state.sel||(state.multi||[]).length||!Sync.on())return;
+  const box=document.createElement('div');box.id='qbox';
+  if(!Sync.user||!pb.cloud||!pb.cloud.ut){box.innerHTML=`<h4>💬 Fragen zum Play</h4><p class="hint">Fragen und Antworten gibt es bei Playbooks, die über ein Konto geteilt sind${Sync.user?'':' – melde dich dafür an'}.</p>`;el.appendChild(box);return}
+  const u=Sync.user,qs=Q.forPlay(pl.id);
+  const who=e=>e===u.email?'Du':esc((e||'?').split('@')[0]);
+  box.innerHTML=`<h4>💬 Fragen zum Play${qs.length?` (${qs.filter(q=>!q.done).length} offen)`:''}</h4>
+    ${qs.map(q=>`<div class="qitem${q.done?' done':''}" data-qid="${q.id}">
+      <div class="qhead"><b>${who(q.authorEmail)}</b><span>${new Date(q.created).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})}${q.done?' · ✓ erledigt':''}</span>${q.author===u.uid||q.owner===u.uid?`<button class="qdel" data-qdel="${q.id}" title="Frage löschen">✕</button>`:''}</div>
+      <div class="qtext">${esc(q.text)}</div>
+      ${q.answer?`<div class="qans"><b>${who(q.answeredBy)}:</b> ${esc(q.answer)}</div>`:''}
+      ${Q.canAnswer(q)?`<div class="qact"><input type="text" data-qans="${q.id}" placeholder="${q.answer?'Antwort ändern…':'Antworten…'}" maxlength="2000"><button class="btn sm" data-qsend="${q.id}">↵</button><label><input type="checkbox" data-qdone="${q.id}"${q.done?' checked':''}> erledigt</label></div>`:''}
+    </div>`).join('')||'<p class="hint" style="margin:0 0 6px">Noch keine Fragen.</p>'}
+    <textarea id="qNew" rows="2" maxlength="2000" placeholder="Frage zu diesem Play stellen…"></textarea>
+    <button class="btn sm primary" data-qask="1" style="margin-top:4px">Frage senden</button>
+    <p class="hint" style="margin:4px 0 0;font-size:11px">Sichtbar für dich, ${pb.cloud.role==='own'?'und alle, die bearbeiten dürfen':`${esc((pb.cloud.ownerEmail||'den Besitzer').split('@')[0])} und alle, die bearbeiten dürfen`}.</p>`;
+  el.appendChild(box);
+}
+document.addEventListener('click',async e=>{
+  const t=e.target;const pb=curPb(),pl=curPlay();
+  if(t.closest('[data-qask]')){const ta=$('#qNew');const v=ta.value.trim();if(!v)return toast('Bitte eine Frage eingeben.');
+    try{await Q.ask(pb,pl,v.slice(0,2000));ta.value='';qBox();renderSide();toast('Frage gesendet')}catch(err){toast(err.offline?'Offline – bitte später senden.':'Senden nicht möglich ('+(err.status===403?'keine Berechtigung – sind die neuen Regeln in Firebase veröffentlicht?':err.message)+')')}return}
+  const sd=t.closest('[data-qsend]');if(sd){const q=Q.list.find(x=>x.id===sd.dataset.qsend);const i=document.querySelector(`[data-qans="${sd.dataset.qsend}"]`);const v=i&&i.value.trim();if(!q||!v)return;
+    const o={...q};q.answer=v.slice(0,2000);q.answeredBy=Sync.user.email;try{await Q.save(q);qBox();toast('Antwort gespeichert')}catch(err){Object.assign(q,o);toast('Speichern nicht möglich')}return}
+  const dl=t.closest('[data-qdel]');if(dl){const q=Q.list.find(x=>x.id===dl.dataset.qdel);if(!q||!await confirmBox('Frage löschen?','Die Frage und die Antwort werden für alle gelöscht.','Löschen'))return;
+    try{await Q.del(q);qBox();renderSide()}catch(err){toast('Löschen nicht möglich')}return}
+});
+document.addEventListener('change',async e=>{const d=e.target.closest&&e.target.closest('[data-qdone]');if(!d)return;const q=Q.list.find(x=>x.id===d.dataset.qdone);if(!q)return;
+  q.done=d.checked;try{await Q.save(q);qBox();renderSide()}catch(err){q.done=!d.checked;d.checked=q.done;toast('Speichern nicht möglich')}});
+document.addEventListener('keydown',e=>{const i=e.target.closest&&e.target.closest('[data-qans]');if(i&&e.key==='Enter'){e.preventDefault();const b=document.querySelector(`[data-qsend="${i.dataset.qans}"]`);if(b)b.click()}},true);
 function authMsg(m){m=String(m||'');
   if(/EMAIL_EXISTS/.test(m))return 'Für diese E-Mail gibt es schon ein Konto – bitte anmelden.';
   if(/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(m))return 'E-Mail oder Passwort stimmt nicht.';
@@ -2252,8 +2518,8 @@ function mergePb(loc,rem){
   if((rem.updated||0)>(loc.updated||0)){loc.name=rem.name;if(rem.layoutPlayId)loc.layoutPlayId=rem.layoutPlayId}
 }
 function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
-  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='edit'?'bearbeiten':'nur lesen'}</span>`;
-  const n=(c.readers||[]).length+(c.editors||[]).length;return n?` <span class="chip shared" title="Mit ${n} Coaches geteilt">👥 ${n}</span>`:'';}
+  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='edit'?'bearbeiten':c.role==='coach'?'Coach':'nur lesen'}</span>`;
+  const n=nShare(c);return n?` <span class="chip shared" title="Mit ${n} Coaches geteilt">👥 ${n}</span>`:'';}
 async function accountDialog(){
   if(!Sync.on())return;
   if(Sync.user){const u=Sync.user;
@@ -2296,17 +2562,29 @@ async function accountDialog(){
 document.addEventListener('click',async e=>{const d=e.target.closest('[data-acct="delete"]');if(!d)return;
   if(!await confirmBox('Konto löschen?','Dein Konto und deine Playbooks auf dem Server werden endgültig gelöscht. Geteilte Playbooks sehen die anderen Coaches danach nicht mehr. Auf diesem Gerät bleiben deine Playbooks erhalten.','Endgültig löschen'))return;
   document.querySelectorAll('.mback').forEach(x=>x.remove());try{await Sync.deleteAccount()}catch(err){toast(err.message)}});
+// after sharing changed: questions and progress of this playbook get the new coach lists, so new coaches see older entries too
+async function refreshAccess(pb){
+  const c=pb.cloud,arr=a=>({arrayValue:{values:(a||[]).map(v=>({stringValue:v}))}});
+  for(const coll of ['questions','progress']){
+    const j=await Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:coll}],where:{fieldFilter:{field:{fieldPath:'owner'},op:'EQUAL',value:{stringValue:Sync.user.uid}}}}});
+    for(const x of (Array.isArray(j)?j:[]).filter(x=>x.document)){const d=x.document,f=d.fields||{};
+      if((f.pbId&&f.pbId.stringValue)!==pb.id)continue;
+      const fields={...f,editors:arr(c.editors),coaches:arr(c.coaches)};
+      try{await Sync.req('PATCH','/'+coll+'/'+encodeURIComponent(d.name.split('/').pop()),{fields})}catch(e){console.warn(coll,e)}}}
+  Q.list.forEach(q=>{if(q.pbId===pb.id){q.editors=c.editors||[];q.coaches=c.coaches||[]}});
+}
 async function shareDialog(pb){
   if(!Sync.user){return accountDialog()}
   if(!pb.cloud)Sync.touch(pb);
-  const c=pb.cloud;let list=[...(c.editors||[]).map(e=>({e,r:'edit'})),...(c.readers||[]).map(e=>({e,r:'read'}))];
-  const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}">${esc(x.e)}</span><select data-srole="${i}"><option value="read"${x.r==='read'?' selected':''}>kann lesen</option><option value="edit"${x.r==='edit'?' selected':''}>kann bearbeiten</option></select><button type="button" class="btn sm" data-sdel="${i}" title="Freigabe entfernen">✕</button></div>`).join(''):'<p class="hint">Noch mit niemandem geteilt.</p>';
+  const c=pb.cloud;let list=[...(c.editors||[]).map(e=>({e,r:'edit'})),...(c.coaches||[]).map(e=>({e,r:'coach'})),...(c.readers||[]).map(e=>({e,r:'read'}))];
+  const ROLES=[['read','Spieler – lesen'],['coach','Coach – lesen + Fortschritt'],['edit','Coach – bearbeiten']];
+  const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}">${esc(x.e)}</span><select data-srole="${i}">${ROLES.map(([v,n])=>`<option value="${v}"${x.r===v?' selected':''}>${n}</option>`).join('')}</select><button type="button" class="btn sm" data-sdel="${i}" title="Freigabe entfernen">✕</button></div>`).join(''):'<p class="hint">Noch mit niemandem geteilt.</p>';
   const p=modal('👥 „'+pb.name+'“ freigeben',`<p class="hint" style="margin-top:0">Trag die E-Mail-Adresse ein, mit der sich der Coach (oder Spieler) in der App angemeldet hat. Er sieht das Playbook, sobald er seine Adresse bestätigt hat.</p>
     <div id="shareList">${rows()}</div>
     <div class="row" style="margin-top:10px;align-items:flex-end"><div style="flex:2"><label>E-Mail</label><input type="email" id="sEmail" placeholder="coach@beispiel.de"></div>
-      <div style="flex:1"><label>Rechte</label><select id="sRole"><option value="read">kann lesen</option><option value="edit">kann bearbeiten</option></select></div>
+      <div style="flex:1"><label>Rechte</label><select id="sRole">${ROLES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select></div>
       <button type="button" class="btn sm" data-sadd="1">Hinzufügen</button></div>
-    <p class="hint" style="font-size:12px">„Kann bearbeiten“ heißt: Plays ändern, anlegen und löschen. Freigeben und das Playbook löschen kannst nur du.</p>`,
+    <p class="hint" style="font-size:12px"><b>Spieler – lesen:</b> sieht das Playbook, lernt, stellt Fragen; Zeit und Lern-Ergebnisse werden für die Coaches erfasst.<br><b>Coach – lesen + Fortschritt:</b> sieht das Playbook, den Fortschritt der Spieler und beantwortet Fragen, ändert aber nichts.<br><b>Coach – bearbeiten:</b> zusätzlich Plays ändern, anlegen und löschen. Freigeben und das Playbook löschen kannst nur du.</p>`,
     [{label:'Abbrechen',value:null},{label:'Speichern',value:'ok',cls:'primary'}]);
   const back=[...document.querySelectorAll('.mback')].pop();
   const add=()=>{const i=back.querySelector('#sEmail');const em=i.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(em))return toast('Bitte eine gültige E-Mail-Adresse eingeben.');
@@ -2317,8 +2595,9 @@ async function shareDialog(pb){
   back.addEventListener('keydown',e=>{if(e.target.id==='sEmail'&&e.key==='Enter'){e.preventDefault();e.stopPropagation();add()}},true);
   const r=await p;if(r.value!=='ok')return;
   {const i=r.el.querySelector('#sEmail');if(i&&i.value.trim())add()}
-  c.readers=list.filter(x=>x.r==='read').map(x=>x.e);c.editors=list.filter(x=>x.r==='edit').map(x=>x.e);
+  c.readers=list.filter(x=>x.r==='read').map(x=>x.e);c.editors=list.filter(x=>x.r==='edit').map(x=>x.e);c.coaches=list.filter(x=>x.r==='coach').map(x=>x.e);
   Sync.touch(pb);await Sync.push(pb.id);renderSide();
+  if(Sync.state==='ok')refreshAccess(pb).catch(e=>console.warn('access refresh',e));
   toast(Sync.state==='ok'?(list.length?`Geteilt mit ${list.length} ${list.length===1?'Person':'Personen'}`:'Freigaben entfernt'):'Gespeichert – wird übertragen, sobald du online bist');
 }
 
@@ -2517,7 +2796,7 @@ function helpDialog(){
     <li><b>Teilen:</b> Playbook als Datei exportieren – andere importieren es in ihre eigene Kopie.</li>
     <li><b>📁 Ordner verbinden</b> (Chrome/Edge am PC): Playbooks werden automatisch als Dateien in einem Ordner auf deinem Gerät gespeichert – bleiben auch erhalten, wenn Browserdaten gelöscht werden.</li>
     <li><b>▣ Präsentieren:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
-    <li><b>🎓 Lernen</b> (im Präsentationsmodus): Die eigenen Aufgaben sind verdeckt, bis du mit „Aufdecken“ oder Taste A auflöst.</li>
+    <li><b>🎓 Lernen</b> (im Präsentationsmodus): Die Aufgaben sind verdeckt. Spieler antippen, links die Aufgabe wählen (z. B. „Deep ½“, „Slant“), beim QB die Reads der Reihe nach antippen – dann „Aufdecken“: grün richtig, rot falsch. Bewertet wird der hinterlegte Name der Aufgabe, nicht die Zeichnung. Den Namen setzen Vorlagen automatisch; bei selbst gezeichneten Linien unter „Linie bearbeiten → Aufgabe“ eintragen.</li>
     <li><b>💾 Alles sichern</b> speichert alle Playbooks in eine Datei. <b>🕘 Verlauf</b> holt frühere Stände eines Plays zurück.</li>
     <li><b>👤 Konto:</b> Mit E-Mail und Passwort sind deine Playbooks auf allen Geräten gleich. Über ⋯ → „👥 Freigeben“ teilst du ein Playbook mit anderen Coaches – zum Lesen oder Bearbeiten.</li>
     <li><b>🗑 Papierkorb:</b> Gelöschtes bleibt 30 Tage und lässt sich wiederherstellen.</li>
@@ -2561,6 +2840,8 @@ document.addEventListener('click',async e=>{
     case 'toForm':return setKind(true);
     case 'toPlay':return setKind(false);
     case 'lockAll':case 'unlockAll':return lockAll(act==='lockAll');
+    case 'suggestTasks':return suggestDialog();
+    case 'progress':return progressDialog(curPb());
     case 'help':return helpDialog();
     case 'trash':return trashDialog();
     case 'account':return accountDialog();
@@ -2632,8 +2913,8 @@ document.addEventListener('click',async e=>{
     case 'animBack':return animStepBy(-0.2);
     case 'video':return exportAnim('video');
     case 'gif':return exportAnim('gif');
-    case 'quiz':state.quiz=!state.quiz;state.quizShown=false;renderField();return renderPresentBar();
-    case 'quizShow':state.quizShown=!state.quizShown;renderField();return renderPresentBar();
+    case 'quiz':state.quiz=!state.quiz;state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
+    case 'quizShow':if(state.quizShown)state.qa=null;else{const R=quizResult(curPb(),curPlay());Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
     case 'quizRand':{const pb=curPb();if(pb.plays.length>1){let i;do{i=Math.floor(Math.random()*pb.plays.length)}while(pb.plays[i].id===state.playId);selectPlay(pb.plays[i].id)}return}
     case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
@@ -2682,7 +2963,7 @@ document.addEventListener('change',e=>{
   if(t.id==='oppSel')return loadOpp(t.value);
   if(t.dataset.pf==='shape'||t.dataset.pf==='read'){const p=selPlayer();commit();p[t.dataset.pf]=t.dataset.pf==='read'?+t.value:t.value;return changed({})}
   if(t.id==='animOpt'){state.animOpt=+t.value;return}
-  if(t.dataset.rf){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;commit();const f=t.dataset.rf;r[f]=t.type==='checkbox'?t.checked:(f==='speed'||f==='delay')?+t.value:t.value;return changed({})}
+  if(t.dataset.rf){const p=selPlayer();const r=p&&getRoute(p,curRouteKey(p));if(!r)return;commit();const f=t.dataset.rf;r[f]=t.type==='checkbox'?t.checked:(f==='speed'||f==='delay')?+t.value:f==='task'?t.value.trim().slice(0,30):t.value;if(f==='task'&&!r.task)delete r.task;return changed({})}
 });
 document.addEventListener('focusin',e=>{if(e.target.dataset&&(e.target.dataset.f||e.target.dataset.mf||e.target.dataset.pf==='label'))state.editSnap=curPlay()?JSON.stringify(curPlay()):null});
 document.addEventListener('pointerdown',e=>{if(e.target.dataset&&(e.target.dataset.mf||e.target.dataset.rw))state.editSnap=curPlay()?JSON.stringify(curPlay()):null},true);
