@@ -269,9 +269,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.4';
+const APP_VERSION='2026-11-16.5';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -2439,7 +2439,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
           if(rp){mergePb(pb,rp);pb.cloud.ut=d.ut;if(pb.cloud.role!=='own')Object.assign(pb.cloud,{readers:d.readers,editors:d.editors,coaches:d.coaches});renderAll()}
         }catch(err){if(err.status===404){pb.cloud.ut=null}else if(err.status===403&&pb.cloud.role==='own'&&!pb.cloud.ut){pb.id=uid('pb');}}
         return this.push(pb.id,true);
-      } else {console.warn('sync push',e);this.state=e.status===403?'error':'offline';this.later();}
+      } else {console.warn('sync push',e);this.state=e.status===403?'error':'offline';this.later();if(e.status===403){Upd.snooze=0;Upd.check()}}
     }
     updateStatus();
   },
@@ -2921,29 +2921,35 @@ async function shareDialog(pb){
 }
 
 /* ---------- new app version on the server? ask to reload ---------- */
-const Upd={last:0,shown:false,snooze:0,
+const Upd={last:0,shown:false,snooze:0,snoozed:false,touched:false,
   async check(){
     if(!HOSTED||this.shown||Date.now()<this.snooze||!/^https?:/.test(location.protocol))return;this.last=Date.now();
     let txt;try{const r=await fetch(location.pathname+(location.pathname.endsWith('/')?'':'')+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;txt=await r.text()}catch(e){return}
     const m=/const APP_VERSION='([^']+)'/.exec(txt);if(!m||m[1]===APP_VERSION)return;
     let notes=[];try{const n=/const APP_NOTES=(\[.*?\]);/.exec(txt);if(n)notes=JSON.parse(n[1]).filter(x=>typeof x==='string').slice(0,6)}catch(e){}
+    if(!this.touched&&!state.drawing&&!$('.mback')&&!state.present)return this.go(true);   // nothing done yet in this session: just update
     this.show(m[1],notes);
   },
+  async go(quiet){if(!quiet)toast('Wird aktualisiert…');flushAll();
+    for(let i=0;i<40&&(W.timers.size||W.busy.size);i++)await new Promise(res=>setTimeout(res,150));
+    try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}
+    location.reload()},
   async show(v,notes){
     if($('.mback')||state.drag||state.drawing||state.present){setTimeout(()=>this.show(v,notes),20000);return}
     this.shown=true;
-    const r=await modal('Neue Version der App',`<p style="margin-top:0">Es gibt eine neue Version des Playbook Builders. Bitte aktualisiere, damit alle Coaches mit derselben Version arbeiten.</p>
+    let left=30;const p=modal('Neue Version der App',`<p style="margin-top:0">Es gibt eine neue Version des Playbook Builders. Sie wird in <b id="updLeft">${left}</b> Sekunden automatisch geladen, damit alle mit derselben Version arbeiten.</p>
       ${notes.length?`<p class="hint" style="margin-bottom:4px"><b>Neu:</b></p><ul style="margin-top:0">${notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
       <p class="hint">Deine Playbooks bleiben erhalten – es wird nur die App neu geladen.</p>`,
-      [{label:'Später',value:null},{label:'Jetzt aktualisieren',value:'go',cls:'primary'}]);
-    if(r.value!=='go'){this.shown=false;this.snooze=Date.now()+30*60000;return}
-    toast('Wird aktualisiert…');flushAll();
-    for(let i=0;i<40&&(W.timers.size||W.busy.size);i++)await new Promise(res=>setTimeout(res,150));
-    try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}
-    location.reload();
+      [...(this.snoozed?[]:[{label:'In 30 Min.',value:null}]),{label:'Jetzt aktualisieren',value:'go',cls:'primary'}]);
+    const back=[...document.querySelectorAll('.mback')].pop();
+    const r=await Promise.race([p,new Promise(res=>{const iv=setInterval(()=>{left--;const el=back&&back.querySelector('#updLeft');if(el)el.textContent=left;
+      if(!back||!back.isConnected){clearInterval(iv);return}if(left<=0){clearInterval(iv);back.remove();res({value:'go'})}},1000)})]);
+    if(r.value!=='go'){this.shown=false;this.snoozed=true;this.snooze=Date.now()+30*60000;setTimeout(()=>this.check(),30*60000+1000);return}   // only once – next time it updates
+    this.go();
   }
 };
-if(HOSTED){setTimeout(()=>Upd.check(),15000);setInterval(()=>{if(document.visibilityState==='visible')Upd.check()},10*60000);
+['pointerdown','keydown'].forEach(t=>document.addEventListener(t,()=>{Upd.touched=true},{capture:true,once:true}));
+if(HOSTED){setTimeout(()=>Upd.check(),2500);setInterval(()=>{if(document.visibilityState==='visible')Upd.check()},10*60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-Upd.last>2*60000)Upd.check()})}
 
 /* ---------- unexpected errors: tell the user, keep the data ---------- */
