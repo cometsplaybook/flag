@@ -247,9 +247,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-14.4';
+const APP_VERSION='2026-11-15.3';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -352,12 +352,18 @@ function applyLayout(tpl,pl){
       p.shape=t.shape;p.color=t.color;if(t.fill)p.fill=t.fill;else delete p.fill;
       const rc=t.route&&t.route.color,mc=t.motion&&t.motion.color;
       if(p.route&&rc)p.route.color=rc;if(p.route&&t.route&&t.route.w)p.route.w=t.route.w;if(p.motion&&(mc||rc))p.motion.color=mc||rc;
+      const tw=t.route&&t.route.w;if(p.motion&&tw)p.motion.w=tw;(p.alts||[]).forEach(r=>{if(tw)r.w=tw});
       (p.alts||[]).forEach((r,j)=>{const ac=(t.alts&&t.alts[j]&&t.alts[j].color)||(t.alts&&t.alts[0]&&t.alts[0].color)||rc;if(ac)r.color=ac});});};
   matchList(tpl.players,pl.players);matchList(tpl.opp||[],pl.opp||[]);
   ['zone','text','bolt'].forEach(type=>{const t=(tpl.marks||[]).find(m=>m.type===type);if(!t)return;
     (pl.marks||[]).filter(m=>m.type===type).forEach(m=>{m.color=t.color;
       if(type==='zone'){m.opacity=t.opacity;m.border=t.border;m.dashed=t.dashed;if(t.bcolor)m.bcolor=t.bcolor;else delete m.bcolor;if(t.bw)m.bw=t.bw;else delete m.bw}})});
 }
+// line width for a new line: like this player's own line, else like the layout template (same label first), else 1.4
+function defW(p){const pb=curPb(),t=pb&&layoutTpl(pb);if(p&&p.route&&p.route.w)return p.route.w;
+  if(t){const all=[...t.players,...(t.opp||[])];const m=all.find(q=>(q.label||'').toUpperCase()===((p&&p.label)||'').toUpperCase()&&q.route&&q.route.w);if(m)return m.route.w;
+    const ws={};all.forEach(q=>[q.route,...(q.alts||[])].forEach(r=>{if(r&&r.w)ws[r.w]=(ws[r.w]||0)+1}));const best=Object.entries(ws).sort((a,b)=>b[1]-a[1])[0];if(best)return +best[0]}
+  return 1.4}
 function layoutTpl(pb){return pb.layoutPlayId?pb.plays.find(x=>x.id===pb.layoutPlayId)||null:null}
 /* Flag field grew from 25 to 53.3 yards wide: spread old flag plays horizontally so everything
    keeps its place relative to the field. Depths (yards from the LOS) stay unchanged. */
@@ -374,7 +380,7 @@ function fixRoutes(pb){let n=0;
   pb.plays.forEach(pl=>[...(pl.players||[]),...(pl.opp||[])].forEach(p=>{
     if(p.route&&!hasLine(p.route)){p.route=null;n++}
     if(p.alts&&p.alts.length){const k=p.alts.length;p.alts=p.alts.filter(hasLine);if(p.alts.length!==k)n++}
-    if(!p.route&&p.alts&&p.alts.length){const a=p.alts.shift();if(a.style==='dotted')a.style='solid';p.route=a;n++}}));
+  }));
   return n>0;
 }
 const isRO=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
@@ -1207,9 +1213,9 @@ function drawArr(p){const r=drawRoute(p);return r?r.pts:[]}
 function setMan(dpid,rid,asAlt){
   const pb=curPb(),pl=curPlay(),p=findP(dpid),o=findP(rid);if(!p||!o)return;
   const dx=p.x-o.x,dy=p.y-o.y,l=Math.hypot(dx,dy)||1,k=Math.min(1,l*0.5);
-  const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,color:(p.route&&p.route.color)||defRouteColor(p)};
+  const route={pts:[{x:r1(o.x+dx/l*k-p.x),y:r1(o.y+dy/l*k-p.y)}],style:'solid',end:'none',curve:false,man:o.id,color:(p.route&&p.route.color)||defRouteColor(p),w:defW(p)};
   commit();
-  if(asAlt&&hasLine(p.route)){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  if(asAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
   else{p.route=route;state.selRoute={k:'route',j:0}}
   state.sel=p.id;state.pickMan=null;changed({insp:true});
   toast(`Man auf ${o.label||'Gegner'} – zum Umleiten den ⊕ auf der Linie ziehen`);
@@ -1224,11 +1230,12 @@ function startDrawing(kind,pid){
   commit();
   let j=0;
   const dc=(p.route&&p.route.color)||defRouteColor(p);const pe=state.pendingEnd;state.pendingEnd=null;
-  if(kind==='route'&&(pe==='bolt'||state.tplAlt)&&hasLine(p.route))kind='alt';   // keep the existing route, add an alternative
-  if(kind==='alt'&&!hasLine(p.route))kind='route';   // no route yet: the first line is the route
-  if(kind==='alt'){p.alts=p.alts||[];p.alts.push({pts:[],style:'solid',end:pe||'arrow',curve:false,color:dc});j=p.alts.length-1;}
+  let dotAlt=false;if(kind==='route'&&(state.tplAlt||(pe==='bolt'&&hasLine(p.route)))){kind='alt';dotAlt=true}   // keep the existing route, add an alternative (dotted)
+  if(kind==='alt'&&pe==='bolt')dotAlt=true;
+  if(kind==='alt'||state.tplAlt)dotAlt=true;   // alternatives are dotted – also when the player has no main route
+  if(kind==='alt'){p.alts=p.alts||[];p.alts.push({pts:[],style:dotAlt?'dotted':'solid',end:pe||'arrow',curve:false,color:dc,w:defW(p)});j=p.alts.length-1;}
   else{const prev=p[kind];
-    p[kind]=kind==='route'?{pts:[],style:prev&&prev.style||'solid',end:pe||(prev&&prev.end!=='bolt'&&prev.end)||'arrow',curve:false,color:(prev&&prev.color)||dc}:{pts:[],curve:false,color:(prev&&prev.color)||dc};}
+    p[kind]=kind==='route'?{pts:[],style:prev&&prev.style||'solid',end:pe||(prev&&prev.end!=='bolt'&&prev.end)||'arrow',curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p)}:{pts:[],curve:false,color:(prev&&prev.color)||dc,w:(prev&&prev.w)||defW(p)};}
   state.sel=pid;state.selRoute={k:kind,j};state.drawing={kind,pid,j};renderField();renderInsp();
 }
 function finishDrawing(keepMode){
@@ -1376,9 +1383,9 @@ function applyTemplate(i){
     else pts=t.p.map(([o,u])=>toRel(p.x+o*sx,p.y-u));
     route={pts,style:'solid',end:t.e||'arrow',curve:!!t.c};
   }
-  route.color=(p.route&&p.route.color)||defRouteColor(p);
+  route.color=(p.route&&p.route.color)||defRouteColor(p);route.w=defW(p);
   commit();
-  if(state.tplAlt&&hasLine(p.route)){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
+  if(state.tplAlt){route.style='dotted';p.alts=p.alts||[];p.alts.push(route);state.selRoute={k:'alt',j:p.alts.length-1}}
   else{p.route=route;state.selRoute={k:'route',j:0}}
   changed({insp:true});
 }
