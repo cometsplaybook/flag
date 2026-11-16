@@ -186,6 +186,9 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 /* modal */
 .mback{position:fixed;inset:0;background:rgba(20,24,22,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal{background:var(--panel);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:18px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.modal{position:relative}.modal .mx{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:8px;background:transparent;font-size:20px;line-height:1;color:var(--muted);cursor:pointer}.modal .mx:hover{background:var(--line);color:var(--ink)}
+.modal:has(.mx) h3{padding-right:36px}
+body.gated>*:not(.mback):not(#toast){visibility:hidden}
 .modal h3{margin:0 0 12px;font-family:var(--cond);font-stretch:condensed;font-size:24px;text-transform:uppercase}
 .modal .mbtns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
 .modal label{display:block;font-weight:600;font-size:14px;margin:10px 0 4px}
@@ -272,9 +275,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.11';
+const APP_VERSION='2026-11-16.13';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1819,16 +1822,16 @@ function gifWriter(W,H,samples){
 function stopAnim(silent){if(!state.anim)return;cancelAnimationFrame(state.anim.raf);state.anim=null;if(!silent){renderCenter();renderPresentBar()}}
 
 /* ---------- modal / toast ---------- */
-function modal(title,body,buttons){
+function modal(title,body,buttons,opts={}){
   return new Promise(res=>{
-    const back=document.createElement('div');back.className='mback';
-    back.innerHTML=`<div class="modal" role="dialog"><h3>${esc(title)}</h3><div class="mbody">${body}</div><div class="mbtns">${buttons.map((b,i)=>`<button class="btn ${b.cls||''}" data-i="${i}">${esc(b.label)}</button>`).join('')}</div></div>`;
+    const back=document.createElement('div');back.className='mback'+(opts.sticky?' sticky':'');
+    back.innerHTML=`<div class="modal" role="dialog">${opts.x?'<button type="button" class="mx" aria-label="Schließen" title="Schließen">✕</button>':''}<h3>${esc(title)}</h3><div class="mbody">${body}</div><div class="mbtns">${buttons.map((b,i)=>`<button class="btn ${b.cls||''}" data-i="${i}">${esc(b.label)}</button>`).join('')}</div></div>`;
     document.body.appendChild(back);
     const close=v=>{back.remove();res(v)};
-    back.addEventListener('click',e=>{if(e.target===back)close({value:null,el:back});const b=e.target.closest('.mbtns button');
+    back.addEventListener('click',e=>{if((e.target===back&&!opts.sticky)||e.target.closest('.mx'))return close({value:null,el:back});const b=e.target.closest('.mbtns button');
       if(b){const bt=buttons[+b.dataset.i];if(bt.keep){bt.onClick&&bt.onClick(back);return}const out={value:bt.value,el:back};
         if(bt.validate&&!bt.validate(back))return;close(out)}});
-    back.addEventListener('keydown',e=>{if(e.key==='Escape')close({value:null,el:back})});
+    back.addEventListener('keydown',e=>{if(e.key==='Escape'&&!opts.sticky)close({value:null,el:back})});
     const f=back.querySelector('input,textarea,select');if(f)setTimeout(()=>f.focus({preventScroll:true}),30);
   });
 }
@@ -2536,6 +2539,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     this.btn();if(!this.on())return;
     let a=null;try{a=JSON.parse(localStorage.getItem('pbb-auth')||'null')}catch(e){}
     if(a&&a.refreshToken){this.user={uid:a.uid,email:a.email,refreshToken:a.refreshToken,idToken:null,exp:0,verified:false};this.btn();this.pull(true)}
+    else setTimeout(gateUp,50);
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&this.user&&Date.now()-this.last>15000)this.pull()});
     window.addEventListener('online',()=>{if(this.user)this.pull()});
   }
@@ -2710,7 +2714,7 @@ const Snap={at:{},
 async function snapDialog(pb){if(!Sync.user||!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
   let l;try{l=await Snap.list(pb)}catch(e){return toast(/denied|PERMISSION|403/i.test(e.message+e.status)?'Cloud-Sicherungen noch nicht freigeschaltet – bitte die neuen Firebase-Regeln veröffentlichen.':'Sicherungen nicht erreichbar: '+e.message)}
   const fmt=t=>new Date(t).toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'})+', '+new Date(t).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr';
-  const r=modal('🗄 Cloud-Sicherungen – '+esc(pb.name),`<p class="hint" style="margin-top:0">Für jeden Tag mit Änderungen liegt der letzte Stand dieses Playbooks in der Cloud (die letzten 3 Wochen werden angezeigt). Wiederherstellen legt eine <b>Kopie</b> als neues Playbook an – das aktuelle bleibt unverändert, du kannst also nichts kaputt machen.</p>
+  const r=modal('🗄 Cloud-Sicherungen – '+pb.name,`<p class="hint" style="margin-top:0">Für jeden Tag mit Änderungen liegt der letzte Stand dieses Playbooks in der Cloud (die letzten 3 Wochen werden angezeigt). Wiederherstellen legt eine <b>Kopie</b> als neues Playbook an – das aktuelle bleibt unverändert, du kannst also nichts kaputt machen.</p>
     ${l.length?l.map((x,i)=>`<div class="trow"><div><b>${fmt(x.at)}</b><span class="hint">${x.n} Einträge · gespeichert von ${esc(x.by)}</span></div><span></span><button type="button" class="btn sm primary" data-snap="${i}">Als Kopie wiederherstellen</button></div>`).join(''):'<p class="hint">Noch keine Sicherung – sie entsteht automatisch, sobald das Playbook synchronisiert wird.</p>'}`,
     [{label:'Schließen',value:null,cls:'primary'}]);
   const back=[...document.querySelectorAll('.mback')].pop();
@@ -2732,7 +2736,7 @@ function mergePb(loc,rem){
 function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
   if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='read'?'nur lesen':'Coach'}</span>`;
   const n=nShare(c);return n?` <span class="chip shared" title="${c.team?'Über die Team-Liste geteilt':'Mit '+n+' Personen geteilt'}">👥 ${c.team?'Team':n}</span>`:'';}
-async function accountDialog(){
+async function accountDialog(opts={}){
   if(!Sync.on())return;
   if(Sync.user){const u=Sync.user;
     const r=await modal('Dein Konto',`<p style="margin-top:0">Angemeldet als <b>${esc(u.email)}</b></p>
@@ -2741,8 +2745,8 @@ async function accountDialog(){
       <p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“ – oder für alle Playbooks auf einmal über die Team-Liste.</p>
       <div class="row" style="margin:0 0 8px"><button type="button" class="btn sm" data-acct="team">👥 Team-Liste${Team.mine()?' – '+esc(Team.mine().name):''}</button></div>
       <details><summary class="hint">Konto löschen</summary><p class="hint">Löscht dein Konto und deine Playbooks auf dem Server. Auf diesem Gerät bleiben sie erhalten.</p><button class="btn sm danger" data-acct="delete">Konto endgültig löschen</button></details>`,
-      [...(u.verified?[]:[{label:'Mail erneut senden',value:'resend'},{label:'Ich habe bestätigt',value:'check'}]),{label:'Abmelden',value:'out'},{label:'Jetzt synchronisieren',value:'sync',cls:'primary'}]);
-    if(r.value==='out')return Sync.signOut();
+      [...(u.verified?[]:[{label:'Mail erneut senden',value:'resend'},{label:'Ich habe bestätigt',value:'check'}]),{label:'Abmelden',value:'out'},{label:'Jetzt synchronisieren',value:'sync',cls:'primary'}],{x:true});
+    if(r.value==='out')return logout();
     if(r.value==='sync'){Sync.state='busy';updateStatus();await Promise.all([...state.pbs].filter(pb=>pb.cloud&&pb.cloud.dirty).map(pb=>Sync.push(pb.id)));await Sync.pull(true);return toast(Sync.state==='ok'?'Synchronisiert':'Synchronisierung nicht möglich – bist du online?')}
     if(r.value==='resend'){try{await Sync.resendVerify();toast('Bestätigungs-Mail gesendet')}catch(e){toast(e.message)}return}
     if(r.value==='check'){await Sync.pull(true);return toast(Sync.user&&Sync.user.verified?'E-Mail bestätigt ✓':'Noch nicht bestätigt – bitte den Link in der Mail öffnen.')}
@@ -2755,10 +2759,14 @@ async function accountDialog(){
     ${mode==='in'?'<p style="margin:6px 0 0"><button type="button" class="btn sm" data-acct="reset">Passwort vergessen?</button></p>':''}
     <p class="hint">Mit Konto sind deine Playbooks auf allen Geräten gleich, und du kannst sie mit anderen Coaches teilen. Ohne Konto bleibt alles wie bisher nur auf diesem Gerät.</p>
     <p class="hint" style="font-size:12px">Datenschutz: Für die Anmeldung verarbeitet Google Firebase deine E-Mail-Adresse und dein Passwort (verschlüsselt). Die Playbooks liegen in einer Firebase-Datenbank in Frankfurt. Beides dient nur dazu, deine Playbooks zwischen deinen Geräten und den Coaches abzugleichen, mit denen du teilst. Du kannst dein Konto jederzeit löschen.</p>`;
-  const p=modal('Konto',`<div id="acctBox">${html()}</div>`,[{label:'Abbrechen',value:null},{label:'Weiter',value:'go',cls:'primary',validate:el=>{
+  const gate=!!opts.gate;
+  const p=modal(gate?'Anmelden':'Konto',`${gate?'<p style="margin-top:0">Du bist abgemeldet. Melde dich an, um deine Playbooks zu sehen.</p>':''}<div id="acctBox">${html()}</div>`,[{label:gate?'Ohne Konto weiter':'Abbrechen',value:gate?'skip':null},{label:'Weiter',value:'go',cls:'primary',validate:el=>{
       const e=el.querySelector('#aEmail').value.trim(),w=el.querySelector('#aPw').value;
-      if(!/^\S+@\S+\.\S+$/.test(e)){toast('Bitte eine gültige E-Mail-Adresse eingeben.');return false}if(w.length<6){toast('Das Passwort braucht mindestens 6 Zeichen.');return false}return true}}]);
+      if(!/^\S+@\S+\.\S+$/.test(e)){toast('Bitte eine gültige E-Mail-Adresse eingeben.');return false}if(w.length<6){toast('Das Passwort braucht mindestens 6 Zeichen.');return false}return true}}],gate?{sticky:true}:{x:true});
   const back=[...document.querySelectorAll('.mback')].pop();
+  // Enter in e-mail or password = log in
+  back.addEventListener('keydown',e=>{if(e.key!=='Enter'||!e.target.closest('#acctBox input'))return;e.preventDefault();
+    if(e.target.id==='aEmail'&&!back.querySelector('#aPw').value)return back.querySelector('#aPw').focus();const b=[...back.querySelectorAll('.mbtns .btn')].pop();if(b)b.click()});
   back.addEventListener('click',async e=>{
     const m=e.target.closest('[data-amode]');if(m){const em=back.querySelector('#aEmail').value;mode=m.dataset.amode;back.querySelector('#acctBox').innerHTML=html();back.querySelector('#aEmail').value=em;
       const pb2=[...back.querySelectorAll('.mbtns .btn')].pop();if(pb2)pb2.textContent=mode==='up'?'Konto erstellen':'Anmelden';return}
@@ -2766,12 +2774,28 @@ async function accountDialog(){
       try{await Sync.resetPw(em);toast('Mail zum Zurücksetzen ist unterwegs')}catch(err){toast(err.message)}}
   });
   {const b=[...back.querySelectorAll('.mbtns .btn')].pop();if(b)b.textContent='Anmelden'}
-  const r=await p;if(r.value!=='go')return;
+  const r=await p;
+  if(r.value==='skip'){ungate();return}
+  if(r.value!=='go')return;
   const email=r.el.querySelector('#aEmail').value.trim().toLowerCase(),pw=r.el.querySelector('#aPw').value;
   try{if(mode==='up'){await Sync.signUp(email,pw);modal('Konto erstellt',`<p>Willkommen! Wir haben dir eine Mail an <b>${esc(email)}</b> geschickt. Bitte bestätige darin deine Adresse – erst dann können andere Coaches Playbooks mit dir teilen.</p><p class="hint">Deine Playbooks von diesem Gerät werden jetzt in dein Konto übernommen.</p>`,[{label:'Alles klar',value:null,cls:'primary'}])}
-    else await Sync.signIn(email,pw)}
-  catch(err){toast(err.message);setTimeout(accountDialog,50)}
+    else await Sync.signIn(email,pw);ungate()}
+  catch(err){toast(err.message);setTimeout(()=>accountDialog(opts),50)}
 }
+// sign out: everything that is safe in the cloud leaves this device, then the page shows only the login
+async function logout(){
+  const dirty=()=>state.pbs.filter(pb=>pb.cloud&&(pb.cloud.dirty||!pb.cloud.ut)&&pb.cloud.role!=='read'&&pb.cloud.role!=='coach');
+  flushAll();for(let i=0;i<20&&(W.timers.size||W.busy.size);i++)await new Promise(res=>setTimeout(res,150));
+  toast('Wird abgemeldet…');await Promise.all(dirty().map(pb=>Sync.push(pb.id).catch(()=>{})));await Prog.flush();
+  const left=dirty();
+  if(left.length&&!await confirmBox('Noch nicht alles gespeichert',`${left.length===1?'Ein Playbook ist':left.length+' Playbooks sind'} noch nicht in der Cloud (${left.map(pb=>'„'+esc(pb.name)+'“').join(', ')}) – bist du offline? Wenn du dich trotzdem abmeldest, ${left.length===1?'bleibt es':'bleiben sie'} auf diesem Gerät erhalten.`,'Trotzdem abmelden'))return;
+  const keep=new Set(left.map(pb=>pb.id));
+  state.pbs=state.pbs.filter(pb=>!pb.cloud||keep.has(pb.id));   // in the cloud = safe; only unsaved and local-only playbooks stay
+  Sync.signOut(true);try{localStorage.setItem('pb_gate','1')}catch(e){}
+  Store.saveLocal();setTimeout(()=>location.reload(),300)}
+function gateUp(){if(!Sync.on()||Sync.user)return;let g=null;try{g=localStorage.getItem('pb_gate')}catch(e){}if(g!=='1')return;
+  document.body.classList.add('gated');accountDialog({gate:true})}
+function ungate(){try{localStorage.removeItem('pb_gate')}catch(e){}document.body.classList.remove('gated')}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-acct="team"]'))return;document.querySelectorAll('.mback').forEach(x=>x.remove());teamDialog()});
 document.addEventListener('click',async e=>{const d=e.target.closest('[data-acct="delete"]');if(!d)return;
   if(!await confirmBox('Konto löschen?','Dein Konto und deine Playbooks auf dem Server werden endgültig gelöscht. Geteilte Playbooks sehen die anderen Coaches danach nicht mehr. Auf diesem Gerät bleiben deine Playbooks erhalten.','Endgültig löschen'))return;
@@ -3074,7 +3098,7 @@ async function historyDialog(){
   const rows=l.map((h,i)=>{let prev='';try{prev=svgFor(pb,cleanPlay(JSON.parse(h.json),true),{style:'light'})}catch(e){}
     return `<div class="hrow">${prev}<div><b>${new Date(h.at).toLocaleDateString('de-DE')}, ${new Date(h.at).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr</b><span class="hint">Stand vor den Änderungen ab diesem Zeitpunkt</span></div>
       <button class="btn sm primary" data-hrest="${i}">Wiederherstellen</button></div>`}).join('');
-  const r=modal('Verlauf – '+esc(pl.name),l.length?`<p class="hint" style="margin-top:0">Frühere Stände dieses Plays (höchstens 10, nur auf diesem Gerät). Der aktuelle Stand wird beim Wiederherstellen ebenfalls aufgehoben.</p>${rows}`
+  const r=modal('Verlauf – '+pl.name,l.length?`<p class="hint" style="margin-top:0">Frühere Stände dieses Plays (höchstens 10, nur auf diesem Gerät). Der aktuelle Stand wird beim Wiederherstellen ebenfalls aufgehoben.</p>${rows}`
     :'<p class="hint">Noch keine früheren Stände. Sobald du ein Play änderst, wird der Stand davor hier aufgehoben.</p>',[{label:'Schließen',value:null,cls:'primary'}]);
   const back=[...document.querySelectorAll('.mback')].pop();
   back.addEventListener('click',async e=>{const b=e.target.closest('[data-hrest]');if(!b)return;
