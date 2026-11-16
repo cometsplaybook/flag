@@ -121,7 +121,7 @@ body.lasering,body.lasering *{cursor:none!important}
 .qtext{font-size:14px;white-space:pre-wrap;margin-top:2px}.qans{font-size:13px;margin-top:4px;padding:4px 6px;background:#eef2ff;border-radius:6px;white-space:pre-wrap}
 .qact{display:flex;gap:4px;align-items:center;margin-top:4px}.qact input[type=text]{flex:1;min-width:0;padding:4px 6px;font-size:13px}.qact label{font-size:12px;display:flex;gap:3px;align-items:center;white-space:nowrap;color:var(--ink)}
 #qNew{width:100%;font-size:13px}.qbadge{font-size:11px;background:#fde68a;color:#7c2d12;border-radius:8px;padding:0 5px;font-weight:700}
-#quizPanel{position:fixed;left:12px;top:64px;width:230px;max-height:calc(100vh - 80px);overflow:auto;z-index:41;background:rgba(255,253,248,.97);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#quizPanel{position:fixed;left:12px;top:calc(var(--pbh,52px) + 12px);width:230px;max-height:calc(100vh - var(--pbh,52px) - 28px);overflow:auto;z-index:41;background:rgba(255,253,248,.97);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 6px 20px rgba(0,0,0,.15)}
 #quizPanel h4{margin:0 0 6px}#quizPanel p{font-size:14px;margin:6px 0}
 .qopts{display:flex;flex-direction:column;gap:5px}.qopt{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font:inherit;font-size:15px;font-weight:600;text-align:left;cursor:pointer}
 .qopt:hover{border-color:var(--ink)}.qopt.on{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
@@ -141,16 +141,20 @@ body.presenting.quizzing .app{padding-left:256px}
 #tagFilter{width:100%;padding:5px 8px;font-size:13px}
 #playSearch{width:100%;padding:6px 9px;border:1px solid var(--line);border-radius:8px;font-size:14px}
 body.presenting header,body.presenting #side,body.presenting #insp,body.presenting .toolbar,body.presenting .hintbar,body.presenting #bannerWrap{display:none!important}
-body.presenting .app{display:block;padding:64px 8px 8px;min-height:100vh}
+body.presenting .app{display:block;padding:calc(var(--pbh,52px) + 12px) 8px 8px;min-height:100vh}
 body.presenting .fieldwrap{border:0;background:transparent;padding:0}
 body.presenting #field{width:100%!important;height:calc(100vh - 80px);box-shadow:none}
 #presentBar .btn{color:var(--ink)}#presentBar .btn.on,#presentBar .btn.primary{color:#fff}#presentBar select{width:auto;color:var(--ink);padding:4px 8px}
-#presentBar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--navy);color:#fff}
+#presentBar{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;flex-wrap:wrap;row-gap:6px;gap:6px;align-items:center;padding:8px 12px;background:var(--navy);color:#fff}
 #presentBar .ptitle{flex:1;display:flex;gap:10px;align-items:baseline;min-width:0;overflow:hidden;white-space:nowrap}
 #presentBar .ptitle b{font-family:var(--cond);font-stretch:condensed;font-size:22px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis}
 #presentBar .ptitle span{opacity:.8;font-size:14px}
 #presentBar .sep{width:1px;height:24px;background:rgba(255,255,255,.3)}
-#presNotesBox{position:fixed;left:16px;bottom:16px;max-width:min(560px,90vw);z-index:41;background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px;line-height:1.4;white-space:pre-wrap;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#presNotesBox{position:fixed;left:16px;bottom:16px;width:min(420px,90vw);max-height:60vh;overflow:auto;z-index:41;background:rgba(255,253,248,.97);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:16px;line-height:1.4;box-shadow:0 6px 20px rgba(0,0,0,.15)}
+#presNotesBox .pnhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}#presNotesBox .mx{border:0;background:transparent;font-size:18px;cursor:pointer;color:var(--muted)}
+#presNotesBox .pntext{white-space:pre-wrap}#presNotesBox .pnq{margin-top:10px;border-top:1px solid var(--line);padding-top:8px;font-size:14px}
+#presNotesBox .pnqi{margin:6px 0;padding:6px 8px;background:#fff;border:1px solid var(--line);border-radius:8px}#presNotesBox .pnqi.done{opacity:.6}
+#presNotesBox textarea{width:100%;margin:6px 0 4px;font:inherit;font-size:14px}
 @media (pointer:coarse){
   .btn{min-height:38px}.btn.sm{min-height:34px}
   .tpl button{padding:10px 2px}
@@ -278,9 +282,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.15';
+const APP_VERSION='2026-11-16.20';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["🏷 Lern-Modus für Formationen: oben „Plays | Formationen“ umschalten – bei Formationen wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1342,12 +1346,15 @@ const manOpen=(pl,qa,id)=>normTask(qa.ans[id]||'')==='man'&&(pl.opp||[]).length>
 function quizNeedsOpp(pl){const qa=state.qa&&state.qa.playId===pl.id?state.qa:null;
   return pl.players.some(p=>manTarget(pl,p))||!!(qa&&Object.values(qa.ans).some(a=>normTask(a)==='man'))}
 // learn mode: next play to learn – in order (after the last one it starts again) or random (each play once, then a new round)
+// "37 Plays, 10 Formationen" (formations counted separately)
+function countTxt(pb){const f=pb.plays.filter(isF).length,p=pb.plays.length-f;return `${p} ${p===1?'Play':'Plays'}`+(f?`, ${f} ${f===1?'Formation':'Formationen'}`:'')}
 function formNames(pb){return [...new Set(sortKinds(pb.plays).filter(isF).map(x=>(x.name||'').trim()).filter(Boolean))]}
 function quizNextPlay(){const pb=curPb();if(!pb)return;const forms=isF(curPlay());
-  const pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);if(!pool.length)return toast(forms?'Keine Formationen mit Namen.':'Keine Plays mit Aufgaben zum Lernen.');
+  let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
+  if(!pool.length&&!forms)pool=sortKinds(pb.plays).filter(pl=>!isF(pl));if(!pool.length)return toast(forms?'Keine Formations mit Namen.':'Keine Plays mit Aufgaben zum Lernen.');
   const done=state.quizDone=state.quizDone||new Set();let next;
   if(state.quizRandom){let c=pool.filter(pl=>!done.has(pl.id)&&pl.id!==state.playId);
-    if(!c.length){done.clear();c=pool.filter(pl=>pl.id!==state.playId);if(pool.length>1)toast(`Alle ${pool.length} ${forms?'Formationen':'Plays'} geschafft 🎉 – neue Runde`)}
+    if(!c.length){done.clear();c=pool.filter(pl=>pl.id!==state.playId);if(pool.length>1)toast(`Alle ${pool.length} ${forms?'Formations':'Plays'} geschafft 🎉 – neue Runde`)}
     next=c.length?c[Math.floor(Math.random()*c.length)]:pool[0]}
   else{const i=pool.findIndex(pl=>pl.id===state.playId);next=pool[(i+1)%pool.length];if(i===pool.length-1&&pool.length>1)toast(forms?'Das war die letzte Formation – weiter mit der ersten':'Das war das letzte Play – weiter mit dem ersten')}
   if(next.id===state.playId){state.qa=null;state.quizShown=false;renderField();return renderPresentBar()}
@@ -1368,7 +1375,7 @@ function quizPanel(){
   if(!el){el=document.createElement('div');el.id='quizPanel';document.body.appendChild(el)}
   const qa=qaState(),qi=quizInfo(pb,pl);const p=qa.pick&&pl.players.find(x=>x.id===qa.pick);
   if(isF(pl)){const names=formNames(pb);const nx=`<button class="btn sm primary" data-a="quizNextPlay">${state.quizRandom?'🔀 Nächste Formation':'Nächste Formation ▶'}</button>`;
-    if(names.length<2){el.innerHTML=`<h4>🏷 Formationen</h4><p class="hint">Zum Abfragen braucht das Playbook mindestens zwei Formationen mit Namen.</p>${nx}`;return}
+    if(names.length<2){el.innerHTML=`<h4>🏷 Formations</h4><p class="hint">Zum Abfragen braucht das Playbook mindestens zwei Formations mit Namen.</p>${nx}`;return}
     const right=pl.name.trim();
     el.innerHTML=`<h4>🏷 Welche Formation ist das?</h4><p class="hint" style="margin-top:0">${qa.form?'':'Das ist eine <b>Formation</b> – hier gibt es keine Routen. Tippe den richtigen Namen an.'}</p>
       <div class="qopts qforms">${names.map(n=>{const c=!qa.form?'':n===right?' good':n===qa.form?' bad':'';return `<button class="btn sm${c}" data-qform="${esc(n)}"${qa.form?' disabled':''}>${esc(n)}</button>`}).join('')}</div>
@@ -1415,12 +1422,22 @@ function renderPresentBar(){document.body.classList.toggle('quizzing',!!(state.p
     <button class="btn sm" data-a="presNext" ${pNext?'':'disabled'} title="Nächstes Play (→)">▶</button>
     <span class="sep"></span>
     ${animCtl(pl)}
-    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formationen lernen: Namen der Formationen">Formationen</button></span>`:''}${state.quiz&&!isF(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button><button class="btn sm ${state.quizRandom?'on':''}" data-a="quizRand" title="Zufällige Reihenfolge ein/aus – jedes Play kommt einmal dran">🔀</button>`:''}
+    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formations lernen: Namen der Formationen">Formations</button></span>`:''}${state.quiz&&!isF(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button>`:''}${state.quiz?`<button class="btn sm ${state.quizRandom?'on':''}" data-a="quizRand" title="Zufällige Reihenfolge ein/aus – jedes Play kommt einmal dran">🔀 Zufall</button>`:''}
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L)">🔴 Laser</button>
-    ${pl.notes?`<button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen ein/aus (N)">📝 Notizen</button>`:''}
+    <button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen und Fragen ein/aus (N)">📝 Notizen${Q.forPlay(pl.id).some(q=>!q.done)?' 💬':''}</button>
     <button class="btn sm" data-a="presExit" title="Beenden (Esc)">✕ Beenden</button>`;
+  document.documentElement.style.setProperty('--pbh',bar.offsetHeight+'px');
   let nb=$('#presNotesBox');
-  if(state.presNotes&&pl.notes&&!(state.quiz&&!state.quizShown)){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}nb.textContent=pl.notes}else if(nb)nb.remove();
+  if(state.presNotes){if(!nb){nb=document.createElement('div');nb.id='presNotesBox';document.body.appendChild(nb)}
+    const keep=nb.querySelector('#presQNew'),draft=keep?keep.value:'',foc=document.activeElement===keep;
+    const hide=state.quiz&&!state.quizShown&&!(isF(pl)&&qaState().form);   // notes may hold the solution
+    const can=Sync.on()&&Sync.user&&pb.cloud&&pb.cloud.ut,u=Sync.user,qs=can?Q.forPlay(pl.id):[];const who=e=>u&&e===u.email?'Du':esc((e||'?').split('@')[0]);
+    nb.innerHTML=`<div class="pnhead"><b>📝 Notizen</b><button type="button" class="mx" data-a="presNotes" title="Schließen">✕</button></div>
+      <div class="pntext">${!pl.notes?'<span class="hint">Keine Notizen zu diesem Play.</span>':hide?'<span class="hint">🙈 Die Notizen erscheinen nach dem Aufdecken.</span>':esc(pl.notes)}</div>
+      ${can?`<div class="pnq"><b>💬 Fragen</b>${qs.map(q=>`<div class="pnqi${q.done?' done':''}"><div>${who(q.authorEmail)}: ${esc(q.text)}</div>${q.answer?`<div class="qans"><b>${who(q.answeredBy)}:</b> ${esc(q.answer)}</div>`:'<div class="hint" style="font-size:12px">noch keine Antwort</div>'}</div>`).join('')}
+        <textarea id="presQNew" rows="2" maxlength="2000" placeholder="Frage zu diesem Play an den Coach…"></textarea><button type="button" class="btn sm primary" data-presask="1">Frage senden</button></div>`:''}`;
+    const ta=nb.querySelector('#presQNew');if(ta){ta.value=draft;if(foc)ta.focus()}}
+  else if(nb)nb.remove();
 }
 function setPresent(on){
   state.present=on;document.body.classList.toggle('presenting',on);state.qa=null;
@@ -1885,16 +1902,17 @@ async function pbMenu(){
   const pb=curPb();
   const own=!pb.cloud||pb.cloud.role==='own';
   if(!own){const c=pb.cloud;
-    const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</span></p>
+    const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${countTxt(pb)}</span></p>
       <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> ${c.role==='read'?' – du kannst es <b>lesen</b>':' – du bist hier <b>Coach</b>'}.</div>
       ${c.role==='read'?'<p class="hint">Dein Coach sieht, wie lange du im Playbook warst und deine Ergebnisse im 🎓 Lern-Modus.</p>':'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>'}
+      ${c.role==='read'?'':`<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="tasksCheck" title="Alle Aufgaben für den Lern-Modus auf einen Blick">📋 Aufgaben prüfen</button>${c.role==='edit'?'<button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben vorschlagen</button>':''}</div>`}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="snaps">🗄 Cloud-Sicherungen</button></div>':''}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>':''}`,
       [{label:'Aus meiner Liste entfernen',value:'unshare',cls:'danger'},{label:'Schließen',value:null,cls:'primary'}]);
     if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);toast('Aus deiner Liste entfernt')}
     return}
   const r=await modal('Playbook',`<label>Name</label><input type="text" id="pbName" value="${esc(pb.name)}">
-    <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${pb.plays.length} Plays</p>
+    <p class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${countTxt(pb)}</p>
     <div class="row" style="margin:6px 0"><button type="button" class="btn sm" data-a="lockAll">🔒 Alle sperren</button><button type="button" class="btn sm" data-a="unlockAll">🔓 Alle entsperren</button></div>
     ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>':''}
     ${Sync.user&&pb.cloud&&pb.cloud.ut?'<div class="row" style="margin:0 0 6px"><button type="button" class="btn sm" data-a="snaps" title="Tägliche Sicherungen dieses Playbooks in der Cloud">🗄 Cloud-Sicherungen</button></div>':''}
@@ -1907,7 +1925,7 @@ async function pbMenu(){
   if(r.value==='unshare'){Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);return toast('Aus deiner Liste entfernt')}
   if(r.value==='share')return shareDialog(pb);
   if(r.value==='del'){
-    if(!await confirmBox('Playbook löschen?',`„${esc(pb.name)}“ mit ${pb.plays.length} Plays wird in den Papierkorb verschoben und kann dort ${TRASH_DAYS} Tage lang wiederhergestellt werden.`,'In den Papierkorb'))return;
+    if(!await confirmBox('Playbook löschen?',`„${esc(pb.name)}“ mit ${countTxt(pb)} wird in den Papierkorb verschoben und kann dort ${TRASH_DAYS} Tage lang wiederhergestellt werden.`,'In den Papierkorb'))return;
     Trash.add({kind:'pb',data:clone(pb)});
     Store.deletePb(pb);state.pbs=state.pbs.filter(p=>p.id!==pb.id);selectPb(state.pbs[0]?state.pbs[0].id:null);
   }
@@ -2383,7 +2401,7 @@ async function importPbDialog(inc){
   let pb={...inc,plays};
   if(ex){const lay=inc.plays.findIndex(x=>x.id===inc.layoutPlayId);pb=cleanPb({...inc,plays},false);pb.name=inc.name+' (Import)';if(inc.fieldV)pb.fieldV=inc.fieldV;void lay}
   else if(pb.layoutPlayId&&!plays.some(x=>x.id===pb.layoutPlayId))delete pb.layoutPlayId;
-  state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast(`Playbook „${pb.name}“ mit ${pb.plays.length} Plays importiert`);
+  state.pbs.push(pb);Store.savePb(pb);pb.plays.forEach(pl=>Store.savePlay(pb,pl));selectPb(pb.id);toast(`Playbook „${pb.name}“ mit ${countTxt(pb)} importiert`);
 }
 function importError(msg){modal('Import nicht möglich',`<p>${esc(msg)}</p><p class="hint">Es wurde nichts verändert.</p>`,[{label:'OK',value:null,cls:'primary'}])}
 document.addEventListener('change',async e=>{
@@ -2681,6 +2699,9 @@ function qBox(){
     <p class="hint" style="margin:4px 0 0;font-size:11px">Sichtbar für dich, ${pb.cloud.role==='own'?'und alle, die bearbeiten dürfen':`${esc((pb.cloud.ownerEmail||'den Besitzer').split('@')[0])} und alle, die bearbeiten dürfen`}.</p>`;
   el.appendChild(box);
 }
+document.addEventListener('click',async e=>{if(!e.target.closest('[data-presask]'))return;const ta=$('#presQNew');const v=ta&&ta.value.trim();if(!v)return toast('Bitte eine Frage eingeben.');
+  try{await Q.ask(curPb(),curPlay(),v.slice(0,2000));ta.value='';renderPresentBar();renderSide();toast('Frage gesendet – dein Coach sieht sie beim Play')}
+  catch(err){toast(err.offline?'Offline – bitte später senden.':'Senden nicht möglich ('+(err.status===403?'keine Berechtigung':err.message)+')')}});
 document.addEventListener('click',async e=>{
   const t=e.target;const pb=curPb(),pl=curPlay();
   if(t.closest('[data-qask]')){const ta=$('#qNew');const v=ta.value.trim();if(!v)return toast('Bitte eine Frage eingeben.');
@@ -3357,7 +3378,9 @@ document.addEventListener('click',async e=>{
     case 'quizRand':state.quizRandom=!state.quizRandom;toast(state.quizRandom?'🔀 Zufällige Reihenfolge – jedes Play kommt einmal dran':'Reihenfolge wie im Playbook');if(state.quizRandom)return quizNextPlay();return renderPresentBar();
     case 'quizNextPlay':return quizNextPlay();
     case 'quizKind':{const pb=curPb(),want=a.dataset.k==='forms';if(isF(curPlay())===want)return;
-      const pool=sortKinds(pb.plays).filter(x=>want?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);if(!pool.length)return toast(want?'Keine Formationen mit Namen.':'Keine Plays mit Aufgaben.');
+      let pool=sortKinds(pb.plays).filter(x=>want?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);
+      if(!pool.length&&!want){pool=sortKinds(pb.plays).filter(x=>!isF(x));if(pool.length)toast('In den Plays sind noch keine Aufgaben eingetragen – Coaches können sie über ⋯ → „🎓 Aufgaben vorschlagen“ ergänzen.')}
+      if(!pool.length)return toast(want?'Keine Formations mit Namen.':'Keine Plays vorhanden.');
       state.quizDone=new Set();selectPlay((state.quizRandom?pool[Math.floor(Math.random()*pool.length)]:pool[0]).id);return}
     case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
