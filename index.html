@@ -272,9 +272,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.8';
+const APP_VERSION='2026-11-16.10';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1351,7 +1351,7 @@ function quizPanel(){
   if(!el){el=document.createElement('div');el.id='quizPanel';document.body.appendChild(el)}
   const qa=qaState(),qi=quizInfo(pb,pl);const p=qa.pick&&pl.players.find(x=>x.id===qa.pick);
   if(state.quizShown){const R=quizResult(pb,pl);
-    el.innerHTML=`<h4>Ergebnis</h4><div class="qscore">${R.ok} / ${R.n}</div><p class="hint">${R.ok===R.n?'Alles richtig – stark! 💪':'Grün ist richtig, rot zeigt die richtige Aufgabe.'}</p>
+    el.innerHTML=`<h4>Ergebnis</h4><div class="qscore">${R.ok} / ${R.n}</div><p class="hint">${R.ok===R.n?'Alles richtig – stark! 💪':'Grün ist richtig, rot zeigt die richtige Aufgabe.'}</p>${state.quizCounted===false?'<p class="hint" style="font-size:12px">🔁 Übungsrunde – gezählt wird pro Play nur der erste Versuch am Tag.</p>':''}
       <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="presNext">Nächstes Play ▶</button>`;
     return}
   if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
@@ -1659,6 +1659,7 @@ function applyTemplate(i){
 function animCtl(pl){
   const a=state.anim;
   const rate=`<select id="animRate" class="sm" title="Tempo der Animation">${[[0.25,'¼×'],[0.5,'½×'],[1,'1×'],[1.5,'1,5×'],[2,'2×']].map(([v,n])=>`<option value="${v}"${state.animRate===v?' selected':''}>${n}</option>`).join('')}</select>`;
+  if(!a&&quizHidden())return `<button class="btn sm" disabled title="Im Lern-Modus erst aufdecken, dann abspielen">▶ Abspielen</button>`;
   if(!a)return `<button class="btn sm" data-a="anim" title="Abspielen (Leertaste im Präsentationsmodus)">▶ Abspielen</button>${animOptSel(pl)}${rate}`;
   return `${a.done?'':`<button class="btn sm" data-a="animPause">${a.playing?'⏸ Pause':'▶ Weiter'}</button>`}<button class="btn sm" data-a="animBack" title="Schritt zurück">⏮</button><button class="btn sm" data-a="animFwd" title="Schritt vor">⏭</button><button class="btn sm on" data-a="anim">${a.done?'↺ Zurück':'■ Stopp'}</button>${rate}`;
 }
@@ -1725,7 +1726,8 @@ function animAt(M,t){
 }
 function animUI(){renderCenter();renderPresentBar()}
 function animFrame(t){const a=state.anim;if(!a)return;const f=animAt(a.M,t);a.pos=f.pos;a.ball=f.ball;a.bs=f.bs;renderField()}
-function startAnim(){
+const quizHidden=()=>!!(state.present&&state.quiz&&!state.quizShown);   // learn mode: the play runs only after the answers are revealed
+function startAnim(){if(quizHidden())return toast('Erst 👁 Aufdecken – dann kannst du das Play abspielen.');
   const pb=curPb(),pl=curPlay();const M=animModel(pb,pl,state.animOpt||0);
   if(!M){toast('Keine Routen zum Abspielen.');return}
   state.sel=null;state.multi=[];state.drawing=null;state.quizShown=true;
@@ -2574,10 +2576,15 @@ const Q={list:[],fresh:0,seen:null,
 /* ---------- learning progress of read-only accounts (kids): time in the playbook + learn results, visible to owner/editors ---------- */
 const Prog={docs:{},pend:{},lastAct:Date.now(),
   on(pb){return !!(Sync.user&&pb&&pb.cloud&&pb.cloud.ut&&pb.cloud.role==='read')},
-  P(id){return this.pend[id]||(this.pend[id]={sec:0,res:{}})},
+  P(id){return this.pend[id]||(this.pend[id]={sec:0,res:{},prac:{}})},
   tick(){const pb=curPb();if(!this.on(pb)||document.visibilityState!=='visible')return;
     if(Date.now()-this.lastAct<120000||state.present)this.P(pb.id).sec+=15},
-  result(pb,pl,ok,n){if(!this.on(pb)||!n)return;this.P(pb.id).res[pl.id]={ok,n,t:Date.now()};this.flush()},
+  // only the first try of a play per day counts; tries after seeing the solution are practice (counted, but no score)
+  result(pb,pl,ok,n){if(!this.on(pb)||!n)return null;let counted=false;const P=this.P(pb.id),day=Snap.day(),k=pb.id+'|'+pl.id;let m={};try{m=JSON.parse(localStorage.getItem('pb_qday')||'{}')}catch(e){}
+    const srv=this.docs[pb.id]&&this.docs[pb.id].res[pl.id];
+    if(m[k]===day||P.res[pl.id]||(srv&&srv.d===day))P.prac[pl.id]=(P.prac[pl.id]||0)+1;
+    else{P.res[pl.id]={ok,n,t:Date.now(),d:day};m[k]=day;counted=true;try{localStorage.setItem('pb_qday',JSON.stringify(m))}catch(e){}}
+    this.flush();return counted},
   dec(doc){const f=doc.fields||{};let res={};try{res=JSON.parse(f.results&&f.results.stringValue||'{}')}catch(e){}
     return {ut:doc.updateTime,seconds:+(f.seconds&&f.seconds.integerValue||0),last:+(f.last&&f.last.integerValue||0),res,
       user:f.user&&f.user.stringValue,email:f.email&&f.email.stringValue,pbId:f.pbId&&f.pbId.stringValue}},
@@ -2588,13 +2595,16 @@ const Prog={docs:{},pend:{},lastAct:Date.now(),
     if(this.busy||!Sync.user)return;this.busy=true;
     try{for(const id of Object.keys(this.pend)){const pend=this.pend[id];const pb=state.pbs.find(x=>x.id===id);
         if(!pb||!this.on(pb)){delete this.pend[id];continue}
-        if(!pend.sec&&!Object.keys(pend.res).length)continue;
+        if(!pend.sec&&!Object.keys(pend.res).length&&!Object.keys(pend.prac||{}).length)continue;
         const path=`/progress/${encodeURIComponent(id+'_'+Sync.user.uid)}`;
         for(let attempt=0;attempt<2;attempt++){
           let d=this.docs[id];
           if(!d){try{d=this.dec(await Sync.req('GET',path))}catch(e){if(e.status===404)d={ut:null,seconds:0,last:0,res:{}};else throw e}}
           const nd={seconds:d.seconds+pend.sec,last:Date.now(),res:{...d.res}};
-          Object.entries(pend.res).forEach(([pid,r])=>{const o=nd.res[pid]||{n:0,best:0};nd.res[pid]={last:r.ok+'/'+r.n,best:Math.max(o.best||0,r.ok/r.n),tries:(o.tries||0)+1,t:r.t}});
+          Object.entries(pend.res).forEach(([pid,r])=>{const o=nd.res[pid]||{n:0,best:0};
+            if(o.d===r.d){nd.res[pid]={...o,prac:(o.prac||0)+1};return}   // already counted today (other device): practice
+            nd.res[pid]={last:r.ok+'/'+r.n,best:Math.max(o.best||0,r.ok/r.n),tries:(o.tries||0)+1,t:r.t,d:r.d,prac:o.prac||0}});
+          Object.entries(pend.prac||{}).forEach(([pid,k])=>{const o=nd.res[pid];if(o)nd.res[pid]={...o,prac:(o.prac||0)+k}});
           try{const j=await Sync.req('PATCH',path,this.enc(pb,nd),d.ut?'currentDocument.updateTime='+encodeURIComponent(d.ut):'currentDocument.exists=false');
             this.docs[id]={...nd,ut:j.updateTime};delete this.pend[id];break}
           catch(e){if(e.offline||e.message==='offline')throw e;delete this.docs[id];if(attempt)console.warn('progress',e)}
@@ -2620,8 +2630,8 @@ async function progressDialog(pb){
   const row=(d,i)=>{const r=Object.entries(d.res).filter(([pid])=>pb.plays.some(x=>x.id===pid));
     const learned=r.filter(([,x])=>x.best>=1).length,avg=r.length?Math.round(r.reduce((a,[,x])=>{const[o,n]=String(x.last).split('/').map(Number);return a+(n?o/n:0)},0)/r.length*100):null;
     return `<details class="prow"><summary><b>${esc((d.email||'?').split('@')[0])}</b><span>${fmtMin(d.seconds)}</span><span>${d.last?new Date(d.last).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}):'–'}</span><span>${learned}/${quiz.length} gelernt${avg!=null?` · Ø ${avg} %`:''}</span></summary>
-      <div class="pdet">${r.length?r.sort((a,b)=>b[1].t-a[1].t).map(([pid,x])=>{const pl=pb.plays.find(y=>y.id===pid);return `<div><span>${playNo(pb,pl)}. ${esc(callName(pl))}</span><span>zuletzt ${esc(x.last)}</span><span>${x.best>=1?'✓ einmal fehlerfrei':'beste '+Math.round(x.best*100)+' %'}</span><span>${x.tries}×</span></div>`}).join(''):'<p class="hint">Noch kein Lern-Ergebnis.</p>'}</div></details>`};
-  modal('📊 Fortschritt – '+pb.name,`<p class="hint" style="margin-top:0">Alle mit Lesezugriff: Zeit im Playbook, zuletzt aktiv und Ergebnisse im 🎓 Lern-Modus (antippen für Details). „Gelernt“ = ein Play einmal komplett richtig gelöst. ${quiz.length} Plays haben Aufgaben zum Lernen.</p>
+      <div class="pdet">${r.length?r.sort((a,b)=>b[1].t-a[1].t).map(([pid,x])=>{const pl=pb.plays.find(y=>y.id===pid);return `<div><span>${playNo(pb,pl)}. ${esc(callName(pl))}</span><span title="Erster Versuch am letzten Lern-Tag">zuletzt ${esc(x.last)}${x.prac?` · ${x.prac}× geübt`:''}</span><span>${x.best>=1?'✓ einmal fehlerfrei':'beste '+Math.round(x.best*100)+' %'}</span><span>${x.tries}×</span></div>`}).join(''):'<p class="hint">Noch kein Lern-Ergebnis.</p>'}</div></details>`};
+  modal('📊 Fortschritt – '+pb.name,`<p class="hint" style="margin-top:0">Alle mit Lesezugriff: Zeit im Playbook, zuletzt aktiv und Ergebnisse im 🎓 Lern-Modus (antippen für Details). Gezählt wird pro Play nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken sind „geübt“. „Gelernt“ = ein Play einmal komplett richtig gelöst. ${quiz.length} Plays haben Aufgaben zum Lernen.</p>
     <div class="phead"><span>Name</span><span>Zeit</span><span>Zuletzt</span><span>Lernen</span></div>
     ${list.length?list.map(row).join(''):'<p class="hint">Noch keine Daten. Sie erscheinen, sobald jemand mit Lesezugriff das Playbook öffnet.</p>'}`,[{label:'Schließen',value:null,cls:'primary'}]);
 }
@@ -3285,10 +3295,10 @@ document.addEventListener('click',async e=>{
     case 'animBack':return animStepBy(-0.2);
     case 'video':return exportAnim('video');
     case 'gif':return exportAnim('gif');
-    case 'quiz':state.quiz=!state.quiz;state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
-    case 'quizShow':if(!state.quizShown){const pl=curPlay(),qa=qaState();const open=pl&&pl.players.find(p=>manOpen(pl,qa,p.id));
+    case 'quiz':if(state.anim)stopAnim();state.quiz=!state.quiz;state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
+    case 'quizShow':if(state.quizShown&&state.anim)stopAnim();if(!state.quizShown){const pl=curPlay(),qa=qaState();const open=pl&&pl.players.find(p=>manOpen(pl,qa,p.id));
       if(open){qa.pick=open.id;qa.manPick=open.id;renderField();quizPanel();return toast(`${open.label} spielt Man – erst den Gegenspieler antippen.`)}}
-    if(state.quizShown)state.qa=null;else{const R=quizResult(curPb(),curPlay());Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
+    if(state.quizShown)state.qa=null;else{const R=quizResult(curPb(),curPlay());state.quizCounted=Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
     case 'quizRand':{const pb=curPb();if(pb.plays.length>1){let i;do{i=Math.floor(Math.random()*pb.plays.length)}while(pb.plays[i].id===state.playId);selectPlay(pb.plays[i].id)}return}
     case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
