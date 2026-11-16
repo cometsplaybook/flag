@@ -180,6 +180,27 @@ aside.insp label{display:block;font-size:13px;font-weight:600;color:var(--muted)
 .tpl{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 .tpl button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 2px;font-size:13px;font-weight:600}
 .tpl button:hover{border-color:var(--accent);color:var(--accent)}
+.homeScreen,#homeScreen{position:fixed;inset:0;z-index:45;background:var(--bg);display:flex;flex-direction:column}
+#homeScreen .hshead{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--navy);color:#fff}
+#homeScreen .hshead .btn{background:#fff;color:#1f2937;border-color:#fff}
+#homeScreen .hshead b{font-family:var(--cond);font-stretch:condensed;font-size:26px;text-transform:uppercase}
+#homeScreen .hsbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+#homeScreen h2{font-family:var(--cond);font-stretch:condensed;font-size:34px;text-transform:uppercase;margin:0 0 4px}
+#homeScreen .hssel{font-size:22px;padding:8px 12px;border-radius:10px;margin-bottom:6px;max-width:90vw}
+#homeScreen .hsbtns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+#homeScreen .hsbody{overflow:auto}#homeScreen .hscards{display:flex;gap:28px;flex-wrap:wrap;justify-content:center}
+#homeScreen .hscard{background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:20px;padding:18px 22px}
+#homeScreen .hscards .hsbig{width:min(200px,38vw);padding:20px 12px;font-size:22px}#homeScreen .hscards .hsbig span{font-size:42px}
+#homeScreen .hsbig{width:min(260px,80vw);padding:26px 18px;border-radius:18px;border:2px solid var(--line);background:#fff;font-size:26px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+#homeScreen .hsbig span{font-size:52px;line-height:1}#homeScreen .hsbig small{font-size:14px;font-weight:400;color:var(--muted)}
+#homeScreen .hsbig.learn{background:var(--accent);color:#fff;border-color:var(--accent)}#homeScreen .hsbig.learn small{color:#fff;opacity:.9}
+#homeScreen .hsbig:hover{transform:translateY(-2px)}
+.rounddone{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.45);animation:rdin .25s}
+.rounddone>div{background:#fff;border-radius:18px;padding:26px 34px;text-align:center;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.qreview{background:#fee2e2;color:#991b1b;font-weight:700;font-size:13px;border-radius:8px;padding:5px 8px;margin:-2px 0 8px}
+.rounddone .rdbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.rounddone .rdbtns .btn{font-size:16px;padding:10px 16px}
+.rounddone .rd1{font-size:64px;line-height:1}.rounddone b{display:block;font-family:var(--cond);font-stretch:condensed;font-size:34px;text-transform:uppercase;margin:8px 0 4px}.rounddone p{margin:0 0 14px;font-size:17px;color:var(--muted)}
+@keyframes rdin{from{opacity:0}to{opacity:1}}
 .qforms{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}.qforms .btn{justify-content:center;white-space:normal}
 .qforms .btn.good{background:#16a34a;color:#fff;border-color:#16a34a;opacity:1}.qforms .btn.bad{background:#dc2626;color:#fff;border-color:#dc2626;opacity:1}
 #presentBar .seg{display:inline-flex}#presentBar .seg .btn{border-radius:0}#presentBar .seg .btn:first-child{border-radius:8px 0 0 8px}#presentBar .seg .btn:last-child{border-radius:0 8px 8px 0;margin-left:-1px}
@@ -282,9 +303,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.20';
+const APP_VERSION='2026-11-16.26';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -936,7 +957,7 @@ function playRow(pb,pl,filt){
 function renderSide(){
   const el=$('#side');const pb=curPb();
   let h=`<div class="pbhead"><select id="pbSel">${state.pbs.map(p=>`<option value="${p.id}"${p.id===state.pbId?' selected':''}>${p.cloud&&p.cloud.role!=='own'?'👥 ':''}${esc(p.name)}</option>`).join('')}${state.pbs.length?'':'<option>— kein Playbook —</option>'}</select>
-    <button class="btn" data-a="newPb" title="Neues Playbook">＋</button>${pb?'<button class="btn" data-a="pbMenu" title="Playbook-Einstellungen">⋯</button>':''}</div>`;
+    ${isPlayer(pb)?'':`<button class="btn" data-a="newPb" title="Neues Playbook">＋</button>${pb?'<button class="btn" data-a="pbMenu" title="Playbook-Einstellungen">⋯</button>':''}`}</div>`;
   if(pb){
     h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span>${shareChip(pb)}</div>`;
     if(pb.plays.some(isF))h+=`<div class="kindtabs">${[['','Alle'],['p','Plays'],['f','Formationen']].map(([k,n])=>`<button data-kind="${k}" class="${state.kindF===k?'on':''}">${n}</button>`).join('')}</div>`;
@@ -944,8 +965,8 @@ function renderSide(){
     {const ut=usedTags(pb);if(ut.length)h+=`<select id="tagFilter" title="Nach Situation filtern"><option value="">Alle Situationen</option>${ut.map(t=>`<option value="${esc(t)}"${state.tagF===t?' selected':''}>${esc(t)}</option>`).join('')}</select>`}
     var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
       ${isRO(pb)?'':'<div class="newrow"><button class="btn primary" data-a="newPlay">＋ Neues Play</button><button class="btn" data-a="newForm" title="Reine Formation ohne Routen anlegen">＋ Formation</button></div>'}
-      <div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
-      <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`;
+      ${isPlayer(pb)?`<div class="sidefoot">${installBtn()}</div>`:`<div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
+      <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`}`;
   } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`;
   const items=pb&&LI?LI.items:[];
   const nlx=el.querySelector('.plays');
@@ -974,7 +995,18 @@ function renderCenter(){
   const own=FORMS[pb.variant][ownKind(pb)],opp=FORMS[pb.variant][oppKind(pb)];
   const m=state.mode;
   const L=isLk(pl),D=L?' disabled':'';
-  el.innerHTML=`<div class="toolbar panel" style="padding:8px">
+  if(isPlayer(pb)){el.innerHTML=`<div class="toolbar panel" style="padding:8px">
+    <button class="btn sm" data-a="home" title="Zur Startseite">🏠 Start</button><span class="sep"></span>
+    <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L) – Esc beendet">🔴 Laser</button>
+    ${animCtl(pl)}
+    <button class="btn sm primary" data-a="learn" title="Plays und Formations lernen">🎓 Lernen</button>
+    <span class="sep"></span>
+    <button class="btn sm" data-a="style" title="Feld-Darstellung">${{light:'Feld: Hell',grass:'Feld: Rasen',dark:'Feld: Dunkel'}[state.style]||'Feld: Hell'}</button>
+    <label class="zoom" title="Feldgröße">🔍<input type="range" id="zoom" min="25" max="100" step="1" value="${state.zoom}"></label>
+  </div>
+  <div class="fieldwrap"><svg id="field" class="m-select" style="width:${state.zoom}%" xmlns="http://www.w3.org/2000/svg"></svg></div>
+`}
+  else el.innerHTML=`<div class="toolbar panel" style="padding:8px">
     <button class="btn sm lockbtn ${L?'locked':''}" data-a="lock" title="${L?'Gesperrt – zum Entsperren klicken':'Play gegen Änderungen sperren'}">${L?'🔒':'🔓'}</button>
     <span class="sep"></span>
     <button class="btn sm ${m==='select'?'on':''}"${D} data-mode="select" title="Spieler und Punkte verschieben (V)">✥ Bewegen</button>
@@ -988,7 +1020,7 @@ function renderCenter(){
     <span class="sep"></span>
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer zum Präsentieren (L) – Esc beendet">🔴 Laser</button>
     ${animCtl(pl)}
-    <button class="btn sm" data-a="present" title="Präsentationsmodus (Vollbild, Pfeiltasten)">▣ Präsentieren</button>
+    ${isPlayer(pb)?'<button class="btn sm primary" data-a="learn" title="Plays und Formations lernen">🎓 Lernen</button>':'<button class="btn sm" data-a="present" title="Präsentationsmodus (Vollbild, Pfeiltasten)">▣ Präsentation</button>'}
     <span class="sep"></span>
     <select id="formSel" class="sm"${D} title="Eigene Formation laden"><option value="">${pb.type==='defense'?'Defense':'Offense'}-Formation…</option>${(()=>{const cf=customForms(pb);const ks=Object.keys(cf);
       return (ks.length?`<optgroup label="Eigene Formationen">${ks.map(k=>`<option value="c:${esc(k)}">${esc(k)} (${cf[k].players.map(p=>esc(p.label)).join(', ')})</option>`).join('')}</optgroup>`:'')+
@@ -1068,10 +1100,10 @@ function renderInsp0(){
       <label>Kategorie</label><input type="text" value="${esc(pl.cat)}">
       <label>Formation</label><input type="text" value="${esc(pl.formation)}">
       <label>Notizen / Coaching Points</label><textarea>${esc(pl.notes)}</textarea></fieldset>
-      <h4>Aktionen</h4>
+      ${isPlayer(pb)?'':`<h4>Aktionen</h4>
       <div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="png">Als PNG</button></div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="svg">Als SVG</button><button class="btn sm" data-a="sharePlay">Teilen</button></div>${tpBtn()}
-      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>`;
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="video" title="Animation als Video speichern, z. B. für WhatsApp">🎬 Als Video</button><button class="btn sm" data-a="gif" title="Animation als GIF speichern">Als GIF</button></div>`}`;
     return}
   state.multi=state.multi.filter(id=>findP(id));
   if(state.multi.length>1){
@@ -1187,7 +1219,7 @@ function toggleTag(t){
   commit();const a=pl.tags||(pl.tags=[]);const i=a.indexOf(t);if(i>=0)a.splice(i,1);else if(a.length<12)a.push(t);
   Store.savePlay(pb,pl);renderInsp();renderSide();
 }
-function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar()}
+function renderAll(){renderSide();renderCenter();renderInsp();updateStatus();renderPresentBar();renderHome()}
 /* ---------- 🎓 learn mode: tap a player, tap his task, then reveal ---------- */
 const normTask=t=>String(t||'').toLowerCase().replace(/mitte/g,'middle').replace(/½/g,'1/2').replace(/⅓/g,'1/3').replace(/¼/g,'1/4').replace(/\s+/g,' ').trim();
 function taskOptions(pb){
@@ -1349,14 +1381,26 @@ function quizNeedsOpp(pl){const qa=state.qa&&state.qa.playId===pl.id?state.qa:nu
 // "37 Plays, 10 Formationen" (formations counted separately)
 function countTxt(pb){const f=pb.plays.filter(isF).length,p=pb.plays.length-f;return `${p} ${p===1?'Play':'Plays'}`+(f?`, ${f} ${f===1?'Formation':'Formationen'}`:'')}
 function formNames(pb){return [...new Set(sortKinds(pb.plays).filter(isF).map(x=>(x.name||'').trim()).filter(Boolean))]}
+// end of a learning round: big notice, wrong ones can be practised again on their own
+function roundEnd(forms,total,wrong,review){const el=document.createElement('div');el.className='rounddone';const W=forms?'Formations':'Plays',n=wrong.length,ok=total-n;
+  el.innerHTML=`<div><div class="rd1">${n?'🏁':'🎉'}</div><b>${review?(n?'Wiederholung geschafft':'Jetzt alles richtig!'):`Alle ${total} ${W} geschafft!`}</b>
+    <p>${review?`${ok} von ${total} jetzt richtig.`:`${ok} von ${total} richtig${n?` – ${n} ${n===1?(forms?'Formation':'Play'):W} falsch.`:' – stark! 💪'}`}</p>
+    <div class="rdbtns">${n?`<button class="btn primary" data-rd="wrong">❌ ${n===1?(forms?'Die falsche Formation':'Das falsche Play'):`Die ${n} falschen`} nochmal</button>`:''}<button class="btn ${n?'':'primary'}" data-rd="new">🔄 Neue Runde mit allen</button></div></div>`;
+  document.body.appendChild(el);
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-rd]');if(!b)return;el.remove();const pb=curPb();state.quizDone=new Set();state.quizWrong=new Set();
+    let ids;if(b.dataset.rd==='wrong'){state.quizOnly=new Set(wrong);ids=wrong}else{state.quizOnly=null;ids=quizPoolOf(pb,forms).map(x=>x.id)}
+    const c=ids.filter(id=>id!==state.playId),L=c.length?c:ids,pick=L[Math.floor(Math.random()*L.length)];
+    if(pick===state.playId){state.qa=null;state.quizShown=false;renderField();renderPresentBar()}else selectPlay(pick)})}
+function quizPoolOf(pb,forms){let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
+  if(!pool.length&&!forms)pool=sortKinds(pb.plays).filter(pl=>!isF(pl));return pool}
+function quizMark(pl,right){state.quizWrong=state.quizWrong||new Set();if(right)state.quizWrong.delete(pl.id);else state.quizWrong.add(pl.id)}
 function quizNextPlay(){const pb=curPb();if(!pb)return;const forms=isF(curPlay());
-  let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
-  if(!pool.length&&!forms)pool=sortKinds(pb.plays).filter(pl=>!isF(pl));if(!pool.length)return toast(forms?'Keine Formations mit Namen.':'Keine Plays mit Aufgaben zum Lernen.');
-  const done=state.quizDone=state.quizDone||new Set();let next;
-  if(state.quizRandom){let c=pool.filter(pl=>!done.has(pl.id)&&pl.id!==state.playId);
-    if(!c.length){done.clear();c=pool.filter(pl=>pl.id!==state.playId);if(pool.length>1)toast(`Alle ${pool.length} ${forms?'Formations':'Plays'} geschafft 🎉 – neue Runde`)}
-    next=c.length?c[Math.floor(Math.random()*c.length)]:pool[0]}
-  else{const i=pool.findIndex(pl=>pl.id===state.playId);next=pool[(i+1)%pool.length];if(i===pool.length-1&&pool.length>1)toast(forms?'Das war die letzte Formation – weiter mit der ersten':'Das war das letzte Play – weiter mit dem ersten')}
+  let pool=quizPoolOf(pb,forms);if(!pool.length)return toast(forms?'Keine Formations mit Namen.':'Keine Plays mit Aufgaben zum Lernen.');
+  const review=!!(state.quizOnly&&pool.some(pl=>state.quizOnly.has(pl.id)));if(review)pool=pool.filter(pl=>state.quizOnly.has(pl.id));else state.quizOnly=null;
+  const done=state.quizDone=state.quizDone||new Set();
+  const c=pool.filter(pl=>!done.has(pl.id)&&pl.id!==state.playId);
+  if(!c.length&&(pool.length>1||done.has(state.playId))){const wrong=pool.filter(pl=>(state.quizWrong||new Set()).has(pl.id)).map(pl=>pl.id);return roundEnd(forms,pool.length,wrong,review)}
+  const next=c.length?c[Math.floor(Math.random()*c.length)]:pool[0];
   if(next.id===state.playId){state.qa=null;state.quizShown=false;renderField();return renderPresentBar()}
   selectPlay(next.id)}
 function quizNext(){const qa=qaState(),pl=curPlay(),qi=quizInfo(curPb(),pl);const next=qi.asked.find(x=>!qa.ans[x.id]&&!(qi.isQB(x)&&!taskOf(pl,x).length));qa.pick=next?next.id:null}
@@ -1369,21 +1413,22 @@ function quizPick(pid){
   if(!qi.asked.includes(p)){toast('Für diesen Spieler ist keine Aufgabe hinterlegt.');return}
   qa.pick=pid;qa.readMode=qi.isQB(p)&&qi.hasReads&&!taskOf(pl,p).length;renderField();renderPresentBar();
 }
-function quizPanel(){
+function quizPanel(){quizPanel0();const el=$('#quizPanel');if(el&&state.quizOnly&&state.quizOnly.has(state.playId)){const d=document.createElement('div');d.className='qreview';d.textContent=`❌ Wiederholung – nur die falschen (${[...state.quizOnly].filter(id=>!(state.quizDone||new Set()).has(id)).length} übrig)`;el.prepend(d)}}
+function quizPanel0(){
   let el=$('#quizPanel');const pb=curPb(),pl=curPlay();
   if(!state.present||!state.quiz||!pb||!pl){if(el)el.remove();return}
   if(!el){el=document.createElement('div');el.id='quizPanel';document.body.appendChild(el)}
   const qa=qaState(),qi=quizInfo(pb,pl);const p=qa.pick&&pl.players.find(x=>x.id===qa.pick);
-  if(isF(pl)){const names=formNames(pb);const nx=`<button class="btn sm primary" data-a="quizNextPlay">${state.quizRandom?'🔀 Nächste Formation':'Nächste Formation ▶'}</button>`;
+  if(isF(pl)){const names=formNames(pb);const nx=`<button class="btn sm primary" data-a="quizNextPlay">Nächste Formation ▶</button>`;
     if(names.length<2){el.innerHTML=`<h4>🏷 Formations</h4><p class="hint">Zum Abfragen braucht das Playbook mindestens zwei Formations mit Namen.</p>${nx}`;return}
     const right=pl.name.trim();
     el.innerHTML=`<h4>🏷 Welche Formation ist das?</h4><p class="hint" style="margin-top:0">${qa.form?'':'Das ist eine <b>Formation</b> – hier gibt es keine Routen. Tippe den richtigen Namen an.'}</p>
       <div class="qopts qforms">${names.map(n=>{const c=!qa.form?'':n===right?' good':n===qa.form?' bad':'';return `<button class="btn sm${c}" data-qform="${esc(n)}"${qa.form?' disabled':''}>${esc(n)}</button>`}).join('')}</div>
-      ${qa.form?`<p style="margin:10px 0 6px"><b>${qa.form===right?'✓ Richtig – das ist „'+esc(right)+'“ 💪':'✗ Leider falsch – das ist „'+esc(right)+'“'}</b></p>${state.quizCounted===false?'<p class="hint" style="font-size:12px">🔁 Übungsrunde – gezählt wird nur der erste Versuch am Tag.</p>':''}${nx}`:''}`;
+      ${qa.form?`<p style="margin:10px 0 6px"><b>${qa.form===right?'✓ Richtig – das ist „'+esc(right)+'“ 💪':qa.form==='\u0000'?'👁 Das ist „'+esc(right)+'“':'✗ Leider falsch – das ist „'+esc(right)+'“'}</b></p>${state.quizCounted===false?'<p class="hint" style="font-size:12px">🔁 Übungsrunde – gezählt wird nur der erste Versuch am Tag.</p>':''}${nx}`:''}`;
     return}
   if(state.quizShown){const R=quizResult(pb,pl);
     el.innerHTML=`<h4>Ergebnis</h4><div class="qscore">${R.ok} / ${R.n}</div><p class="hint">${R.ok===R.n?'Alles richtig – stark! 💪':'Grün ist richtig, rot zeigt die richtige Aufgabe.'}</p>${state.quizCounted===false?'<p class="hint" style="font-size:12px">🔁 Übungsrunde – gezählt wird pro Play nur der erste Versuch am Tag.</p>':''}
-      <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="quizNextPlay">${state.quizRandom?'🔀 Nächstes Play':'Nächstes Play ▶'}</button>`;
+      <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="quizNextPlay">Nächstes Play ▶</button>`;
     return}
   if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
   const done=qi.asked.filter(x=>(qa.ans[x.id]&&!manOpen(pl,qa,x.id))||(qi.isQB(x)&&qa.reads.length)).length;
@@ -1402,7 +1447,7 @@ function quizPanel(){
 }
 document.addEventListener('click',e=>{
   const fo=e.target.closest('[data-qform]');if(fo){const pb=curPb(),pl=curPlay(),qa=qaState();if(!pl||!isF(pl)||qa.form)return;qa.form=fo.dataset.qform;
-    (state.quizDone=state.quizDone||new Set()).add(pl.id);state.quizCounted=Prog.result(pb,pl,qa.form===pl.name.trim()?1:0,1);return renderPresentBar()}
+    (state.quizDone=state.quizDone||new Set()).add(pl.id);quizMark(pl,qa.form===pl.name.trim());state.quizCounted=Prog.result(pb,pl,qa.form===pl.name.trim()?1:0,1);return renderPresentBar()}
   const o=e.target.closest('[data-qopt]');if(o){const qa=qaState();if(!qa.pick)return;qa.ans[qa.pick]=o.dataset.qopt;
     if(normTask(o.dataset.qopt)==='man'&&(curPlay().opp||[]).length){delete qa.man[qa.pick];qa.manPick=qa.pick;renderField();return quizPanel()}   // then: whom?
     delete qa.man[qa.pick];quizNext();renderField();return quizPanel()}
@@ -1417,12 +1462,12 @@ function renderPresentBar(){document.body.classList.toggle('quizzing',!!(state.p
   if(!bar){bar=document.createElement('div');bar.id='presentBar';document.body.appendChild(bar)}
   const i=pb.plays.indexOf(pl);
   {const o=sortKinds(pb.plays);const k=o.indexOf(pl);var pPrev=k>0,pNext=k<o.length-1}
-  bar.innerHTML=`<button class="btn sm" data-a="presPrev" ${pPrev?'':'disabled'} title="Vorheriges Play (←)">◀</button>
+  bar.innerHTML=`${state.quiz&&isPlayer(pb)?'':`<button class="btn sm" data-a="presPrev" ${pPrev?'':'disabled'} title="Vorheriges Play (←)">◀</button>`}
     <div class="ptitle">${state.quiz&&isF(pl)&&!qaState().form?'<b>🏷 Formation ?</b>':`<b>${playNo(pb,pl)}. ${esc(callName(pl))}</b><span>${esc(pl.cat||'')}</span>`}</div>
-    <button class="btn sm" data-a="presNext" ${pNext?'':'disabled'} title="Nächstes Play (→)">▶</button>
+    ${state.quiz&&isPlayer(pb)?'':`<button class="btn sm" data-a="presNext" ${pNext?'':'disabled'} title="Nächstes Play (→)">▶</button>`}
     <span class="sep"></span>
     ${animCtl(pl)}
-    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formations lernen: Namen der Formationen">Formations</button></span>`:''}${state.quiz&&!isF(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button>`:''}${state.quiz?`<button class="btn sm ${state.quizRandom?'on':''}" data-a="quizRand" title="Zufällige Reihenfolge ein/aus – jedes Play kommt einmal dran">🔀 Zufall</button>`:''}
+    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formations lernen: Namen der Formationen">Formations</button></span>`:''}${state.quiz&&isF(pl)&&!qaState().form?`<button class="btn sm primary" data-a="formShow" title="Lösung zeigen (zählt als nicht gewusst)">👁 Aufdecken</button>`:''}${state.quiz&&!isF(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button>`:''}
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L)">🔴 Laser</button>
     <button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen und Fragen ein/aus (N)">📝 Notizen${Q.forPlay(pl.id).some(q=>!q.done)?' 💬':''}</button>
     <button class="btn sm" data-a="presExit" title="Beenden (Esc)">✕ Beenden</button>`;
@@ -1439,10 +1484,27 @@ function renderPresentBar(){document.body.classList.toggle('quizzing',!!(state.p
     const ta=nb.querySelector('#presQNew');if(ta){ta.value=draft;if(foc)ta.focus()}}
   else if(nb)nb.remove();
 }
+// players (read-only accounts) start in learn mode, so a play is never shown with its solution first
+const isPlayer=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
+function startLearn(){const pb=curPb();if(!pb||!pb.plays.length)return;
+  const pool=sortKinds(pb.plays).filter(x=>!isF(x)&&quizInfo(pb,x).asked.length);const first=pool[Math.floor(Math.random()*pool.length)]||sortKinds(pb.plays).find(x=>!isF(x))||sortKinds(pb.plays)[0];
+  if(state.anim)stopAnim(true);state.home=false;state.quiz=true;state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;state.quizShown=false;if(first)state.playId=first.id;setPresent(true)}
+function maybeLearn(){const pb=curPb();if(isPlayer(pb)&&!state.present&&!state.homeSeen){state.home=true;state.homeSeen=true;renderHome()}}
+// start page for players: "Playbook" or "Lernen" – nothing with a solution is visible before they choose
+function renderHome(){let el=$('#homeScreen');const pb=curPb();
+  if(!state.home||state.present||!isPlayer(pb)){if(el)el.remove();return}
+  if(!el){el=document.createElement('div');el.id='homeScreen';document.body.appendChild(el)}
+  const mine=state.pbs.filter(isPlayer);const u=Sync.user;
+  el.innerHTML=`<div class="hshead"><b>🏈 Playbook</b><button class="btn sm" data-a="account">👤 ${esc(u?u.email.split('@')[0]:'Konto')}</button></div>
+    <div class="hsbody"><div class="hscards">${mine.map(p=>`<div class="hscard"><h2>${esc(p.name)}</h2>
+      <p class="hint">${p.type==='defense'?'Defense':'Offense'} · ${esc(VAR[p.variant].name)} · ${countTxt(p)}</p>
+      <div class="hsbtns"><button class="hsbig" data-a="homePb" data-pb="${esc(p.id)}"><span>📖</span>Playbook<small>Plays ansehen und abspielen</small></button>
+      <button class="hsbig learn" data-a="homeLearn" data-pb="${esc(p.id)}"><span>🎓</span>Lernen<small>Teste, ob du deine Aufgaben kennst</small></button></div></div>`).join('')}</div></div>`}
+document.addEventListener('change',e=>{if(e.target.id==='homePb')selectPb(e.target.value)});
 function setPresent(on){
   state.present=on;document.body.classList.toggle('presenting',on);state.qa=null;
   if(on){state.sel=null;state.drawing=null;state.mode='select';const de=document.documentElement;try{if(de.requestFullscreen&&!document.fullscreenElement)de.requestFullscreen().catch(()=>{})}catch(e){}}
-  else{try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}const nb=$('#presNotesBox');if(nb)nb.remove()}
+  else{try{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}catch(e){}const nb=$('#presNotesBox');if(nb)nb.remove();if(isPlayer(curPb()))state.home=true}
   renderAll();
 }
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&state.present)setPresent(false)});
@@ -1471,7 +1533,7 @@ function restore(json){
 function undo(){const pl=curPlay();if(!state.undo.length||!pl)return;state.redo.push(JSON.stringify(pl));restore(state.undo.pop())}
 function redo(){const pl=curPlay();if(!state.redo.length||!pl)return;state.undo.push(JSON.stringify(pl));restore(state.redo.pop())}
 function selectPlay(id){state.pickMan=null;state.qa=null;state.playId=id;state.multi=[];state.quizShown=false;state.sel=null;state.drawing=null;state.undo=[];state.redo=[];stopAnim(true);renderAll()}
-function selectPb(id){state.q='';state.tagF='';state.kindF='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.multi=[];state.sel=null;state.drawing=null;state.undo=[];state.redo=[];saveUI();renderAll()}
+function selectPb(id){state.q='';state.tagF='';state.kindF='';state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.multi=[];state.sel=null;state.drawing=null;state.undo=[];state.redo=[];state.home=isPlayer(pb)&&!state.present;saveUI();renderAll()}
 
 /* ---------- field interaction ---------- */
 function toField(e){
@@ -1703,7 +1765,7 @@ function animCtl(pl){
   const a=state.anim;
   const rate=`<select id="animRate" class="sm" title="Tempo der Animation">${[[0.25,'¼×'],[0.5,'½×'],[1,'1×'],[1.5,'1,5×'],[2,'2×']].map(([v,n])=>`<option value="${v}"${state.animRate===v?' selected':''}>${n}</option>`).join('')}</select>`;
   if(!a&&quizHidden())return `<button class="btn sm" disabled title="Im Lern-Modus erst aufdecken, dann abspielen">▶ Abspielen</button>`;
-  if(!a)return `<button class="btn sm" data-a="anim" title="Abspielen (Leertaste im Präsentationsmodus)">▶ Abspielen</button>${animOptSel(pl)}${rate}`;
+  if(!a)return `<button class="btn sm" data-a="anim" title="Abspielen (Leertaste im Präsentationsmodus)">▶ Abspielen</button>${isPlayer(curPb())?'':animOptSel(pl)}${rate}`;
   return `${a.done?'':`<button class="btn sm" data-a="animPause">${a.playing?'⏸ Pause':'▶ Weiter'}</button>`}<button class="btn sm" data-a="animBack" title="Schritt zurück">⏮</button><button class="btn sm" data-a="animFwd" title="Schritt vor">⏭</button><button class="btn sm on" data-a="anim">${a.done?'↺ Zurück':'■ Stopp'}</button>${rate}`;
 }
 // model of one play's animation: who runs where and when; reused for the live animation and for video/GIF
@@ -2571,6 +2633,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     if(changed){if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;const pb=curPb();
       if(pb&&!pb.plays.find(x=>x.id===state.playId)){state.playId=pb.plays[0]?pb.plays[0].id:null;state.sel=null}
       if(state.anim)stopAnim(true);Store.saveLocal();renderAll()}
+    if(first)setTimeout(maybeLearn,300);
     if(Q.fresh){const n=Q.fresh;Q.fresh=0;setTimeout(()=>toast(n===1?'💬 Neue Frage zu einem Play':`💬 ${n} neue Fragen zu deinen Plays`),news.length?2800:0)}
     if(news.length)toast(news.length===1?`„${news[0][0]}“ wurde von ${news[0][1].split('@')[0]} aktualisiert`:`${news.length} geteilte Playbooks wurden aktualisiert`);
     updateStatus();this.later();
@@ -3067,7 +3130,7 @@ const Upd={last:0,shown:false,snooze:0,snoozed:false,touched:false,
 ['pointerdown','keydown'].forEach(t=>document.addEventListener(t,()=>{Upd.touched=true},{capture:true,once:true}));
 // after an update: show what is new (only notes this device has not seen yet), stays open until OK
 function whatsNew(){let seen=null;try{seen=JSON.parse(localStorage.getItem('pb_seenNotes')||'null')}catch(e){}
-  const save=()=>{try{localStorage.setItem('pb_seenNotes',JSON.stringify(APP_NOTES.slice(0,40)))}catch(e){}};
+  const save=()=>{try{localStorage.setItem('pb_seenNotes',JSON.stringify(APP_NOTES))}catch(e){}};
   if(!Array.isArray(seen)){save();return}   // first start on this device: nothing to announce
   const fresh=APP_NOTES.filter(n=>!seen.includes(n));if(!fresh.length)return;
   if($('.mback')||state.present||state.drawing){setTimeout(whatsNew,5000);return}
@@ -3120,6 +3183,7 @@ async function backupAll(){
 }
 function backupDue(){
   if(Store.mode!=='local'||Folder.handle||!state.pbs.some(pb=>pb.plays.length))return null;
+  if(Sync.user&&state.pbs.every(pb=>pb.cloud&&(pb.cloud.ut||pb.cloud.role!=='own')))return null;   // everything is in the cloud (with daily snapshots) – no file backup needed
   let last=0,snooze=0;try{last=+localStorage.getItem('pbb-lastBackup')||0;snooze=+localStorage.getItem('pbb-backupSnooze')||0}catch(e){return null}
   if(Date.now()<snooze)return null;
   if(!last)return 'Du hast noch keine Sicherung deiner Playbooks. Sie liegen nur in diesem Browser.';
@@ -3232,27 +3296,36 @@ const Laser={on:false,cv:null,ctx:null,pts:[],raf:0,
   }
 };
 function helpDialog(){
+  if(isPlayer(curPb()))return modal('So funktioniert’s',`<ul>
+    <li><b>🏠 Startseite:</b> Für jedes Playbook wählst du <b>📖 Playbook</b> (ansehen) oder <b>🎓 Lernen</b> (dich selbst testen).</li>
+    <li><b>📖 Playbook:</b> Links ein Play antippen, mit <b>▶ Abspielen</b> läuft es als Animation. Rechts stehen Name, Formation und Notizen des Coaches.</li>
+    <li><b>🎓 Lernen – Plays:</b> Die Aufgaben sind verdeckt. Tippe einen Spieler auf dem Feld an und wähle links seine Aufgabe (z. B. „Slant“, „Deep ½“). Bei <b>Man</b> tippst du danach den Gegenspieler an, den er deckt. Wenn alle beantwortet sind: <b>👁 Aufdecken</b> – grün ist richtig, rot falsch.</li>
+    <li><b>🎓 Lernen – Formations:</b> Oben auf „Formations“ umschalten und den richtigen Namen der gezeigten Formation antippen.</li>
+    <li>Beim Lernen kommen die Plays und Formations immer <b>gemischt</b> – jedes einmal. Am Ende der Runde kannst du die <b>falschen nochmal</b> üben oder eine neue Runde starten.</li>
+    <li><b>Abspielen</b> geht beim Lernen erst nach dem Aufdecken. Gezählt wird pro Play der <b>erste Versuch am Tag</b> – danach kannst du beliebig üben.</li>
+    <li><b>📝 Notizen:</b> Zeigt die Notizen des Coaches (beim Lernen erst nach dem Aufdecken). Dort kannst du auch eine <b>Frage zum Play</b> an deinen Coach schreiben – seine Antwort siehst du an derselben Stelle.</li>
+    <li><b>👤 Konto</b> (oben rechts): abmelden. Dein Coach sieht, wie lange du gelernt hast und wie gut es lief.</li></ul>`,
+    [{label:'Alles klar',value:null,cls:'primary'}],{x:true});
   modal('So funktioniert’s',`<ul>
-    <li><b>Playbook anlegen:</b> Offense oder Defense, Flag 5er oder Tackle 11er.</li>
-    <li><b>Formation</b> über das Auswahlmenü laden, Spieler per Ziehen verschieben.</li>
-    <li><b>Route / Auftrag:</b> Spieler antippen und rechts eine Vorlage wählen (Slant, Post, Blitz, Deep ⅓ …) – oder mit <b>↗ Route</b> selbst zeichnen.</li>
-    <li><b>Motion</b> (gestrichelt) läuft in der Animation vor dem Snap.</li>
-    <li><b>Gegner</b> einblenden, um Plays gegen eine Front oder Coverage zu zeigen. In Defense-Playbooks wählst du <b>Man</b> und tippst dann den Gegenspieler an. Um einen Spieler herum leitest du die Linie, indem du den <b>⊕</b> in der Mitte eines Abschnitts ziehst – so entsteht eine neue Ecke. Beim Selberzeichnen endet die Linie automatisch als Man-Deckung, wenn du zuletzt einen Gegenspieler antippst. Beim Abspielen läuft der Defender den gezeichneten Weg und bleibt dann an seinem Mann. Mit <b>✎ Weiterzeichnen</b> hängst du an jede Linie weitere Punkte an.</li>
-    <li><b>▶ Abspielen</b> animiert alle Routen – mit Pause, Einzelschritt (⏮ ⏭) und Tempo. Der Ball geht vom QB zum Spieler mit Read 1. Unter „Aktionen“ speicherst du die Animation als <b>Video oder GIF</b>.</li>
-    <li><b>☑ Mehrere</b> (oder Umschalt-Klick): mehrere Spieler markieren, gemeinsam ziehen, ausrichten. <b>⧉ Kopieren</b> überträgt eine Route auf andere Spieler (Strg+C / Strg+V).</li>
-    <li><b>Situationen</b> (z. B. „3rd &amp; long“, „Red Zone“) am Play vergeben – danach filtern und als <b>Call-Sheet</b> drucken.</li>
-    <li><b>Playbook / Wristband</b> exportiert die ausgewählten Plays als PNG oder SVG oder druckt sie – Wristbands auch in Originalgröße mit Schnittmarken.</li>
-    <li><b>Teilen:</b> Playbook als Datei exportieren – andere importieren es in ihre eigene Kopie.</li>
-    <li><b>📁 Ordner verbinden</b> (Chrome/Edge am PC): Playbooks werden automatisch als Dateien in einem Ordner auf deinem Gerät gespeichert – bleiben auch erhalten, wenn Browserdaten gelöscht werden.</li>
-    <li><b>▣ Präsentieren:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
-    <li><b>🎓 Lernen</b> (im Präsentationsmodus): Die Aufgaben sind verdeckt. Spieler antippen, links die Aufgabe wählen (z. B. „Deep ½“, „Slant“), beim QB die Reads der Reihe nach antippen – dann „Aufdecken“: grün richtig, rot falsch. Bewertet wird der hinterlegte Name der Aufgabe, nicht die Zeichnung. Den Namen setzen Vorlagen automatisch; bei selbst gezeichneten Linien unter „Linie bearbeiten → Aufgabe“ eintragen.</li>
-    <li><b>💾 Alles sichern</b> speichert alle Playbooks in eine Datei. <b>🕘 Verlauf</b> holt frühere Stände eines Plays zurück.</li>
-    <li><b>👤 Konto:</b> Mit E-Mail und Passwort sind deine Playbooks auf allen Geräten gleich. Über ⋯ → „👥 Freigeben“ teilst du ein Playbook mit anderen Coaches – zum Lesen oder Bearbeiten.</li>
-    <li><b>🗑 Papierkorb:</b> Gelöschtes bleibt 30 Tage und lässt sich wiederherstellen.</li>
-    <li><b>🔴 Laser</b> (Taste L): roter Laserpunkt zum Präsentieren – solange er an ist, wird nichts verändert. Esc beendet.</li>
+    <li><b>Playbook anlegen</b> (＋ oben links): Offense oder Defense, Flag 5er oder Tackle 11er.</li>
+    <li><b>Formationen</b> mit „＋ Formation“ anlegen (F1, F2 …), dann „＋ Neues Play mit dieser Formation“. Plays links am Griff <b>⠿</b> an eine neue Stelle ziehen.</li>
+    <li><b>Route / Auftrag:</b> Spieler antippen und rechts eine Vorlage wählen (Slant, Post, Blitz, Deep ½, Man …) – oder mit <b>↗ Route</b> selbst zeichnen. Eigene Routen über „Linie bearbeiten“ → <b>★ Als Vorlage</b> mit Namen speichern.</li>
+    <li><b>Motion</b> (gestrichelt) läuft vor dem Snap. <b>Alternativen</b> (gepunktet) zeigen eine zweite Option.</li>
+    <li><b>Gegner</b> einblenden. In Defense-Playbooks <b>Man</b> wählen und den Gegenspieler antippen; mit dem <b>⊕</b> in der Mitte eines Abschnitts leitest du die Linie um Spieler herum.</li>
+    <li><b>▶ Abspielen</b> mit Pause, Einzelschritt (⏮ ⏭) und Tempo. Unter „Aktionen“ als <b>Video oder GIF</b> speichern.</li>
+    <li><b>☑ Mehrere</b> (oder Umschalt-Klick): Spieler gemeinsam ziehen und ausrichten. <b>⧉ Kopieren</b> überträgt eine Linie (Strg+C / Strg+V), ↶ macht es rückgängig.</li>
+    <li><b>Situationen</b> (z. B. „3rd &amp; long“) am Play vergeben – danach filtern und als <b>Call-Sheet</b> drucken.</li>
+    <li><b>Playbook / Wristband:</b> Plays als PNG/SVG speichern oder drucken – Playbook mit 1–6 Spalten, Wristband in Originalgröße.</li>
+    <li><b>▣ Präsentation:</b> Vollbild für Meetings – ←/→ wechselt das Play, Leertaste spielt ab, N zeigt Notizen, Esc beendet.</li>
+    <li><b>🎓 Lernen</b> (in der Präsentation): Plays (Aufgaben der Spieler) oder Formations (Namen) abfragen – immer in zufälliger Reihenfolge, jedes einmal pro Runde; danach lassen sich die falschen separat wiederholen. Damit das klappt, braucht jede Linie einen Aufgaben-Namen: ⋯ → <b>🎓 Aufgaben vorschlagen</b> und <b>📋 Aufgaben prüfen</b>.</li>
+    <li><b>👤 Konto:</b> Mit E-Mail und Passwort sind deine Playbooks auf allen Geräten gleich. Teilen über ⋯ → <b>👥 Freigeben</b> (Spieler – lesen / Coach – lesen + Fortschritt / Coach – bearbeiten) oder für alle auf einmal über die <b>👥 Team-Liste</b> im Konto.</li>
+    <li><b>👥 Mit Team teilen:</b> ein ganzes Playbook (⋯) oder ein einzelnes Play (rechts beim Play). Geteilte Plays findest du links unter <b>👥 Team-Plays</b> und übernimmst sie in ein Team-Playbook.</li>
+    <li><b>💬 Fragen</b> zum Play stellen und beantworten (rechts beim Play). <b>📊 Fortschritt</b> (⋯) zeigt, wie lange und wie gut die Spieler gelernt haben.</li>
+    <li><b>Sicherheit:</b> 🕘 Verlauf (frühere Stände eines Plays), 🗑 Papierkorb (30 Tage), 🗄 Cloud-Sicherungen (⋯, jeder Tag der letzten 3 Wochen), 💾 Alles sichern (Datei).</li>
+    <li><b>🔒</b> sperrt ein Play gegen versehentliche Änderungen (⋯ → alle auf einmal). <b>🔴 Laser</b> (Taste L) zum Zeigen.</li>
     <li>Tastatur: V/R/M/P = Werkzeuge, Entf = Spieler löschen, Strg+Z / Strg+Y, Enter = Zeichnen beenden.</li></ul>
-    <p class="hint">${Store.mode==='cloud'?'Jeder Nutzer hat eigene, private Playbooks in seinem Konto.':Store.mode==='local'?'Gespeichert wird lokal in diesem Browser. Für ein Backup nutze „Playbook teilen“.':'In dieser Ansicht kann nicht gespeichert werden – bitte exportieren.'}</p>`,
-    [{label:'Alles klar',value:null,cls:'primary'}]);
+    <p class="hint">${Sync.user?'Angemeldet – alles wird automatisch in der Cloud gespeichert und täglich gesichert. Neue Versionen der App lädt sie selbst.':'Ohne Konto wird nur in diesem Browser gespeichert – sichere regelmäßig mit „💾 Alles sichern“ oder melde dich an.'}</p>`,
+    [{label:'Alles klar',value:null,cls:'primary'}],{x:true});
 }
 
 /* ---------- event wiring ---------- */
@@ -3305,6 +3378,10 @@ document.addEventListener('click',async e=>{
     case 'togSide':return toggleMin('side');
     case 'togInsp':return toggleMin('insp');
     case 'present':return setPresent(true);
+    case 'learn':return startLearn();
+    case 'home':state.home=true;return renderHome();
+    case 'homePb':case 'homeLearn':{const id=a.dataset.pb;if(id&&id!==state.pbId){state.pbId=id;const pb=curPb();state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;state.sel=null;state.undo=[];state.redo=[];saveUI()}
+      if(act==='homeLearn')return startLearn();state.home=false;return renderAll()}
     case 'presExit':return setPresent(false);
     case 'presPrev':return presStep(-1);
     case 'presNext':return presStep(1);
@@ -3371,17 +3448,19 @@ document.addEventListener('click',async e=>{
     case 'animBack':return animStepBy(-0.2);
     case 'video':return exportAnim('video');
     case 'gif':return exportAnim('gif');
-    case 'quiz':if(state.anim)stopAnim();state.quiz=!state.quiz;state.quizDone=new Set();state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
+    case 'quiz':if(state.anim)stopAnim();state.quiz=!state.quiz;state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;
+      if(state.quiz){const pb=curPb(),pool=sortKinds(pb.plays).filter(x=>isF(curPlay())?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);if(pool.length){selectPlay(pool[Math.floor(Math.random()*pool.length)].id);state.quiz=true}}state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
     case 'quizShow':if(state.quizShown&&state.anim)stopAnim();if(!state.quizShown){const pl=curPlay(),qa=qaState();const open=pl&&pl.players.find(p=>manOpen(pl,qa,p.id));
       if(open){qa.pick=open.id;qa.manPick=open.id;renderField();quizPanel();return toast(`${open.label} spielt Man – erst den Gegenspieler antippen.`)}}
-    if(state.quizShown)state.qa=null;else{(state.quizDone=state.quizDone||new Set()).add(state.playId);const R=quizResult(curPb(),curPlay());state.quizCounted=Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
-    case 'quizRand':state.quizRandom=!state.quizRandom;toast(state.quizRandom?'🔀 Zufällige Reihenfolge – jedes Play kommt einmal dran':'Reihenfolge wie im Playbook');if(state.quizRandom)return quizNextPlay();return renderPresentBar();
+    if(state.quizShown)state.qa=null;else{(state.quizDone=state.quizDone||new Set()).add(state.playId);const R=quizResult(curPb(),curPlay());quizMark(curPlay(),R.ok===R.n);state.quizCounted=Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
     case 'quizNextPlay':return quizNextPlay();
+    case 'formShow':{const pb=curPb(),pl=curPlay(),qa=qaState();if(!pl||!isF(pl)||qa.form)return;qa.form='\u0000';   // revealed without an answer
+      (state.quizDone=state.quizDone||new Set()).add(pl.id);quizMark(pl,false);state.quizCounted=Prog.result(pb,pl,0,1);return renderPresentBar()}
     case 'quizKind':{const pb=curPb(),want=a.dataset.k==='forms';if(isF(curPlay())===want)return;
       let pool=sortKinds(pb.plays).filter(x=>want?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);
       if(!pool.length&&!want){pool=sortKinds(pb.plays).filter(x=>!isF(x));if(pool.length)toast('In den Plays sind noch keine Aufgaben eingetragen – Coaches können sie über ⋯ → „🎓 Aufgaben vorschlagen“ ergänzen.')}
       if(!pool.length)return toast(want?'Keine Formations mit Namen.':'Keine Plays vorhanden.');
-      state.quizDone=new Set();selectPlay((state.quizRandom?pool[Math.floor(Math.random()*pool.length)]:pool[0]).id);return}
+      state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;selectPlay(pool[Math.floor(Math.random()*pool.length)].id);return}
     case 'install':return installApp();
     case 'drawAlt':state.mode='route';startDrawing('alt',p.id);return renderCenter();
     case 'tplAlt':state.tplAlt=true;return renderInsp();
@@ -3462,6 +3541,7 @@ document.addEventListener('keydown',e=>{
   const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
   if(e.key==='Escape'&&Laser.on){Laser.toggle(false);return}
   if(state.present){const k=e.key;
+    if((k==='ArrowRight'||k==='PageDown'||k==='ArrowLeft'||k==='PageUp')&&state.quiz&&isPlayer(curPb()))return;
     if(k==='ArrowRight'||k==='PageDown'){e.preventDefault();return presStep(1)}
     if(k==='ArrowLeft'||k==='PageUp'){e.preventDefault();return presStep(-1)}
     if(k===' '){e.preventDefault();return !state.anim?startAnim():state.anim.done?stopAnim():animPause()}
@@ -3499,7 +3579,7 @@ document.addEventListener('keydown',e=>{
   const pb=state.pbs.find(p=>p.id===last)||state.pbs[0];
   state.pbId=pb?pb.id:null;state.playId=pb&&pb.plays[0]?pb.plays[0].id:null;
   try{await Folder.init()}catch(e){console.warn(e)}
-  showBanner();renderAll();
+  showBanner();renderAll();setTimeout(maybeLearn,400);
 })();
 </script>
 </body>
