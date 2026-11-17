@@ -270,6 +270,11 @@ body.presenting .ptog{display:none}
 }
 /* 📱 phones only – nothing here applies to tablets or PCs */
 @media (max-width:640px){
+  header{gap:6px;padding:8px 10px}
+  header .hbtn{padding:6px 9px;white-space:nowrap;flex:none}
+  header .hlbl{display:none}
+  header #acctBtn{max-width:30vw;overflow:hidden;text-overflow:ellipsis}
+  header .status{font-size:12px;padding:4px 8px;min-width:0;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
   #presentBar{padding:6px 8px;gap:5px;row-gap:5px}
   #presentBar .ptitle{order:-1;flex:1 0 100%;font-size:15px}
   #presentBar .btn.sm{padding:5px 8px;font-size:13px}
@@ -296,7 +301,7 @@ body.presenting .ptog{display:none}
   <div class="logo"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="9" transform="rotate(-35 16 16)" fill="#8b5a2b" stroke="#fff" stroke-width="1.5"/><path d="M11 21 21 11M13 15l4 4M15 13l4 4M11 17l4 4" stroke="#fff" stroke-width="1.6"/></svg><span>Playbook Builder</span></div>
   <div class="status" id="status">Lädt…</div>
   <button class="hbtn" id="acctBtn" data-a="account" title="Konto & Synchronisierung" hidden>👤 Anmelden</button>
-  <button class="hbtn" data-a="feedback" title="Fehler melden, Verbesserungen und Wünsche schicken">✉ Feedback</button>
+  <button class="hbtn" data-a="feedback" title="Fehler melden, Verbesserungen und Wünsche schicken">✉<span class="hlbl"> Feedback</span></button>
   <button class="hbtn" data-a="help" title="Hilfe">?</button>
 </header>
 <div id="bannerWrap"></div>
@@ -325,9 +330,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-16.28';
+const APP_VERSION='2026-11-17.1';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -458,6 +463,8 @@ function fixRoutes(pb){let n=0;
   pb.plays.forEach(pl=>[...(pl.players||[]),...(pl.opp||[])].forEach(p=>{
     if(p.route&&!hasLine(p.route)){p.route=null;n++}
     if(p.alts&&p.alts.length){const k=p.alts.length;p.alts=p.alts.filter(hasLine);if(p.alts.length!==k)n++}
+    // no main route left, but a solid "alternative" (e.g. after the main route was deleted): that line is the main route
+    if(!hasLine(p.route)&&p.alts&&p.alts.length&&p.alts[0].style!=='dotted'){p.route=p.alts.shift();n++}
   }));
   return n>0;
 }
@@ -577,7 +584,7 @@ const Store={mode:'memory',db:null,uid:null,note:'',
     if(this.mode!=='local')return [];
     try{const j=JSON.parse(localStorage.getItem(LSK)||'null');return (j&&j.pbs)||[]}catch(e){return []}
   },
-  meta(pb){const m={kind:'playbook',name:pb.name,type:pb.type,variant:pb.variant,created:pb.created||Date.now(),updated:Date.now(),order:pb.plays.map(p=>p.id)};if(pb.layoutPlayId)m.layoutPlayId=pb.layoutPlayId;if(pb.fieldV)m.fieldV=pb.fieldV;if(pb.tpls)m.tpls=pb.tpls;return m},
+  meta(pb){const m={kind:'playbook',name:pb.name,type:pb.type,variant:pb.variant,created:pb.created||Date.now(),updated:Date.now(),order:pb.plays.map(p=>p.id)};if(pb.layoutPlayId)m.layoutPlayId=pb.layoutPlayId;if(pb.fieldV)m.fieldV=pb.fieldV;if(pb.tpls)m.tpls=pb.tpls;if(pb.book)m.book=pb.book;return m},
   savePb(pb){
     pb.updated=Date.now();Sync.touch(pb);
     if(this.mode==='cloud'){const ref=this.col().doc(pb.id);schedule('pb:'+pb.id,()=>ref.set(this.meta(pb)));}
@@ -1222,6 +1229,7 @@ function renderInsp0(){
         <div><label>Start nach</label><select data-rf="delay">${[0,0.25,0.5,1,1.5,2,3].map(v=>`<option value="${v}"${(r.delay||0)==v?' selected':''}>${v?fmtNum(v)+' s':'Snap'}</option>`).join('')}</select></div></div>`}
         ${cur.k==='motion'?'':`<label>Aufgabe <span class="hint" style="font-weight:400">– für 🎓 Lernen</span></label><input type="text" data-rf="task" list="taskList" maxlength="30" value="${esc(r.task||'')}" placeholder="z. B. ${pb.type==='defense'?'Deep ½':'Slant'}"><datalist id="taskList">${taskOptions(pb).map(n=>`<option value="${esc(n)}">`).join('')}</datalist>`}
         <label style="display:flex;gap:6px;align-items:center;color:var(--ink)"><input type="checkbox" data-rf="curve" ${r.curve?'checked':''}> geschwungen</label>
+        ${cur.k==='alt'&&!isRO(pb)&&!isLk(pl)?`<div class="row" style="margin-top:6px"><button class="btn sm" data-a="altToMain" title="Diese Alternative wird zur Hauptroute${hasLine(p.route)?' – die bisherige Hauptroute wird zur Alternative':''}">⬆ Zur Hauptroute machen</button></div>`:''}
         <div class="row" style="margin-top:6px">${cur.k==='motion'||isRO(pb)?'':`<button class="btn sm" data-a="saveTpl" title="Diese Linie mit Namen als eigene Vorlage speichern – der Name wird im Lern-Modus abgefragt">★ Als Vorlage</button>`}<button class="btn sm" data-a="copyRoute" title="Diese Linie kopieren, um sie bei einem anderen Spieler einzufügen (Strg+C)">⧉ Kopieren</button><button class="btn sm" data-a="contRoute" title="Weitere Punkte an diese Linie anhängen, z. B. ums Eck">✎ Weiterzeichnen</button><button class="btn sm" data-a="popPoint">Letzten Punkt weg</button><button class="btn sm danger" data-a="delSelRoute">Löschen</button></div></div>`;
     }
   } else h+=`<p class="hint" style="margin-top:12px">Gegner-Spieler kannst du verschieben und gestalten, damit die Aufstellung zu deinem Play passt.</p>`;
@@ -1249,7 +1257,7 @@ function taskOptions(pb){
   const base=[...base0,...(pb.tpls||[]).map(t=>t.n).filter(n=>!base0.some(b=>normTask(b)===normTask(n)))];
   const used=new Set();pb.plays.forEach(pl=>pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(r&&r.task)used.add(r.task)})));
   const extra=[...used].filter(u=>!base.some(b=>normTask(b)===normTask(u))).sort();
-  return [...base,...extra];
+  return [...base,...extra].sort((a,b)=>a.localeCompare(b,'de',{sensitivity:'base',numeric:true}));   // always A–Z, also with new names
 }
 // what counts as right for a player: the task names of his lines (main + alternatives); old lines without a name: Blitz / Man are recognised
 function taskOf(pl,p){
@@ -2242,6 +2250,83 @@ function printPages(svgs,real,land){   // real=true: pages are already A4 in mil
   window.addEventListener('afterprint',done);
   setTimeout(()=>{try{window.print()}catch(e){toast('Drucken ist in dieser Ansicht nicht möglich – bitte als PNG speichern.')}setTimeout(()=>{if(document.body.classList.contains('printing')&&!window.matchMedia('print').matches)done()},60000)},80);
 }
+// ----- Playbook-Buch: cover, team philosophy, formations overview, one page per play (A4, for print / PDF) -----
+const BK={W:540,H:763.7,L:15.8,R:523,NAVY:'#0d294b',HEAD:'#113764',TXT:'#113764',LT:'#d9d9d9'};
+function bookOf(pb){const b=pb.book||{};const any=k=>b[k]||((state.pbs.find(x=>x.book&&x.book[k])||{}).book||{})[k]||'';
+  return {title:b.title||(pb.type==='defense'?'Defense':'Offense')+' Playbook',philo:b.philo||'',logo:any('logo'),cover:any('cover')}}
+function bkPage(inner){return `<svg xmlns="http://www.w3.org/2000/svg" width="210mm" height="297mm" viewBox="0 0 ${BK.W} ${BK.H}"><rect width="${BK.W}" height="${BK.H}" fill="#fff"/>${inner}</svg>`}
+function bkT(x,y,t,size,fill,o=''){return `<text x="${x}" y="${y}" font-family="${FONT}" font-size="${size}" fill="${fill}" ${o}>${esc(t)}</text>`}
+function bkHead(bk,title){const {L,R}=BK;const w=R-L;let fs=21;const room=w-(bk.logo?170:40);while(fs>11&&String(title).length*fs*0.55>room)fs--;
+  return `<rect x="${L}" y="6.5" width="${w}" height="37" rx="3" fill="${BK.NAVY}"/>`+
+    (bk.logo?`<image x="${L+8}" y="10" width="70" height="30" preserveAspectRatio="xMinYMid meet" href="${bk.logo}"/>`:'')+
+    bkT((L+R)/2,25+fs*0.36,title,fs,BK.LT,'text-anchor="middle"')}
+// assignment table rows: label and tasks (alternatives with " / ", Blitz first, a zone next to other tasks is just "Zone")
+function bookRows(pb,pl){const lab=sideLabels(pb,pl)||{};const ORD=['WCB','SCB','CB','LB','SS','FS'];const out=[];
+  pl.players.forEach(p=>{const ts=[p.route,...(p.alts||[])].filter(r=>r&&hasLine(r)).map(r=>({t:r.task||taskOf(pl,{...p,route:r,alts:[]})[0]||'',z:r.end==='zone'}));
+    if(!ts.length)return;ts.sort((a,b)=>(/^blitz/i.test(b.t)?1:0)-(/^blitz/i.test(a.t)?1:0));
+    const mixed=ts.length>1&&ts.some(t=>t.z)&&!ts.every(t=>t.z);
+    out.push({l:lab[p.id]||p.label||'',a:ts.map(t=>mixed&&t.z?'Zone':t.t).filter(Boolean).join(' / '),x:p.x||0})});
+  if(pb.type==='defense'){const k=r=>{const i=ORD.indexOf(r.l);return i<0?99:i};out.sort((a,b)=>k(a)-k(b)||a.l.localeCompare(b.l))}
+  else out.sort((a,b)=>a.x-b.x);
+  return out}
+function bkField(pb,pl,x,y,w,h){const {fw,fh}=dims(VAR[pb.variant]);
+  return `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="0 0 ${fw} ${fh}" preserveAspectRatio="xMidYMid meet">${playMarkup(pb,pl,{style:'print'})}</svg>`}
+function bkWrap(t,size,width,max){return wrapText(t,Math.max(10,Math.floor(width/(size*0.5))),max)}
+function bookPlayPage(pb,pl,bk){const {L,R,NAVY}=BK;const w=R-L;let s=bkHead(bk,callName(pl)||'Ohne Namen');
+  const box=(x,v,lbl)=>`<rect x="${x}" y="49" width="86" height="14.5" rx="3" fill="#606060" stroke="${NAVY}" stroke-width="1.3"/>`+bkT(x+43,59.8,lbl,10,'#fff','text-anchor="middle"')+
+    `<rect x="${x}" y="65" width="86" height="14.5" rx="3" fill="#fff" stroke="${NAVY}" stroke-width="1.3"/>`+bkT(x+43,75,clip(String(v||'').toUpperCase(),18),8,BK.TXT,'text-anchor="middle"');
+  s+=box(L,isF(pl)?pl.name:pl.formation,'FORMATION')+box(L+90,pl.cat,'CONCEPT');
+  s+=`<rect x="${L+.5}" y="86.5" width="${w-1}" height="287" fill="#fff" stroke="${NAVY}" stroke-width="1"/>`+bkField(pb,pl,L+2,88,w-4,284);
+  const rows=bookRows(pb,pl),n=Math.max(5,rows.length),Y=383.9,RH=17,C=[L,66,184.5,R];
+  ['PLAYER','ASSIGNMENT','DETAILS'].forEach((h,j)=>{s+=`<rect x="${C[j]}" y="${Y}" width="${C[j+1]-C[j]}" height="${RH}" fill="${BK.HEAD}"/>`+bkT(C[j]+2.8,Y+12,h,9,BK.LT)});
+  for(let i=0;i<n;i++){const r=rows[i];if(!r)continue;const y=Y+RH*(i+1)+12;
+    s+=bkT(C[0]+2.8,y,clip(r.l,9),9,BK.TXT)+bkT(C[1]+2.8,y,clip(r.a,24),9,BK.TXT)}
+  for(let i=0;i<=n+1;i++)s+=`<line x1="${L}" x2="${R}" y1="${Y+RH*i}" y2="${Y+RH*i}" stroke="#000" stroke-width=".6"/>`;
+  C.forEach(x=>{s+=`<line x1="${x}" x2="${x}" y1="${Y}" y2="${Y+RH*(n+1)}" stroke="#000" stroke-width=".6"/>`});
+  const NY=Y+RH*(n+1)+12.3,lines=bkWrap(pl.notes||'',11,w-14,40);const bh=Math.max(117,Math.min(BK.H-12-NY-29,lines.length*15+12));
+  s+=`<rect x="${L}" y="${NY}" width="${w}" height="29" fill="${BK.HEAD}"/>`+bkT((L+R)/2,NY+21.5,'Notizen',20,BK.LT,'text-anchor="middle"');
+  s+=`<path d="M${L+.3} ${NY+29}V${NY+29+bh-.3}H${R-.3}V${NY+29}" fill="none" stroke="#000" stroke-width=".6"/>`;
+  lines.slice(0,Math.floor((bh-8)/15)).forEach((ln,i)=>{s+=bkT(L+6,NY+29+17+i*15,ln,11,'#000')});
+  return bkPage(s)}
+function bookFormPages(pb,list,bk){const {L,R,NAVY}=BK;const pages=[],X=[L,(L+R)/2],CW=(R-L)/2,RH=175.8,SH=19.9,NB=42,Y0=58.8;
+  const blank={...(pb.plays[0]||{}),players:[],marks:[],opp:[],showOpp:false};let no=0;
+  for(let i=0;i<Math.max(1,list.length);i+=8){let s=bkHead(bk,'Formations');
+    for(let k=0;k<8;k++){const it=list[i+k],c=k%2,x=X[c],y=Y0+Math.floor(k/2)*RH;
+      s+=`<rect x="${x}" y="${y}" width="${CW}" height="${RH}" fill="#fff"/>`+bkField(pb,it?it.pl:blank,x+2,y+SH+2,CW-4,RH-SH-4);
+      s+=`<rect x="${x}" y="${y}" width="${CW}" height="${SH}" fill="#ededed"/><line x1="${x+NB}" x2="${x+NB}" y1="${y}" y2="${y+SH}" stroke="${NAVY}" stroke-width="1.3"/>`;
+      if(it){no++;s+=bkT(x+NB/2,y+13.8,String(no),10,BK.TXT,'text-anchor="middle"')+bkT(x+NB+(CW-NB)/2,y+15,clip(it.name,26),14,BK.TXT,'text-anchor="middle"')}
+      s+=`<line x1="${x}" x2="${x+CW}" y1="${y+SH}" y2="${y+SH}" stroke="${NAVY}" stroke-width="1.3"/>`}
+    for(let r=0;r<=4;r++)s+=`<line x1="${L}" x2="${R}" y1="${Y0+r*RH}" y2="${Y0+r*RH}" stroke="${NAVY}" stroke-width="1.3"/>`;
+    [L,X[1],R].forEach(x=>{s+=`<line x1="${x}" x2="${x}" y1="${Y0}" y2="${Y0+4*RH}" stroke="${NAVY}" stroke-width="1.3"/>`});
+    pages.push(bkPage(s))}
+  return pages}
+function bookPhiloPages(bk){const {L,R}=BK;const pages=[];let s='',y=0;const x=L+30,w=R-L-60;
+  const start=()=>{s=bkHead(bk,'Team Philosophie');y=88};const flush=()=>{pages.push(bkPage(s))};start();
+  String(bk.philo).split(/\n/).forEach(line=>{const h=/^\s*#/.test(line),t=line.replace(/^\s*#+\s*/,'');
+    if(!t.trim()){y+=8;return}
+    const sz=h?15:12,lh=h?19:15.5,ls=bkWrap(t,sz,w,30);if(h&&y>100)y+=10;
+    ls.forEach(l=>{if(y>BK.H-25){flush();start()}s+=bkT(x,y,l,sz,h?BK.HEAD:'#000',h?'font-weight="700"':'');y+=lh})});
+  flush();return pages}
+function bookCover(bk){let s='';const img=bk.cover||bk.logo;
+  if(img)s+=`<image x="70" y="90" width="400" height="330" preserveAspectRatio="xMidYMid meet" href="${img}"/>`;
+  s+=bkT(BK.W/2,img?480:300,bk.title,28,'#000','text-anchor="middle" font-weight="700"');return bkPage(s)}
+function bookPages(pb,sel){const bk=bookOf(pb);const pages=[bookCover(bk)];
+  if(bk.philo.trim())pages.push(...bookPhiloPages(bk));
+  // formations: own formation drawings, otherwise the first play of each formation
+  const fs=[],seen=new Set();sel.forEach(pl=>{const n=(isF(pl)?pl.name:pl.formation||'').trim();if(!n||seen.has(n.toLowerCase()))return;seen.add(n.toLowerCase());
+    fs.push({name:n,pl:pb.plays.find(x=>isF(x)&&(x.name||'').trim().toLowerCase()===n.toLowerCase())||pl})});
+  if(fs.length)pages.push(...bookFormPages(pb,fs,bk));
+  sel.filter(x=>!isF(x)).forEach(pl=>pages.push(bookPlayPage(pb,pl,bk)));
+  return pages}
+// pictures for the book: scaled down in the browser so the playbook stays small
+function bookImg(file,max,jpeg){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();
+  img.onload=()=>{const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*k));c.height=Math.max(1,Math.round(img.height*k));
+    const ctx=c.getContext('2d');if(jpeg){ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height)}ctx.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);
+    let d=c.toDataURL(jpeg?'image/jpeg':'image/png',0.85);if(!jpeg&&d.length>240000){ctx.globalCompositeOperation='destination-over';ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);d=c.toDataURL('image/jpeg',0.85)}
+    res(d)};img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('Bild konnte nicht gelesen werden.'))};img.src=url})}
+document.addEventListener('change',async e=>{const t=e.target;if(t.id!=='bLogo'&&t.id!=='bCover')return;const f=t.files&&t.files[0];if(!f)return;
+  try{const d=await bookImg(f,t.id==='bLogo'?400:1000,t.id==='bCover');const pv=t.closest('.bimg').querySelector('.bprev');pv.dataset.url=d;pv.innerHTML=`<img src="${d}" alt="" style="max-height:60px;max-width:100%">`}catch(err){toast(err.message)}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-bdel]');if(!b)return;const pv=b.closest('.bimg').querySelector('.bprev');pv.dataset.url='';pv.innerHTML='<span class="hint">kein Bild</span>'});
 let SO={cols:3,meta:true,notes:false,over:false,land:false};try{Object.assign(SO,JSON.parse(localStorage.getItem('pbb-sheet')||'{}'))}catch(e){}
 function sheetInfo(back){const i=back.querySelector('#sInfo');if(!i)return;const pb=curPb();const n=back.querySelectorAll('[name=pick]:checked').length||1;
   const o={cols:+back.querySelector('#sCols').value,notes:back.querySelector('#sNotes').checked,land:back.querySelector('#sLand').checked};
@@ -2253,7 +2338,15 @@ async function sheetDialog(){
   const r=await modal('Playbook / Wristband',`
     <div class="choice"><label><input type="radio" name="lay" value="sheet" checked><span>Playbook<small>3 Spalten mit Namen – zum Ausdrucken</small></span></label>
     <label><input type="radio" name="lay" value="wrist"><span>Wristband<small>Kompakte Karten mit großen Nummern</small></span></label>
-    <label style="grid-column:1/-1"><input type="radio" name="lay" value="call"><span>Call-Sheet<small>Tabelle für den Spieltag, sortiert nach Situation</small></span></label></div>
+    <label><input type="radio" name="lay" value="call"><span>Call-Sheet<small>Tabelle für den Spieltag, sortiert nach Situation</small></span></label>
+    <label><input type="radio" name="lay" value="book"><span>Playbook-Buch (PDF)<small>Deckblatt, Formationen, eine Seite pro Play mit Tabelle und Notizen</small></span></label></div>
+    <div id="bookOpts" hidden>${(b=>`<label>Titel auf dem Deckblatt</label><input type="text" id="bTitle" maxlength="80" value="${esc(b.title)}">
+      <label>Team Philosophie <small class="hint">(leer = keine Seite; Zeilen mit # am Anfang werden Überschriften)</small></label>
+      <textarea id="bPhilo" maxlength="6000" style="min-height:110px" placeholder="# Do your Job\nKomme ins Training.\n…">${esc(b.philo)}</textarea>
+      <div class="row" style="align-items:flex-start;gap:12px">${[['bLogo','Logo (Kopfzeile)',b.logo],['bCover','Bild für das Deckblatt',b.cover]].map(([id,l,u])=>`<div class="bimg" style="flex:1;min-width:0"><label>${l}</label>
+        <div class="bprev" data-url="${u?esc(u):''}" style="height:64px;border:1px solid var(--line,#ccc);border-radius:6px;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden">${u?`<img src="${esc(u)}" alt="" style="max-height:60px;max-width:100%">`:'<span class="hint">kein Bild</span>'}</div>
+        <span style="display:flex;gap:6px;margin-top:4px"><label class="btn sm" style="margin:0;display:inline-flex">Bild wählen…<input type="file" id="${id}" accept="image/*" hidden></label><button type="button" class="btn sm" data-bdel>entfernen</button></span></div>`).join('')}</div>
+      <p class="hint" style="margin:4px 0 0">Titel, Text und Bilder werden im Playbook gespeichert${isRO(pb)?' (bei diesem geteilten Playbook nur für diesen Ausdruck)':''}. Ohne eigenes Bild wird das Logo aus einem deiner anderen Playbooks benutzt. Danach öffnet sich der Drucken-Dialog – dort „Als PDF speichern“ wählen.</p>`)({...bookOf(pb),...(pb.book||{}),title:bookOf(pb).title,logo:(pb.book||{}).logo||'',cover:(pb.book||{}).cover||''})}</div>
     <div id="sheetOpts"><div class="row" style="align-items:flex-end"><div style="flex:1"><label>Spalten</label><select id="sCols">${[1,2,3,4,5,6].map(n=>`<option value="${n}"${SO.cols===n?' selected':''}>${n}</option>`).join('')}</select></div>
         <div style="flex:2"><label class="chk"><input type="checkbox" id="sLand"${SO.land?' checked':''}> Querformat (beim Drucken)</label></div></div>
       <label class="chk"><input type="checkbox" id="sMeta"${SO.meta!==false?' checked':''}> Kategorie neben dem Namen</label>
@@ -2265,8 +2358,8 @@ async function sheetDialog(){
       <div id="wReal" hidden><div class="row" style="margin-top:6px"><div style="flex:1"><label>Breite (cm)</label><input type="text" id="wW" value="11,5" inputmode="decimal"></div><div style="flex:1"><label>Höhe (cm)</label><input type="text" id="wH" value="5,5" inputmode="decimal"></div>
         <div style="flex:1"><label>Plays pro Karte</label><select id="wGrid"><option value="2x2">4 (2×2)</option><option value="3x2">6 (3×2)</option><option value="4x2" selected>8 (4×2)</option><option value="4x3">12 (4×3)</option><option value="5x3">15 (5×3)</option></select></div></div>
       <p class="hint" style="margin:4px 0 0">Miss das Sichtfenster deines Wristbands nach – die Karten werden auf A4 in Originalgröße mit Schnittmarken angeordnet. Beim Drucken „Tatsächliche Größe / 100 %“ wählen.</p></div></div>
-    <label>Feld</label><div class="choice"><label><input type="radio" name="sty" value="light" checked><span>Hell<small>spart Druckertinte</small></span></label><label><input type="radio" name="sty" value="grass"><span>Rasen</span></label><label><input type="radio" name="sty" value="dark"><span>Dunkel</span></label></div>
-    <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label><label style="grid-column:1/-1"><input type="radio" name="fmt" value="print"><span>Drucken / als PDF speichern<small>A4, mehrere Seiten</small></span></label></div>
+    <div id="styFmt"><label>Feld</label><div class="choice"><label><input type="radio" name="sty" value="light" checked><span>Hell<small>spart Druckertinte</small></span></label><label><input type="radio" name="sty" value="grass"><span>Rasen</span></label><label><input type="radio" name="sty" value="dark"><span>Dunkel</span></label></div>
+    <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label><label style="grid-column:1/-1"><input type="radio" name="fmt" value="print"><span>Drucken / als PDF speichern<small>A4, mehrere Seiten</small></span></label></div></div>
     <label style="display:flex;justify-content:space-between;align-items:center">Welche Plays? <span><button type="button" class="btn sm" data-pick="all">Alle</button> <button type="button" class="btn sm" data-pick="none">Keine</button></span></label>
     ${pb.plays.some(isF)?`<p style="margin:4px 0"><button type="button" class="btn sm" data-pick="plays">Nur Plays</button> <button type="button" class="btn sm" data-pick="forms">Nur Formationen</button> <span class="hint">Formationen kommen im Playbook auf eine eigene Seite.</span></p>`:''}
     <div class="picklist">${sortKinds(pb.plays).map(pl=>`<label><input type="checkbox" name="pick" value="${pl.id}" data-kind="${isF(pl)?'f':'p'}" checked> <b>${playNo(pb,pl)}.</b> ${esc(callName(pl)||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
@@ -2281,6 +2374,13 @@ async function sheetDialog(){
   const num=id=>parseFloat(String(r.el.querySelector(id).value).replace(',','.'));
   const wsize=r.el.querySelector('#wSize').value;
   try{
+    if(lay==='book'){const q=id=>r.el.querySelector(id);const url=i=>r.el.querySelectorAll('.bprev')[i].dataset.url||'';
+      const nb=cleanBook({t:Date.now(),title:q('#bTitle').value.trim(),philo:q('#bPhilo').value,logo:url(0),cover:url(1)});
+      const old=pb.book||{};const def=(pb.type==='defense'?'Defense':'Offense')+' Playbook';if(nb.title===def&&!old.title)nb.title='';
+      const changed=['title','philo','logo','cover'].some(k=>(old[k]||'')!==(nb[k]||''));
+      if(changed&&!isRO(pb)){pb.book=nb;Store.savePb(pb)}
+      const tmp=changed&&isRO(pb)?{...pb,book:nb}:pb;
+      return printPages(bookPages(tmp,sel),true,false)}
     let pages,real=false,name=fname(pb.name)+({wrist:'_Wristband',call:'_Call-Sheet'}[lay]||'_Playbook');
     if(lay==='wrist'&&wsize!=='free'){
       const w=Math.max(30,Math.min(190,num('#wW')*10||115)),h=Math.max(20,Math.min(277,num('#wH')*10||55));const [c,rw]=r.el.querySelector('#wGrid').value.split('x').map(Number);
@@ -2364,8 +2464,15 @@ function cleanPb(src,keep){
   if(src.del&&typeof src.del==='object'){pb.del={};Object.keys(src.del).slice(0,3000).forEach(k=>{if(/^[\w.\-:@+~]{1,80}$/.test(k))pb.del[k]=cNum(src.del[k],0,0,1e14)})}
   const li=ids.indexOf(src.layoutPlayId);if(li>=0)pb.layoutPlayId=pb.plays[li].id;
   const tp=cleanTpls(src.tpls);if(tp.length)pb.tpls=tp;
+  const bk=cleanBook(src.book);if(bk)pb.book=bk;
   return pb;
 }
+// settings for the playbook book (PDF): title, team philosophy, logo for the header bar, picture for the cover
+const IMG_RE=/^data:image\/(png|jpeg);base64,[A-Za-z0-9+\/=]+$/;
+function cleanBook(b){if(!b||typeof b!=='object')return null;const o={t:cNum(b.t,0,0,1e14),title:cStr(b.title,80),philo:cStr(b.philo,6000)};
+  if(typeof b.logo==='string'&&b.logo.length<250000&&IMG_RE.test(b.logo))o.logo=b.logo;
+  if(typeof b.cover==='string'&&b.cover.length<450000&&IMG_RE.test(b.cover))o.cover=b.cover;
+  return o}
 // own route templates of a playbook: points as [outside, upfield] like OFF_T, the name is the task for 🎓 Lernen
 function cleanTpls(a){const ok=['arrow','block','dot','bolt','zone','none'],st=['solid','dashed','dotted'];
   return cArr(a,60).map(t=>{if(!t||typeof t!=='object')return null;const n=cStr(t.n,30).trim();
@@ -2500,7 +2607,7 @@ function pickCount(){const all=document.querySelectorAll('[name=pick]'),on=docum
 document.addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(!b)return;const k=b.dataset.pick;document.querySelectorAll('[name=pick]').forEach(x=>x.checked=k==='all'||(k==='plays'&&x.dataset.kind==='p')||(k==='forms'&&x.dataset.kind==='f'));pickCount()});
 document.addEventListener('change',e=>{if(e.target.name==='pick')pickCount();
   const t=e.target,mb=t.closest&&t.closest('.mback');if(!mb||!mb.querySelector('#wristOpts'))return;
-  if(t.name==='lay'){mb.querySelector('#wristOpts').hidden=t.value!=='wrist';mb.querySelector('#sheetOpts').hidden=t.value!=='sheet'}
+  if(t.name==='lay'){mb.querySelector('#wristOpts').hidden=t.value!=='wrist';mb.querySelector('#sheetOpts').hidden=t.value!=='sheet';const bo=mb.querySelector('#bookOpts');if(bo)bo.hidden=t.value!=='book';const sf=mb.querySelector('#styFmt');if(sf)sf.hidden=t.value==='book'}
   if(['sCols','sNotes','sLand'].includes(t.id)||t.name==='pick')sheetInfo(mb);
   if(t.id==='wSize'){mb.querySelector('#wReal').hidden=t.value==='free';const m=/^(\d+)x(\d+)$/.exec(t.value);if(m){mb.querySelector('#wW').value=String(m[1]/10).replace('.',',');mb.querySelector('#wH').value=String(m[2]/10).replace('.',',')}}
 });
@@ -2861,6 +2968,7 @@ function mergePb(loc,rem){
   loc.plays=order.map(id=>map.get(id)).filter(pl=>pl&&!(del[pl.id]&&del[pl.id]>=(pl.updated||0)));
   const cut=Date.now()-90*864e5;Object.keys(del).forEach(k=>{if(del[k]<cut)delete del[k]});loc.del=del;
   if((rem.updated||0)>(loc.updated||0)){loc.name=rem.name;if(rem.layoutPlayId)loc.layoutPlayId=rem.layoutPlayId}
+  if(rem.book&&(!loc.book||(rem.book.t||0)>(loc.book.t||0)))loc.book=rem.book;
   const tm=new Map();[...(rem.tpls||[]),...(loc.tpls||[])].forEach(t=>{const o=tm.get(t.id);if(!o||(t.t||0)>(o.t||0))tm.set(t.id,t)});
   const tl=[...tm.values()].filter(t=>!(del['tpl:'+t.id]&&del['tpl:'+t.id]>=(t.t||0)));if(tl.length)loc.tpls=tl;else delete loc.tpls;
 }
@@ -3486,12 +3594,17 @@ document.addEventListener('click',async e=>{
     case 'delRoute':commit();p.route=null;return changed({insp:true});
     case 'delMotion':commit();p.motion=null;return changed({insp:true});
     case 'popPoint':{const key=curRouteKey(p);const r=getRoute(p,key);if(!r)return;commit();r.pts.pop();if(!r.pts.length){if(key.k==='alt')p.alts.splice(key.j,1);else p[key.k]=null;state.selRoute=null}return changed({insp:true})}
-    case 'delSelRoute':{const key=curRouteKey(p);if(!key)return;commit();if(key.k==='alt')p.alts.splice(key.j,1);else p[key.k]=null;state.selRoute=null;return changed({insp:true})}
+    case 'delSelRoute':{const key=curRouteKey(p);if(!key)return;commit();if(key.k==='alt')p.alts.splice(key.j,1);else p[key.k]=null;
+      if(key.k==='route'&&p.alts&&p.alts.length){const a=p.alts.shift();if(a.style==='dotted')a.style='solid';p.route=a;state.selRoute={k:'route',j:0};toast('Hauptroute gelöscht – die Alternative ist jetzt die Hauptroute');return changed({insp:true})}
+      state.selRoute=null;return changed({insp:true})}
     case 'delPlayer':return deletePlayer();
     case 'multiMode':state.multiMode=!state.multiMode;if(state.multiMode){state.mode='select';toast('Spieler nacheinander antippen – dann gemeinsam ziehen oder rechts ausrichten')}return renderCenter();
     case 'multiClear':state.multi=[];state.sel=null;renderField();return renderInsp();
     case 'alignY':case 'alignX':case 'distX':case 'multiDel':return multiAct(act);
     case 'copyRoute':return copyRoute();
+    case 'altToMain':{const key=curRouteKey(p);if(!key||key.k!=='alt')return;const a=(p.alts||[])[key.j];if(!a)return;commit();
+      const old=p.route&&hasLine(p.route)?p.route:null;if(a.style==='dotted')a.style='solid';p.route=a;p.alts.splice(key.j,1);
+      if(old){old.style='dotted';p.alts.splice(key.j,0,old)}state.selRoute={k:'route',j:0};toast(old?'Getauscht: Alternative ist jetzt die Hauptroute':'Ist jetzt die Hauptroute');return changed({insp:true})}
     case 'contRoute':return continueDrawing();
     case 'pickCancel':state.pickMan=null;renderField();renderCenter();return renderInsp();
     case 'pasteRoute':return pasteRoute(false);
@@ -3537,7 +3650,7 @@ function copyRoute(){const p=selPlayer();const key=p&&!isOpp(p.id)&&curRouteKey(
 function pasteRoute(mirror){
   if(!state.clip)return;const ids=(state.multi.length>1?state.multi:[state.sel]).filter(id=>id&&findP(id)&&!isOpp(id));if(!ids.length)return toast('Wähle zuerst einen eigenen Spieler.');
   commit();ids.forEach(id=>{const p=findP(id);const r=clone(state.clip.r);if(mirror)r.pts.forEach(q=>{q.x=-q.x});
-    if(state.clip.k==='motion')p.motion=r;else if(state.tplAlt&&hasLine(p.route)&&ids.length===1){(p.alts=p.alts||[]).push(r);state.selRoute={k:'alt',j:p.alts.length-1}}else p.route=r});
+    if(state.clip.k==='motion')p.motion=r;else if(state.tplAlt&&hasLine(p.route)&&ids.length===1){r.style='dotted';(p.alts=p.alts||[]).push(r);state.selRoute={k:'alt',j:p.alts.length-1}}else p.route=r});
   changed({insp:true});toast(ids.length>1?`Bei ${ids.length} Spielern eingefügt`:'Eingefügt');
 }
 function multiAct(act){
