@@ -330,9 +330,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'";
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-17.23';
+const APP_VERSION='2026-11-18.5';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["👥 Team-Liste: Feld „Dein Name“ – Spieler sehen bei geteilten Playbooks deinen Namen statt der E-Mail-Adresse","👤 Der Playbook Builder läuft jetzt nur mit Konto – ohne Anmeldung gibt es nur die Anmeldung. Beim Abmelden bleiben keine Playbooks auf dem Gerät zurück","👥 Spieler (in der Team-Liste nur als Spieler eingetragen) haben keine eigenen Playbooks mehr – nur die geteilten","📁 Der verbundene Ordner gehört zum Konto, das ihn verbunden hat – meldet sich im selben Browser ein anderes Konto an, wird der Ordner nicht benutzt","S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -482,7 +482,7 @@ function migrateFlag(pb){
 const TRASH_KEY='pbb-trash',TRASH_DAYS=30;
 const Trash={items:[],
   load(){try{this.items=JSON.parse(localStorage.getItem(TRASH_KEY)||'[]')}catch(e){this.items=[]}if(!Array.isArray(this.items))this.items=[];this.purge()},
-  save(){try{localStorage.setItem(TRASH_KEY,JSON.stringify(this.items))}catch(e){}if(Folder.handle)schedule('folder',()=>Folder.flush(),1000)},
+  save(){try{localStorage.setItem(TRASH_KEY,JSON.stringify(this.items))}catch(e){}if(Folder.active())schedule('folder',()=>Folder.flush(),1000)},
   purge(){const lim=Date.now()-TRASH_DAYS*864e5;this.items=this.items.filter(i=>i&&i.at>lim)},
   add(item){item.id=uid('t');item.at=Date.now();this.items.unshift(item);this.purge();this.save()},
   merge(list){(list||[]).forEach(i=>{if(i&&i.id&&!this.items.find(x=>x.id===i.id))this.items.push(i)});this.items.sort((a,b)=>b.at-a.at);this.purge();try{localStorage.setItem(TRASH_KEY,JSON.stringify(this.items))}catch(e){}}
@@ -610,7 +610,7 @@ const Store={mode:'memory',db:null,uid:null,note:'',
   },
   saveAll(){state.pbs.forEach(pb=>{this.savePb(pb);pb.plays.forEach(pl=>this.savePlay(pb,pl))})},
   saveLocal(){
-    if(Folder.handle)schedule('folder',()=>Folder.flush(),400);
+    if(Folder.active())schedule('folder',()=>Folder.flush(),400);
     if(this.mode==='cloud'){Backup.save();return}
     if(this.mode!=='local'){updateStatus();return}
     schedule('local',()=>{writeLocal(LSK,{v:1,pbs:state.pbs});return Promise.resolve()},80);
@@ -658,29 +658,43 @@ const IDB={db:null,
   async set(k,v){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})},
   async del(k){const db=await this.open();return new Promise((res,rej)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
 };
-const Folder={handle:null,pending:null,files:{},
+// a team player (only "Spieler" in the team lists, never coach/owner): no own playbooks, only the shared ones
+function teamPlayer(){const u=Sync.user;if(!u||!Team.list.length)return false;const e=u.email;let r=false;
+  for(const t of Team.list){if(t.owner===u.uid||(t.editors||[]).includes(e)||(t.coaches||[]).includes(e))return false;if((t.readers||[]).includes(e))r=true}return r}
+const Folder={handle:null,pending:null,files:{},wait:false,
+  // the folder belongs to the account that connected it; other accounts in the same browser don't use it
+  owner(){try{return localStorage.getItem('pbb-folder-owner')||''}catch(e){return ''}},
+  setOwner(v){try{localStorage.setItem('pbb-folder-owner',v||'')}catch(e){}},
+  active(){if(!this.handle||this.wait)return false;const o=this.owner(),u=Sync.user;if(u&&teamPlayer())return false;return u?o===u.email:!Sync.on()&&!o},
   supported(){return typeof window.showDirectoryPicker==='function'&&!(window.claude&&window.claude.use)&&window.isSecureContext!==false},
   async init(){
     if(!this.supported())return;
     let h=null;try{h=await IDB.get('folder')}catch(e){}
     if(!h)return;
-    try{if((await h.queryPermission({mode:'readwrite'}))==='granted'){this.handle=h;await this.load();return}}catch(e){}
+    try{if((await h.queryPermission({mode:'readwrite'}))==='granted'){this.handle=h;if(Sync.on()&&!this.owner()){this.wait=true;return}await this.load();return}}catch(e){}
     this.pending=h;   // needs a click to re-grant access
   },
   async connect(){
     let h;try{h=await window.showDirectoryPicker({id:'playbooks',mode:'readwrite'})}catch(e){if(e&&e.name!=='AbortError')toast('Ordner konnte nicht verbunden werden.');return}
-    this.handle=h;this.pending=null;this.files={};try{await IDB.set('folder',h)}catch(e){}
+    this.handle=h;this.pending=null;this.files={};this.wait=false;this.setOwner(Sync.user?Sync.user.email:'');try{await IDB.set('folder',h)}catch(e){}
     await this.load();toast(`📁 Ordner „${h.name}“ verbunden`);
   },
   async reconnect(){
     const h=this.pending;if(!h)return this.connect();
     try{if((await h.requestPermission({mode:'readwrite'}))!=='granted')return toast('Zugriff nicht erlaubt.')}catch(e){return this.connect()}
-    this.handle=h;this.pending=null;await this.load();toast(`📁 Ordner „${h.name}“ verbunden`);
+    this.handle=h;this.pending=null;if(Sync.user&&!this.owner())this.setOwner(Sync.user.email);this.wait=false;await this.load();toast(`📁 Ordner „${h.name}“ verbunden`);
   },
+  // after the first sync (team lists known): a folder without owner from older versions goes to this account – unless it is a team player
+  no(){try{return JSON.parse(localStorage.getItem('pbb-folder-no')||'[]')}catch(e){return []}},
+  async decide(force){if(!this.wait||this.asking)return;if(!Sync.user){if(!Sync.on()){this.wait=false;return this.load()}return}if(teamPlayer())return;if(!force&&this.no().includes(Sync.user.email))return;
+    this.asking=true;const r=await modal('📁 Ordner zuordnen',`<p style="margin-top:0">In diesem Browser ist der Ordner <b>„${esc(this.handle.name)}“</b> verbunden. Gehört er zu deinem Konto <b>${esc(Sync.user.email)}</b>?</p><p class="hint">Bei „Ja“ werden die Playbooks aus dem Ordner in dein Konto übernommen und Änderungen dort gespeichert. Bei „Nein“ bleibt der Ordner unangetastet.</p>`,
+      [{label:'Nein',value:'no'},{label:'Ja, mein Ordner',value:'yes',cls:'primary'}],{sticky:true});this.asking=false;
+    if(!r||r.value!=='yes'){this.wait=true;try{localStorage.setItem('pbb-folder-no',JSON.stringify([...new Set([...this.no(),Sync.user.email])]))}catch(e){}renderAll();return}
+    this.setOwner(Sync.user.email);this.wait=false;await this.load()},
   async disconnect(){this.handle=null;this.pending=null;this.files={};try{await IDB.del('folder')}catch(e){}renderAll();toast('Ordner getrennt – es wird weiter im Browser gespeichert.')},
   stamp(pb){return Math.max(pb.updated||0,...(pb.plays||[]).map(x=>x.updated||0))},
   async load(){   // read the folder and merge: the newer version of each playbook wins
-    const found=[];
+    if(!this.active())return;const found=[];
     try{for await(const e of this.handle.values()){
       if(e.kind!=='file'||!/\.json$/i.test(e.name))continue;
       try{const j=JSON.parse(await (await e.getFile()).text());
@@ -693,11 +707,12 @@ const Folder={handle:null,pending:null,files:{},
     else{const pb=curPb();if(!pb.plays.find(x=>x.id===state.playId))state.playId=pb.plays[0]?pb.plays[0].id:null}
     Store.saveLocal();renderAll();await this.flush();
   },
+  stash(id){try{return JSON.parse(localStorage.getItem('pbb-stash')||'[]').some(x=>x.id===id)}catch(e){return false}},
   fileName(pb){const base=fname(pb.name)||'playbook';const dup=state.pbs.some(x=>x!==pb&&fname(x.name)===base);return base+(dup?'_'+pb.id.slice(-4):'')+'.playbook.json'},
   async flush(){
-    const h=this.handle;if(!h)return;
+    const h=this.handle;if(!h||!this.active())return;
     try{
-      for(const pb of state.pbs){
+      for(const pb of state.pbs){if(pb.cloud&&pb.cloud.role!=='own'&&pb.cloud.role!=='edit')continue;   // only own playbooks (and those you edit) go into the folder
         const name=this.fileName(pb),old=this.files[pb.id];
         const fh=await h.getFileHandle(name,{create:true});const w=await fh.createWritable();
         await w.write(JSON.stringify({app:'playbook-builder',v:1,fieldV:pb.fieldV||FLAG_V,playbook:noCloud(pb)},null,1));await w.close();
@@ -706,7 +721,7 @@ const Folder={handle:null,pending:null,files:{},
       }
       {const fh=await h.getFileHandle('Papierkorb.trash.json',{create:true});const w=await fh.createWritable();
         await w.write(JSON.stringify({app:'playbook-builder-trash',v:1,items:Trash.items}));await w.close();}
-      for(const id of Object.keys(this.files)){if(!state.pbs.find(x=>x.id===id)){try{await h.removeEntry(this.files[id])}catch(e){}delete this.files[id]}}
+      for(const id of Object.keys(this.files)){if(!state.pbs.find(x=>x.id===id)&&!this.stash(id)){try{await h.removeEntry(this.files[id])}catch(e){}delete this.files[id]}}
     }catch(e){console.warn(e);toast('Speichern im Ordner fehlgeschlagen – bitte Ordner neu verbinden.');this.pending=this.handle;this.handle=null;renderAll()}
   }
 };
@@ -732,16 +747,18 @@ function tpSideBtn(){if(!Sync.user||!TP.can())return '';const n=TP.newCount();
 function tpBtn(){return Sync.user&&TP.can()?`<div class="row" style="margin-top:6px"><button class="btn sm" data-a="playToTeam" title="Dieses Play für alle Coaches im Team sichtbar machen">👥 Mit Team teilen${TP.mine(curPlay())?' ✓':''}</button></div>`:''}
 function trashBtn(){const n=Trash.items.length;return `<button class="btn sm" data-a="trash" style="grid-column:1/-1" title="Gelöschte Plays und Playbooks wiederherstellen">🗑 Papierkorb${n?` (${n})`:''}</button>`}
 function folderUI(){
-  if(!Folder.supported())return '';
+  if(!Folder.supported()||needLogin()||(Sync.user&&teamPlayer()))return '';
+  if(Folder.handle&&!Folder.active())return Folder.wait?(Folder.asking?'':`<button class="btn sm" data-a="folderClaim" style="grid-column:1/-1">📁 Ordner „${esc(Folder.handle.name)}“ zuordnen…</button>`):`<p class="hint" style="grid-column:1/-1;margin:0">📁 Der Ordner „${esc(Folder.handle.name)}“ gehört zu einem anderen Konto.</p>`;
   if(Folder.handle)return `<div class="folderbox">📁 <b>${esc(Folder.handle.name)}</b><span class="hint">Änderungen werden automatisch im Ordner gespeichert.</span><button class="btn sm" data-a="folderOff">Trennen</button></div>`;
   if(Folder.pending)return `<button class="btn sm primary" data-a="folderReconnect" style="grid-column:1/-1">📁 Ordner „${esc(Folder.pending.name)}“ wieder verbinden</button>`;
   return `<button class="btn sm" data-a="folderOn" style="grid-column:1/-1" title="Playbooks automatisch als Dateien in einem Ordner auf diesem Gerät speichern">📁 Ordner verbinden</button>`;
 }
 function updateStatus(){
   const el=$('#status');if(!el)return;
+  if(needLogin()){el.classList.remove('warn');el.textContent='Nicht angemeldet';return}
   const saving=W.timers.size||W.busy.size;
-  el.classList.toggle('warn',Store.mode==='memory'&&!Folder.handle);
-  if(Folder.handle){el.textContent=saving?'Speichert…':`✓ Gespeichert im Ordner „${Folder.handle.name}“`;return}
+  el.classList.toggle('warn',Store.mode==='memory'&&!Folder.active());
+  if(Folder.active()){el.textContent=saving?'Speichert…':`✓ Gespeichert im Ordner „${Folder.handle.name}“`;return}
   if(Store.mode==='memory'){el.textContent='Nicht gespeichert – Export nutzen';return}
   if(Sync.user){const st=Sync.state;el.classList.toggle('warn',st==='offline'||st==='error');
     el.textContent=saving||st==='busy'?'☁ Synchronisiert…':st==='offline'?'☁ Offline – wird später synchronisiert':st==='error'?'☁ Synchronisierung gestört':'☁ Synchronisiert';return}
@@ -985,6 +1002,7 @@ function playRow(pb,pl,filt){
 }
 function renderSide(){
   const el=$('#side');const pb=curPb();
+  if(needLogin()){el.innerHTML=`<p class="hint" style="margin:8px">Bitte anmelden.</p>`;return}
   let h=`<div class="pbhead"><select id="pbSel">${state.pbs.map(p=>`<option value="${p.id}"${p.id===state.pbId?' selected':''}>${p.cloud&&p.cloud.role!=='own'?'👥 ':''}${esc(p.name)}</option>`).join('')}${state.pbs.length?'':'<option>— kein Playbook —</option>'}</select>
     ${isPlayer(pb)?'':`<button class="btn" data-a="newPb" title="Neues Playbook">＋</button>${pb?'<button class="btn" data-a="pbMenu" title="Playbook-Einstellungen">⋯</button>':''}`}</div>`;
   if(pb){
@@ -1017,8 +1035,14 @@ function markCurPlay(){document.querySelectorAll('#side .play').forEach(d=>d.cla
 let sideTimer=null;function renderSideSoon(){clearTimeout(sideTimer);sideTimer=setTimeout(renderSide,250)}
 
 /* ---------- UI: center ---------- */
+// the hosted app works only with an account: without login just the sign-in
+const needLogin=()=>Sync.on()&&!Sync.user;
+// name of a coach as entered in the team list; players never see an e-mail address
+const whoName=e=>Team.nameOf(e)||(teamPlayer()||(Sync.user&&state.pbs.length&&state.pbs.every(isPlayer))?'deinem Coach':(e||'einem Coach'));
 function renderCenter(){
   const el=$('#center');const pb=curPb();const pl=curPlay();
+  if(needLogin()){el.innerHTML=`<div class="panel welcome"><h2>Willkommen im Playbook Builder</h2><p>Melde dich an, um deine Playbooks zu sehen – oder erstelle ein Konto. Spieler bekommen ihre Playbooks vom Coach geteilt.</p><p><button class="btn primary" data-a="account">👤 Anmelden / Konto erstellen</button></p></div>`;return}
+  if(!pb&&Sync.user&&teamPlayer()){el.innerHTML=`<div class="panel welcome"><h2>Noch kein Playbook</h2><p>Sobald dein Coach ein Playbook mit dir teilt, erscheint es hier.</p></div>`;return}
   if(!pb){el.innerHTML=`<div class="panel welcome"><h2>Dein Playbook</h2><p>Lege ein Offense- oder Defense-Playbook für Flag Football (5er) oder Tackle Football (11er) an. Zeichne Formationen, Routen, Blocks, Blitzes und Zonen, spiel sie als Animation ab und exportiere Playbooks und Wristbands.</p><p><button class="btn primary" data-a="newPb">＋ Erstes Playbook anlegen</button></p><p class="hint">${Store.mode==='cloud'?'Deine Playbooks werden privat in deinem Konto gespeichert. Andere Nutzer dieser Seite sehen sie nicht.':'Deine Playbooks werden in diesem Browser gespeichert.'}</p></div>`;return}
   if(!pl){el.innerHTML=`<div class="panel welcome"><h2>${esc(pb.name)}</h2><p>Dieses Playbook ist noch leer.</p><p><button class="btn primary" data-a="newPlay">＋ Erstes Play anlegen</button></p></div>`;return}
   const own=FORMS[pb.variant][ownKind(pb)],opp=FORMS[pb.variant][oppKind(pb)];
@@ -1120,10 +1144,11 @@ document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||!t.datase
 function renderInsp(){renderInsp0();addPickers();qBox()}
 function renderInsp0(){
   const el=$('#insp');const pb=curPb(),pl=curPlay();
+  if(needLogin()){el.innerHTML='';return}
   if(!pb||!pl){el.innerHTML=`<h3>Info</h3><p class="hint">Hier bearbeitest du Details zu Plays und Spielern.</p>`;return}
   if(isLk(pl)){state.sel=null;
     el.innerHTML=`<h3>${isF(pl)?'Formation':'Play'} ${playNo(pb,pl)} <span title="gesperrt">${isRO(pb)?'👁':'🔒'}</span></h3>
-      <div class="banner" style="margin-bottom:10px">${isRO(pb)?`Nur Lesezugriff – geteilt von ${esc(pb.cloud.ownerEmail||'einem Coach')}. Ändern kann nur, wer Bearbeitungsrechte hat.`:'Dieses Play ist gegen Änderungen gesperrt. Zum Bearbeiten oben auf 🔒 klicken.'}</div>
+      <div class="banner" style="margin-bottom:10px">${isRO(pb)?(isPlayer(pb)?`📖 Geteilt von ${esc(whoName(pb.cloud.ownerEmail))}.`:`Nur Lesezugriff – geteilt von ${esc(whoName(pb.cloud.ownerEmail))}. Ändern kann nur, wer Bearbeitungsrechte hat.`):'Dieses Play ist gegen Änderungen gesperrt. Zum Bearbeiten oben auf 🔒 klicken.'}</div>
       <fieldset class="lockfs" disabled>
       <label>Name</label><input type="text" value="${esc(pl.name)}">
       <label>Kategorie</label><input type="text" value="${esc(pl.cat)}">
@@ -1425,7 +1450,7 @@ function roundEnd(forms,total,wrong,review){const el=document.createElement('div
     const c=ids.filter(id=>id!==state.playId),L=c.length?c:ids,pick=L[Math.floor(Math.random()*L.length)];
     if(pick===state.playId){state.qa=null;state.quizShown=false;renderField();renderPresentBar()}else selectPlay(pick)})}
 function quizPoolOf(pb,forms){let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
-  if(!pool.length&&!forms)pool=sortKinds(pb.plays).filter(pl=>!isF(pl));return pool}
+  return pool}
 function quizMark(pl,right){state.quizWrong=state.quizWrong||new Set();if(right)state.quizWrong.delete(pl.id);else state.quizWrong.add(pl.id)}
 function quizNextPlay(){const pb=curPb();if(!pb)return;const forms=isF(curPlay());
   let pool=quizPoolOf(pb,forms);if(!pool.length)return toast(forms?'Keine Formations mit Namen.':'Keine Plays mit Aufgaben zum Lernen.');
@@ -1465,7 +1490,7 @@ function quizPanel0(){
     el.innerHTML=`<h4>Ergebnis</h4><div class="qscore">${R.ok} / ${R.n}</div><p class="hint">${R.ok===R.n?'Alles richtig – stark! 💪':'Grün ist richtig, rot zeigt die richtige Aufgabe.'}</p>${state.quizCounted===false?'<p class="hint" style="font-size:12px">🔁 Übungsrunde – gezählt wird pro Play nur der erste Versuch am Tag.</p>':''}
       <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="quizNextPlay">Nächstes Play ▶</button>`;
     return}
-  if(!qi.asked.length){el.innerHTML=`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
+  if(!qi.asked.length){el.innerHTML=isPlayer(curPb())?`<h4>🎓 Lernen</h4><p class="hint">Bei diesem Play gibt es nichts zu lernen.</p><button class="btn sm primary" data-a="quizNextPlay">Nächstes Play ▶</button>`:`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
   const done=qi.asked.filter(x=>(qa.ans[x.id]&&!manOpen(pl,qa,x.id))||(qi.isQB(x)&&qa.reads.length)).length;
   let h=`<h4>🎓 Was macht wer?</h4><p class="hint" style="margin-top:0">${done} von ${qi.asked.length} beantwortet</p>`;
   if(qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick);h+=`<p><b>${esc(mp?mp.label:'')}</b> spielt Man – tippe jetzt den <b>Gegenspieler</b> an, den er deckt.</p><p class="hint">Andere Aufgabe? ${esc(mp?mp.label:'')} nochmal antippen.</p>`}
@@ -1522,7 +1547,11 @@ function renderPresentBar(){document.body.classList.toggle('quizzing',!!(state.p
 // players (read-only accounts) start in learn mode, so a play is never shown with its solution first
 const isPlayer=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
 function startLearn(){const pb=curPb();if(!pb||!pb.plays.length)return;
-  const pool=sortKinds(pb.plays).filter(x=>!isF(x)&&quizInfo(pb,x).asked.length);const first=pool[Math.floor(Math.random()*pool.length)]||sortKinds(pb.plays).find(x=>!isF(x))||sortKinds(pb.plays)[0];
+  const pool=sortKinds(pb.plays).filter(x=>!isF(x)&&quizInfo(pb,x).asked.length),fp=sortKinds(pb.plays).filter(x=>isF(x)&&(x.name||'').trim());
+  // nothing to learn in the plays yet: formations if there are any, otherwise a clear hint instead of an empty play
+  const first=pool[Math.floor(Math.random()*pool.length)]||fp[Math.floor(Math.random()*fp.length)];
+  if(!first)return toast(isPlayer(pb)?'In diesem Playbook gibt es noch nichts zu lernen – dein Coach trägt die Aufgaben noch ein.':'Noch nichts zu lernen: Trag bei den Linien Aufgaben ein (⋯ → „🎓 Aufgaben für Lernen vorschlagen“) oder gib Formationen einen Namen.');
+  if(!pool.length)toast(isPlayer(pb)?'Bei den Plays gibt es noch nichts zu lernen – du übst erst die Formations.':'Die Plays haben noch keine Aufgaben – es geht mit den Formations los.');
   if(state.anim)stopAnim(true);state.home=false;state.quiz=true;state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;state.quizShown=false;if(first)state.playId=first.id;setPresent(true)}
 function maybeLearn(){const pb=curPb();if(isPlayer(pb)&&!state.present&&!state.homeSeen){state.home=true;state.homeSeen=true;renderHome()}}
 // start page for players: "Playbook" or "Lernen" – nothing with a solution is visible before they choose
@@ -2012,7 +2041,7 @@ async function confirmBox(title,text,okLabel='Löschen'){
 let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
 
 /* ---------- playbook actions ---------- */
-async function newPbDialog(){
+async function newPbDialog(){if(needLogin())return accountDialog();if(teamPlayer())return toast('Als Spieler siehst du die Playbooks, die dein Coach mit dir teilt – eigene kannst du nicht anlegen.');
   const r=await modal('Neues Playbook',`
     <label>Name</label><input type="text" id="npName" placeholder="z. B. Offense 2027" value="">
     <label>Art</label><div class="choice">
@@ -2034,7 +2063,7 @@ async function pbMenu(){
   const own=!pb.cloud||pb.cloud.role==='own';
   if(!own){const c=pb.cloud;
     const r=await modal('Playbook',`<p style="margin-top:0"><b>${esc(pb.name)}</b><br><span class="hint">${pb.type==='defense'?'Defense':'Offense'} · ${VAR[pb.variant].name} · ${countTxt(pb)}</span></p>
-      <div class="banner">👥 Geteilt von <b>${esc(c.ownerEmail||'einem Coach')}</b> ${c.role==='read'?' – du kannst es <b>lesen</b>':' – du bist hier <b>Coach</b>'}.</div>
+      <div class="banner">👥 Geteilt von <b>${esc(whoName(c.ownerEmail))}</b> ${c.role==='read'?' – du kannst es <b>lesen</b>':' – du bist hier <b>Coach</b>'}.</div>
       ${c.role==='read'?'<p class="hint">Dein Coach sieht, wie lange du im Playbook warst und deine Ergebnisse im 🎓 Lern-Modus.</p>':'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="progress">📊 Fortschritt der Spieler</button></div>'}
       ${c.role==='read'?'':`<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="tasksCheck" title="Alle Aufgaben für den Lern-Modus auf einen Blick">📋 Aufgaben prüfen</button>${c.role==='edit'?'<button type="button" class="btn sm" data-a="suggestTasks" title="Für Linien ohne Aufgabe einen Namen vorschlagen (Deep ½, Flat, Slant …)">🎓 Aufgaben vorschlagen</button>':''}</div>`}
       ${c.role==='edit'?'<div class="row" style="margin-top:8px"><button type="button" class="btn sm" data-a="snaps">🗄 Cloud-Sicherungen</button></div>':''}
@@ -2505,7 +2534,7 @@ function exportJSON(obj,title,file,pb){
   return r}
 function exportPb(){const pb=curPb();exportJSON({app:'playbook-builder',v:1,playbook:noCloud(pb)},'Playbook teilen',fname(pb.name)+'.json',pb)}
 function sharePlay(){const pb=curPb(),pl=curPlay();exportJSON({app:'playbook-builder',v:1,variant:pb.variant,type:pb.type,fieldV:pb.fieldV||FLAG_V,play:pl},'Play teilen',fname(pl.name)+'.json')}
-async function importDialog(){
+async function importDialog(){if(needLogin())return accountDialog();if(teamPlayer())return toast('Als Spieler kannst du nichts importieren.');
   const r=await modal('Importieren',`<p class="hint">Lade eine Playbook- oder Play-Datei (.json), die jemand mit dir geteilt hat, oder füge den Text ein. Auch Exporte aus FlagPlay Studio werden erkannt. Du kannst die Datei auch einfach aufs Fenster ziehen.</p>
     <label class="btn" style="display:inline-flex;margin:0;color:var(--ink)">Datei auswählen…<input type="file" id="fileInModal" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden"></label> <span id="pickName" class="hint"></span>
     <label>oder Text einfügen</label><textarea id="jsonIn" style="font-family:monospace;font-size:12px" placeholder='{"app":"playbook-builder", …}'></textarea>`,
@@ -2626,7 +2655,7 @@ function importFlagPlay(j){
   if(!made)return importError('In der FlagPlay-Datei wurden keine Plays gefunden.');
   selectPb(made.id);toast(`${count} Plays aus FlagPlay importiert`+(skipped?` (${skipped} Elemente übersprungen)`:''));
 }
-async function doImport(text){
+async function doImport(text){if(needLogin())return accountDialog();if(teamPlayer())return toast('Als Spieler kannst du nichts importieren.');
   if(typeof text!=='string'||!text.trim())return importError('Die Datei ist leer.');
   if(text.length>20e6)return importError('Die Datei ist zu groß (über 20 MB) – das ist keine Playbook-Datei.');
   let j;try{j=JSON.parse(text)}catch(e){return importError('Die Datei ist keine Playbook-Datei oder beschädigt (kein gültiges JSON).')}
@@ -2751,10 +2780,10 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
   async signUp(email,pw){const j=await this.auth('accounts:signUp',{email,password:pw,returnSecureToken:true});this.keep(j);await this.afterLogin()},   // the confirmation mail only when chosen (or a code from the coach)
   async resetPw(email){await this.auth('accounts:sendOobCode',{requestType:'PASSWORD_RESET',email})},
   async resendVerify(){await this.auth('accounts:sendOobCode',{requestType:'VERIFY_EMAIL',idToken:await this.token()})},
-  async afterLogin(){toast('Angemeldet als '+this.user.email);this.state='busy';updateStatus();await this.pull(true)},
+  async afterLogin(){toast('Angemeldet als '+this.user.email);if(Folder.handle&&!Folder.owner())Folder.wait=true;this.state='busy';updateStatus();await this.pull(true)},
   signOut(silent){
     Prog.flush();Prog.docs={};Q.list=[];Q.seen=null;const was=this.user;this.user=null;clearTimeout(this.timer);try{localStorage.removeItem('pbb-auth')}catch(e){}
-    if(was){state.pbs=state.pbs.filter(pb=>!pb.cloud||pb.cloud.role==='own');state.pbs.forEach(pb=>{delete pb.cloud});   // shared ones leave this device
+    if(was){state.pbs=state.pbs.filter(pb=>!pb.cloud||(pb.cloud.role==='own'&&(!pb.cloud.ut||pb.cloud.dirty)));state.pbs.forEach(pb=>{delete pb.cloud});   // everything that is safe in the cloud leaves this device – the next person here does not get it
       if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;Store.saveLocal();renderAll()}
     this.btn();updateStatus();if(!silent)toast('Abgemeldet – deine eigenen Playbooks bleiben auf diesem Gerät.');
   },
@@ -2764,7 +2793,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     await this.auth('accounts:delete',{idToken:await this.token()});this.signOut(true);toast('Konto gelöscht. Deine Playbooks bleiben lokal auf diesem Gerät.');
   },
   btn(){const b=$('#acctBtn');if(!b)return;b.hidden=!this.on();b.classList.toggle('on',!!this.user);
-    b.textContent=this.user?'👤 '+(this.user.email.split('@')[0].slice(0,14)):'👤 Anmelden'},
+    b.textContent=this.user?'👤 '+((Team.nameOf(this.user.email)||this.user.email.split('@')[0]).slice(0,18)):'👤 Anmelden';b.title=this.user?this.user.email:'Konto & Synchronisierung'},
   // ----- firestore -----
   async req(method,path,body,q){
     const url=this.base()+path+(q?('?'+q):'');
@@ -2851,9 +2880,13 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
       // gone on the server: deleted elsewhere or no longer shared
       state.pbs=state.pbs.filter(pb=>{if(!pb.cloud||seen.has(pb.id))return true;
         if(pb.cloud.role==='own'&&(!pb.cloud.ut||pb.cloud.dirty))return true;changed=true;return false});
+      // team players: only the shared playbooks; own ones are hidden (playbooks that were only on this device are kept aside, not deleted)
+      if(teamPlayer()){const own=state.pbs.filter(pb=>!pb.cloud||pb.cloud.role==='own');
+        if(own.length){const loc=own.filter(pb=>!pb.cloud||!pb.cloud.ut);if(loc.length){try{const st=JSON.parse(localStorage.getItem('pbb-stash')||'[]');loc.forEach(pb=>{if(!st.some(x=>x.id===pb.id))st.push(noCloud(pb))});localStorage.setItem('pbb-stash',JSON.stringify(st))}catch(e){}}
+          own.forEach(pb=>W.timers.delete&&W.timers.delete('cloud:'+pb.id));state.pbs=state.pbs.filter(pb=>pb.cloud&&pb.cloud.role!=='own');changed=true}}
       // own playbooks not uploaded yet (e.g. the first login on this device)
-      state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
-      if(Team.reconcile())changed=true;
+      else state.pbs.forEach(pb=>{if(!pb.cloud||(pb.cloud.role==='own'&&!pb.cloud.ut&&!W.timers.has('cloud:'+pb.id)))this.touch(pb)});
+      if(Team.reconcile())changed=true;this.btn();
       await TP.pull();
       await Q.pull();
       this.state='ok';this.last=Date.now();
@@ -2862,7 +2895,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
     if(changed){if(!curPb())state.pbId=state.pbs[0]?state.pbs[0].id:null;const pb=curPb();
       if(pb&&!pb.plays.find(x=>x.id===state.playId)){state.playId=pb.plays[0]?pb.plays[0].id:null;state.sel=null}
       if(state.anim)stopAnim(true);Store.saveLocal();renderAll()}
-    if(first)setTimeout(maybeLearn,300);
+    if(first){setTimeout(maybeLearn,300);Folder.decide().then(()=>renderAll()).catch(()=>{})}
     if(Q.fresh){const n=Q.fresh;Q.fresh=0;setTimeout(()=>toast(n===1?'💬 Neue Frage zu einem Play':`💬 ${n} neue Fragen zu deinen Plays`),news.length?2800:0)}
     if(news.length)toast(news.length===1?`„${news[0][0]}“ wurde von ${news[0][1].split('@')[0]} aktualisiert`:`${news.length} geteilte Playbooks wurden aktualisiert`);
     updateStatus();this.later();
@@ -2989,7 +3022,7 @@ function qBox(){
     </div>`).join('')||'<p class="hint" style="margin:0 0 6px">Noch keine Fragen.</p>'}
     <textarea id="qNew" rows="2" maxlength="2000" placeholder="Frage zu diesem Play stellen…"></textarea>
     <button class="btn sm primary" data-qask="1" style="margin-top:4px">Frage senden</button>
-    <p class="hint" style="margin:4px 0 0;font-size:11px">Sichtbar für dich, ${pb.cloud.role==='own'?'und alle, die bearbeiten dürfen':`${esc((pb.cloud.ownerEmail||'den Besitzer').split('@')[0])} und alle, die bearbeiten dürfen`}.</p>`;
+    <p class="hint" style="margin:4px 0 0;font-size:11px">Sichtbar für dich, ${pb.cloud.role==='own'?'und alle, die bearbeiten dürfen':isPlayer(pb)?`${esc(Team.nameOf(pb.cloud.ownerEmail)||'deinen Coach')} und die anderen Coaches`:`${esc(Team.nameOf(pb.cloud.ownerEmail)||(pb.cloud.ownerEmail||'den Besitzer').split('@')[0])} und alle, die bearbeiten dürfen`}.</p>`;
   el.appendChild(box);
 }
 document.addEventListener('click',async e=>{if(!e.target.closest('[data-presask]'))return;const ta=$('#presQNew');const v=ta&&ta.value.trim();if(!v)return toast('Bitte eine Frage eingeben.');
@@ -3072,7 +3105,7 @@ function mergePb(loc,rem){
   const tl=[...tm.values()].filter(t=>!(del['tpl:'+t.id]&&del['tpl:'+t.id]>=(t.t||0)));if(tl.length)loc.tpls=tl;else delete loc.tpls;
 }
 function shareChip(pb){const c=pb.cloud;if(!c||!Sync.user)return '';
-  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(c.ownerEmail)}">👥 ${c.role==='read'?'nur lesen':'Coach'}</span>`;
+  if(c.role!=='own')return ` <span class="chip shared" title="Geteilt von ${esc(whoName(c.ownerEmail))}">👥 ${c.role==='read'?'nur lesen':'Coach'}</span>`;
   const n=nShare(c);return n?` <span class="chip shared" title="${c.team?'Über die Team-Liste geteilt':'Mit '+n+' Personen geteilt'}">👥 ${c.team?'Team':n}</span>`:'';}
 async function accountDialog(opts={}){
   if(!Sync.on())return;
@@ -3080,8 +3113,8 @@ async function accountDialog(opts={}){
     const r=await modal('Dein Konto',`<p style="margin-top:0">Angemeldet als <b>${esc(u.email)}</b></p>
       ${u.verified?'':`<div class="banner" style="margin-bottom:10px">🔓 Bitte schalte dein Konto mit dem 🔑 Freischalt-Code von deinem Coach frei. Hat dir dein Coach stattdessen eine Bestätigungs-Mail geschickt, öffne den Link darin (auch im Spam-Ordner nachsehen). Erst dann siehst du Playbooks, die andere mit dir teilen.</div>`}
       <p class="hint">Status: ${Sync.state==='offline'?'offline – Änderungen werden synchronisiert, sobald du wieder online bist':Sync.state==='error'?'Synchronisierung gestört':'synchronisiert'}${Sync.last?` · zuletzt ${new Date(Sync.last).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})} Uhr`:''}</p>
-      <p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“ – oder für alle Playbooks auf einmal über die Team-Liste.</p>
-      <div class="row" style="margin:0 0 8px"><button type="button" class="btn sm" data-acct="team">👥 Team-Liste${Team.mine()?' – '+esc(Team.mine().name):''}</button></div>
+      ${teamPlayer()?`<p class="hint">Du bist als Spieler im Team ${Team.list.filter(x=>Team.role(x)==='read').map(x=>`<b>${esc(x.name||'Team')}</b>`).join(', ')}. Deine Playbooks bekommst du von deinem Coach – auf jedem Gerät, auf dem du angemeldet bist.</p>`:`<p class="hint">Deine Playbooks sind auf allen Geräten gleich, auf denen du angemeldet bist. Teilen kannst du ein Playbook über ⋯ → „👥 Freigeben“ – oder für alle Playbooks auf einmal über die Team-Liste.</p>
+      <div class="row" style="margin:0 0 8px"><button type="button" class="btn sm" data-acct="team">👥 Team-Liste${Team.mine()?' – '+esc(Team.mine().name):''}</button></div>`}
       <details><summary class="hint">Konto löschen</summary><p class="hint">Löscht dein Konto und deine Playbooks auf dem Server. Auf diesem Gerät bleiben sie erhalten.</p><button class="btn sm danger" data-acct="delete">Konto endgültig löschen</button></details>`,
       [...(u.verified?[]:[{label:'Ich habe bestätigt',value:'check'},{label:'🔑 Code eingeben',value:'code'}]),{label:'Abmelden',value:'out'},{label:'Jetzt synchronisieren',value:'sync',cls:'primary'}],{x:true});
     if(r.value==='out')return logout();
@@ -3253,7 +3286,8 @@ async function teamDialog(){
   await Team.pull().catch(()=>{});
   if(!Team.ok)return modal('👥 Team',`<p>Die Team-Liste ist noch nicht freigeschaltet. Bitte in Firebase die neuen Regeln aus <b>firestore-regeln.txt</b> veröffentlichen.</p>`,[{label:'OK',value:null,cls:'primary'}]);
   const u=Sync.user;let t=Team.mine();const other=Team.list.filter(x=>x.owner!==u.uid);
-  const otherHtml=other.length?`<p class="hint" style="margin-top:0">${other.map(x=>`Du bist im Team <b>${esc(x.name||'Team')}</b> von ${esc(x.ownerEmail)} als ${Team.role(x)==='read'?'Spieler':'<b>Coach</b>'}.${Team.role(x)==='read'?'':' Mit „👥 Mit Team teilen“ machst du eigene Playbooks oder einzelne Plays für das Team sichtbar.'}`).join('<br>')}</p>`:'';
+  const otherHtml=other.length?`<p class="hint" style="margin-top:0">${other.map(x=>`Du bist im Team <b>${esc(x.name||'Team')}</b> als ${Team.role(x)==='read'?'Spieler':'<b>Coach</b>'}.${Team.role(x)==='read'?'':' Mit „👥 Mit Team teilen“ machst du eigene Playbooks oder einzelne Plays für das Team sichtbar.'}`).join('<br>')}</p>`:'';
+  if(!t&&teamPlayer())return modal('👥 Team',`${otherHtml}<p class="hint">Dein Coach teilt die Playbooks mit dir – du musst nichts weiter tun.</p>`,[{label:'OK',value:null,cls:'primary'}]);
   if(!t){const r=await modal('👥 Team',`${otherHtml}<p${other.length?'':' style="margin-top:0"'}>Mit einer Team-Liste trägst du Coaches und Spieler mit ihrer Rolle <b>einmal</b> ein. Jeder Coach kann dann ein eigenes Playbook oder ein einzelnes Play mit „👥 Mit Team teilen“ für alle sichtbar machen.</p>`,
       [{label:'Schließen',value:null},{label:'Eigenes Team erstellen',value:'new',cls:'primary'}]);
     if(!r||r.value!=='new')return;t={id:uid('tm'),owner:u.uid,ownerEmail:u.email,name:'Mein Team',readers:[],editors:[],coaches:[],isNew:true}}
@@ -3261,6 +3295,7 @@ async function teamDialog(){
   const rows=()=>list.length?list.map((x,i)=>`<div class="share-row"><span title="${esc(x.e)}" style="display:flex;flex-direction:column;gap:2px;white-space:normal"><span style="display:flex;gap:4px"><input type="text" data-tname="${i}" value="${esc(x.n||'')}" placeholder="Name" maxlength="40" style="padding:4px 6px;flex:3;min-width:0"><input type="text" data-tpos="${i}" value="${esc(x.p||'')}" placeholder="Position" title="Position(en), z. B. QB, SS – nur Spieler mit QB müssen beim Lernen die Reads eintragen" maxlength="40" style="padding:4px 6px;flex:2;min-width:0"></span><small class="hint" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.e)}</small></span><select data-trole="${i}">${TROLES.map(([v,n])=>`<option value="${v}"${x.r===v?' selected':''}>${n}</option>`).join('')}</select><button type="button" class="btn sm" data-tinv="${i}" title="Freischalt-Code für diese Person (statt Bestätigungs-Mail)">🔑</button><button type="button" class="btn sm" data-tdel="${i}" title="Aus dem Team entfernen">✕</button></div>`).join(''):'<p class="hint">Noch niemand im Team.</p>';
   const mineN=state.pbs.filter(pb=>pb.cloud&&pb.cloud.role==='own'&&pb.cloud.team!==t.id).length;
   const p=modal('👥 Team-Liste',`${otherHtml}<label style="margin-top:0">Name des Teams</label><input type="text" id="tName" maxlength="60" value="${esc(t.name)}">
+    <label>Dein Name <span class="hint" style="font-weight:400">– so sehen dich Spieler und Coaches, z. B. „Coach Matthias“</span></label><input type="text" id="tOwnName" maxlength="40" value="${esc((t.names||{})[(t.ownerEmail||'').toLowerCase()]||'')}">
     <div id="teamList" style="margin-top:8px">${rows()}</div>
     <div class="row" style="margin-top:10px;align-items:flex-end;flex-wrap:wrap"><div style="flex:1.3;min-width:110px"><label>Name</label><input type="text" id="tNameNew" maxlength="40" placeholder="z. B. Max M."></div><div style="flex:.9;min-width:80px"><label>Position</label><input type="text" id="tPosNew" maxlength="40" placeholder="QB, SS"></div><div style="flex:2;min-width:150px"><label>E-Mail</label><input type="email" id="tEmail" placeholder="coach@beispiel.de"></div>
       <div style="flex:1;min-width:130px"><label>Rolle</label><select id="tRole">${TROLES.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}</select></div>
@@ -3286,7 +3321,7 @@ async function teamDialog(){
   const all=r.el.querySelector('#tAll');const takeAll=!!(all&&all.checked);
   t.name=r.el.querySelector('#tName').value.trim().slice(0,60)||'Team';
   t.editors=list.filter(x=>x.r==='edit').map(x=>x.e);t.coaches=list.filter(x=>x.r==='coach').map(x=>x.e);t.readers=list.filter(x=>x.r==='read').map(x=>x.e);
-  t.names=Object.fromEntries(list.filter(x=>x.n).map(x=>[x.e,x.n]));t.pos=Object.fromEntries(list.filter(x=>x.p).map(x=>[x.e,x.p]));
+  t.names=Object.fromEntries(list.filter(x=>x.n).map(x=>[x.e,x.n]));{const on=(r.el.querySelector('#tOwnName')||{}).value;if(on&&on.trim())t.names[(t.ownerEmail||'').toLowerCase()]=on.trim().slice(0,40)}t.pos=Object.fromEntries(list.filter(x=>x.p).map(x=>[x.e,x.p]));
   try{await Team.save(t,t.isNew);delete t.isNew;if(!Team.list.includes(t))Team.list.push(t)}catch(e){return toast(e.status===403&&(Object.keys(t.names).length||Object.keys(t.pos).length)?'Speichern nicht möglich – für Namen und Positionen bitte die neuen Regeln aus firestore-regeln.txt in Firebase veröffentlichen.':'Speichern nicht möglich: '+e.message)}
   if(takeAll)state.pbs.forEach(pb=>{if(pb.cloud&&pb.cloud.role==='own'&&pb.cloud.ut){Team.apply(pb,t)}});
   state.pbs.forEach(pb=>{const c=pb.cloud;if(c&&c.team===t.id&&Team.apply(pb,t))Sync.touch(pb)});
@@ -3467,7 +3502,7 @@ async function backupAll(){
   if(ok){try{localStorage.setItem('pbb-lastBackup',String(Date.now()))}catch(e){}showBanner();toast('Sicherung gespeichert – heb die Datei gut auf')}
 }
 function backupDue(){
-  if(Store.mode!=='local'||Folder.handle||!state.pbs.some(pb=>pb.plays.length))return null;
+  if(Store.mode!=='local'||Folder.active()||!state.pbs.some(pb=>pb.plays.length))return null;
   if(Sync.user&&state.pbs.every(pb=>pb.cloud&&(pb.cloud.ut||pb.cloud.role!=='own')))return null;   // everything is in the cloud (with daily snapshots) – no file backup needed
   let last=0,snooze=0;try{last=+localStorage.getItem('pbb-lastBackup')||0;snooze=+localStorage.getItem('pbb-backupSnooze')||0}catch(e){return null}
   if(Date.now()<snooze)return null;
@@ -3679,6 +3714,7 @@ document.addEventListener('click',async e=>{
     case 'backupLater':try{localStorage.setItem('pbb-backupSnooze',String(Date.now()+3*864e5))}catch(e){}return showBanner();
     case 'history':return historyDialog();
     case 'folderOn':return Folder.connect();
+    case 'folderClaim':return Folder.decide(true).then(()=>renderAll());
     case 'folderReconnect':return Folder.reconnect();
     case 'folderOff':return Folder.disconnect();
     case 'pbMenu':return pbMenu();
@@ -3826,6 +3862,7 @@ document.addEventListener('pointerup',onUp);
 document.addEventListener('pointercancel',onUp);
 document.addEventListener('dblclick',e=>{if(e.target.closest('#field')&&state.drawing)finishDrawing()});
 document.addEventListener('keydown',e=>{
+  if(needLogin())return;
   if(e.target.id==='tagNew'&&e.key==='Enter'){e.preventDefault();const v=e.target.value;e.target.value='';toggleTag(v);const n=$('#tagNew');if(n)n.focus({preventScroll:true});return}
   if($('.mback'))return;
   const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea'||tag==='select')return;
