@@ -27,6 +27,50 @@ header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var
 .status{margin-left:auto;font-size:13px;background:rgba(255,255,255,.14);padding:5px 10px;border-radius:99px;white-space:nowrap}
 .status.warn{background:#b45309}
 .phoneonly{display:none!important}
+/* 🎬 film */
+.fmwrap{max-width:1100px;margin:0 auto;padding:14px}
+.fmhead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.fmhead h2{margin:0 8px 0 0;font-family:var(--cond);text-transform:uppercase}
+.fmhead select{width:auto;flex:none;max-width:48vw}
+.fmgrp{margin:18px 0 8px;font-size:16px}
+.fmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.fmcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.fmopen{border:0;padding:0;background:#111;position:relative;aspect-ratio:16/9;display:block;width:100%;cursor:pointer}
+.fmopen img{width:100%;height:100%;object-fit:cover;display:block}.fmnopic{color:#fff;font-size:34px;display:flex;align-items:center;justify-content:center;height:100%}
+.fmopen::after{content:'▶';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px}
+.fmdur{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.7);color:#fff;font-size:12px;padding:1px 6px;border-radius:6px}
+.fmnew{position:absolute;left:6px;top:6px;background:#dc2626;color:#fff;font-size:12px;font-weight:700;padding:2px 7px;border-radius:99px}
+.fmtxt{padding:8px 40px 10px 10px;display:flex;flex-direction:column;gap:2px}.fmtxt .hint{font-size:12px}
+.fmmenu{position:absolute;right:6px;bottom:8px}
+#fmBusy{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:90;display:flex;align-items:center;justify-content:center}
+#fmBusy .fmbox{background:var(--panel);border-radius:14px;padding:18px;width:min(420px,90vw);text-align:center}
+#fmBusy .fmbar{height:8px;background:var(--line);border-radius:99px;margin-top:10px;overflow:hidden}#fmBusy .fmbar i{display:block;height:100%;background:var(--accent,#2563eb);transition:width .2s}
+#filmPl{position:fixed;inset:0;z-index:60;background:#0d0f10;color:#fff;display:flex;flex-direction:column}
+body.fmopen{overflow:hidden}
+#filmPl .hint{color:#aab}
+.fptop{display:flex;gap:10px;align-items:center;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top))}
+.fpmain{flex:1;display:flex;min-height:0}
+.fpstage{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:6px}
+.fpbox{position:relative}.fpbox video,.fpbox canvas{position:absolute;inset:0;width:100%;height:100%}.fpbox canvas{touch-action:none}
+#filmPl.editing .fpbox canvas{cursor:crosshair;outline:2px dashed #ffd60a;outline-offset:2px}
+.fpload{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#ccc;min-width:200px;min-height:120px}
+.fpgo{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:#fff;color:#111;border:0;border-radius:99px;padding:8px 16px;font-weight:700}
+.fpside{width:320px;overflow:auto;padding:8px 12px;border-left:1px solid #2a2e30}
+.fpq{background:#1d2a3a;border-radius:10px;padding:10px;margin-bottom:8px}
+.fplinks,.fpmarks{margin:6px 0;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.fpth{background:#181b1d;border-radius:10px;padding:8px;margin:6px 0}.fpth summary{cursor:pointer}
+.fpth textarea{width:100%;min-height:54px;margin:6px 0 4px;background:#0d0f10;color:#fff;border:1px solid #333;border-radius:8px;padding:6px;box-sizing:border-box}
+.fpmsg{background:#22272a;border-radius:8px;padding:6px 8px;margin:4px 0}.fpmsg.me{background:#1d3324}
+.fptools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 12px;background:#1a1d1f}
+.fpcol{width:26px;height:26px;border-radius:50%;border:2px solid #555;padding:0}.fpcol.on{border-color:#fff;box-shadow:0 0 0 2px #0a84ff}
+.fpctl{display:flex;gap:6px;align-items:center;padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.fpbar{flex:1;position:relative}.fpbar input{width:100%}.fpticks i{position:absolute;top:-4px;width:3px;height:8px;background:#ffd60a;border-radius:2px;transform:translateX(-1px);pointer-events:none}
+.fptime{font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+#filmPl .btn{background:#2a2e30;color:#fff;border-color:#3a3f42}#filmPl .btn.primary{background:var(--accent,#ea580c);border-color:transparent}#filmPl .btn.on{background:#fff;color:#111}
+#filmPl select{background:#2a2e30;color:#fff;border:1px solid #3a3f42;border-radius:8px;padding:4px;width:auto;flex:none}
+#filmPl [hidden],#fmBusy [hidden]{display:none!important}
+@media (max-width:900px){.fpmain{flex-direction:column}.fpstage{flex:none;height:min(56vh,62vw)}.fpside{width:auto;border-left:0;border-top:1px solid #2a2e30;flex:1}}
+.linkbtn{border:0;background:none;color:var(--muted);cursor:pointer;padding:0 2px}
+
 details.hsec{border-bottom:1px solid var(--line)}details.hsec>summary{cursor:pointer;font-weight:700;font-size:16px;padding:10px 2px;list-style:none;display:flex;align-items:center;gap:8px}
 details.hsec>summary::-webkit-details-marker{display:none}details.hsec>summary::after{content:'›';margin-left:auto;font-size:20px;color:var(--muted);transition:transform .15s}details.hsec[open]>summary::after{transform:rotate(90deg)}
 details.hsec>ul{margin:0 0 10px;padding-left:20px}details.hsec>ul>li{margin:0 0 6px}
@@ -383,7 +427,7 @@ html.night .toast{background:#e6e8ea;color:#14171a}
 <body>
 <header>
   <div class="logo"><svg viewBox="0 0 32 32"><ellipse cx="16" cy="16" rx="14" ry="9" transform="rotate(-35 16 16)" fill="#8b5a2b" stroke="#fff" stroke-width="1.5"/><path d="M11 21 21 11M13 15l4 4M15 13l4 4M11 17l4 4" stroke="#fff" stroke-width="1.6"/></svg><span>Playbook Builder</span><img id="teamLogo" alt="" hidden style="height:30px;max-width:90px;object-fit:contain;margin-left:4px"></div>
-  <nav class="vtabs" id="vtabs"><button data-view="pb" class="on">📖<span class="hlbl"> Playbook</span></button><button data-view="gw">🗓<span class="hlbl"> Game Week</span></button><button data-view="cal">📅<span class="hlbl"> Kalender</span></button></nav>
+  <nav class="vtabs" id="vtabs"><button data-view="pb" class="on">📖<span class="hlbl"> Playbook</span></button><button data-view="gw">🗓<span class="hlbl"> Game Week</span></button><button data-view="cal">📅<span class="hlbl"> Kalender</span></button><button data-view="film">🎬<span class="hlbl"> Film</span></button></nav>
   <div class="status" id="status">Lädt…</div>
   <button class="hbtn" id="qBtn" data-a="openQs" hidden style="background:#dc2626;color:#fff;font-weight:700;animation:qpulse 2s ease-in-out 3"></button>
   <button class="hbtn" id="acctBtn" data-a="account" title="Konto & Synchronisierung" hidden>👤 Anmelden</button>
@@ -419,9 +463,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content=`default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com${PUSH_URL?' '+new URL(PUSH_URL).origin:''}; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'`;
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-23.9';
+const APP_VERSION='2026-11-24.3';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["S: ❓ Hilfe nach Themen sortiert zum Auf- und Zuklappen – neu mit Schritt-für-Schritt-Anleitung „🔔 Benachrichtigungen einschalten“ für iPhone, Android und PC","S: 📱 Handy: obere Leiste passt wieder auf den Bildschirm – Sync-Status nur als Symbol, 👤 ohne Namen, 🌙 Nachtmodus und ✉ Feedback jetzt im 👤 Konto-Fenster","S: ⚡ Kommt eine Benachrichtigung, holt die offene App die Neuigkeit sofort – Fragen, Termine und Game Plans erscheinen gleich, nicht erst nach einer Minute","S: 🔴 Neuigkeiten als rote Zahl am App-Symbol (iPhone-App vom Home-Bildschirm, Chrome/Edge am PC) – verschwindet beim Öffnen der App","S: 🔔 Antippen einer Benachrichtigung öffnet direkt den Termin, den Game Plan bzw. das Play mit der Frage","S: 🔔 Benachrichtigungen aufs Handy: Konto → „🔔 Benachrichtigungen“ – bei Terminen und Game Plans, wenn der Coach „🔔 Team benachrichtigen“ wählt, und bei Fragen/Antworten zu Plays (iPhone: erst „Zum Home-Bildschirm“)","🔧 Zonen direkt am Spieler (z. B. LB-Zone in Green) verschwinden nicht mehr und stehen im Playbook-PDF mit Aufgabe und Details","📝 Neu beim Spieler: Feld „Details“ – erscheint im Playbook-PDF in der Spalte DETAILS","📍 Kalender: Ort antippen öffnet Google Maps, „🚗 Navigation“ startet auf dem Handy direkt die Route","📥 Import „Mein Playbook aktualisieren“: importierte Plays behalten ihren Zeitstempel – eine spätere Datei wird dadurch zuverlässig übernommen","S: 🎨 Feld Hell / Rasen / Dunkel jetzt auch in Präsentation und Lernen umschaltbar","📥 Game Plan: „Plays importieren“ – Plays und Formationen aus dem Playbook auswählen und übernehmen; oben ist dann „Game Week“ markiert","🗑 Game Weeks direkt löschen: Knopf 🗑 oben in der Game Week und im Reiter Game Week (Papierkorb, 30 Tage wiederherstellbar)","☑ Markieren: die Play-Liste springt nicht mehr nach oben","📅 Kalender: neuer Termin per Doppelklick auf den Tag","🪟 Fenster schließen sich nicht mehr, wenn du Text markierst und mit der Maus aus dem Fenster fährst","📅 Kalender: H blau, A grün; Haken „🔒 Coaches only“ – solche Termine sehen Spieler nicht","S: 📅 Kalender (Reiter oben): Spiele, Turniere mit mehreren Gegnern und andere Termine – H/A als Wasserzeichen am Tag. 🗓 Reiter Game Week: pro Termin keinen, einen oder mehrere Game Plans anlegen, für ausgewählte Gegner","S: 🗓 Game Week: Plays und Formationen links mit ☑ Markieren auswählen und als Kopie in eine Game Week für einen Gegner übernehmen – mit Scouting-Notizen, Gegner-Routen, Archiv und Rückspiel","👁 Gegner-Routen: nur sichtbar, wenn eingeschaltet (Knopf neben „Gegner“), nie im Druck. Beim Abspielen bleibt Man am Mann, Zone nimmt Receiver in ihrer Zone auf und übergibt sie","🏈 Gegner-Spieler bekommen jetzt auch Routen und Motion (Vorlagen, selbst zeichnen) – sie laufen beim Abspielen mit","📋 Linke Spalte: Play-Liste zeigt ca. 8 Plays (scrollen für mehr), der Ordner-Hinweis ist jetzt eine schmale Zeile","🌙 Nachtmodus für die ganze App (Knopf 🌙 oben rechts) – das Feld lässt sich wie bisher unabhängig auf Hell, Rasen oder Dunkel stellen","👥 Gegner: „Gegner: aus“ blendet sie nur aus (Man-Zuordnungen bleiben), „🗑 Gegner löschen“ entfernt sie – der doppelte Haken „Gegner anzeigen“ ist weg","S: 🧭 Rechte Spalte neu sortiert: „Linie bearbeiten“ steht oben, Aussehen und Linienfarbe sind eingeklappt (merkt sich offen/zu); Tempo jetzt in Stufen 0,5× bis 2,5×","🎓 „nur wenn … auf meine Seite geht“ erscheint jetzt nur bei Man-Linien, wenn zwei Spieler denselben Gegenspieler covern – und gilt für jeden Gegenspieler, nicht nur den RB","S: 🎓 Lernen Defense: Hat ein Spieler Blitz und eine andere Aufgabe, kommt zufällig die Ansage „mit Blitz“ oder „ohne Blitz“ – danach wird auch die andere Variante abgefragt","🎓 Neu bei „Linie bearbeiten“ (Defense): „nur wenn der RB auf meine Seite geht“ – beim Lernen läuft der RB dann zufällig nach links oder rechts (roter Pfeil)","❓ Hilfe auf den neuesten Stand gebracht","📕 Team Philosophie: Fett, Kursiv und Unterstrichen siehst du jetzt sofort beim Schreiben – kleine Knöpfe wie in Word, auch Strg+B / Strg+I / Strg+U","📕 Playbook (PDF): In der Team Philosophie gibt es jetzt Fett, Kursiv und Unterstrichen (Knöpfe F / K / U über dem Textfeld)","S: 〰 Motion wird jetzt automatisch als Wellenlinie gezeichnet","📏 Hilfslinien gibt es jetzt auch beim gemeinsamen Verschieben mehrerer Spieler – am Spieler, den du anfasst; er rastet an anderen Spielern ein (Alt = frei)","☑ Mehrere: ausgewählte Spieler lassen sich jetzt auch direkt gemeinsam ziehen – kurz antippen ohne Ziehen nimmt einen Spieler wieder aus der Auswahl","🟦 Zonen bleiben jetzt an ihrem Platz, wenn du den Spieler verschiebst – mit gedrückter Shift-Taste (erst nach dem Anfassen drücken) wandert die Zone wie bisher mit","📕 Playbook (PDF): „Deep ⅓“ erscheint jetzt als „Deep 1/3“ statt „Deep ?“","📕 „Playbook-Buch“ heißt jetzt „Playbook“, das bisherige Playbook mit Spalten heißt „Playbook (vereinfacht)“","↕ Line of Scrimmage verschieben: Das ganze Play bewegt sich jetzt mit","S: 🏈 Spielfeld (Flag 5er): Die dicke Linie hinter dem QB ist jetzt die Goal Line der Offense und liegt am Feldrand; die Yard-Zahlen zählen von ihr aus","📏 Hilfslinien: halbe Yards dazwischen, und die Abstands-Striche gibt es jetzt auch links und rechts neben dem Spieler","S: ▶ Abspielen: Steht ein anderer Spieler (z. B. RB) direkt hinter dem C, geht der Snap an ihn und er gibt den Ball an den QB weiter","📏 Hilfslinien: Beim Halten eines Spielers erscheinen eine waagrechte und eine senkrechte Linie – steht er mit einem anderen Spieler in einer Linie, rastet er ein und die Linie wird orange (Alt-Taste = frei setzen)","S: 💬 Fragen: auf eine Antwort direkt nachfragen oder mit 👍 reagieren – Coaches sehen „✓ gelesen“ und bekommen Nachfragen als offene Frage oben angezeigt","💬 Fragen: mehrere Antworten pro Frage, ✎ zum Ausbessern der eigenen Frage oder Antwort; angefangene Antworten bleiben erhalten, das Feld wird beim Reinklicken größer","👥 Freigeben: neuer Knopf „🚫 Nicht mehr teilen“ – beendet Team- und Einzel-Freigaben in einem Schritt","💬 Offene Fragen von Spielern stehen jetzt als roter Knopf oben in der Kopfzeile – antippen zeigt alle und springt zum Play","S: Das Team-Logo steht jetzt oben neben „Playbook Builder“","👥 Team-Liste: Feld „Dein Name“ – Spieler sehen bei geteilten Playbooks deinen Namen statt der E-Mail-Adresse","👤 Der Playbook Builder läuft jetzt nur mit Konto – ohne Anmeldung gibt es nur die Anmeldung. Beim Abmelden bleiben keine Playbooks auf dem Gerät zurück","👥 Spieler (in der Team-Liste nur als Spieler eingetragen) haben keine eigenen Playbooks mehr – nur die geteilten","📁 Der verbundene Ordner gehört zum Konto, das ihn verbunden hat – meldet sich im selben Browser ein anderes Konto an, wird der Ordner nicht benutzt","S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["S: 🎬 Neu: Film – kurze Spielszenen hochladen (die App macht sie klein), mit Pfeilen/Kreisen/Text markieren, Frage an die Spieler; Spieler antworten oder fragen selbst. Clips mit Plays/Game Plans verbinden, als Datei sichern und wieder laden","S: ❓ Hilfe nach Themen sortiert zum Auf- und Zuklappen – neu mit Schritt-für-Schritt-Anleitung „🔔 Benachrichtigungen einschalten“ für iPhone, Android und PC","S: 📱 Handy: obere Leiste passt wieder auf den Bildschirm – Sync-Status nur als Symbol, 👤 ohne Namen, 🌙 Nachtmodus und ✉ Feedback jetzt im 👤 Konto-Fenster","S: ⚡ Kommt eine Benachrichtigung, holt die offene App die Neuigkeit sofort – Fragen, Termine und Game Plans erscheinen gleich, nicht erst nach einer Minute","S: 🔴 Neuigkeiten als rote Zahl am App-Symbol (iPhone-App vom Home-Bildschirm, Chrome/Edge am PC) – verschwindet beim Öffnen der App","S: 🔔 Antippen einer Benachrichtigung öffnet direkt den Termin, den Game Plan bzw. das Play mit der Frage","S: 🔔 Benachrichtigungen aufs Handy: Konto → „🔔 Benachrichtigungen“ – bei Terminen und Game Plans, wenn der Coach „🔔 Team benachrichtigen“ wählt, und bei Fragen/Antworten zu Plays (iPhone: erst „Zum Home-Bildschirm“)","🔧 Zonen direkt am Spieler (z. B. LB-Zone in Green) verschwinden nicht mehr und stehen im Playbook-PDF mit Aufgabe und Details","📝 Neu beim Spieler: Feld „Details“ – erscheint im Playbook-PDF in der Spalte DETAILS","📍 Kalender: Ort antippen öffnet Google Maps, „🚗 Navigation“ startet auf dem Handy direkt die Route","📥 Import „Mein Playbook aktualisieren“: importierte Plays behalten ihren Zeitstempel – eine spätere Datei wird dadurch zuverlässig übernommen","S: 🎨 Feld Hell / Rasen / Dunkel jetzt auch in Präsentation und Lernen umschaltbar","📥 Game Plan: „Plays importieren“ – Plays und Formationen aus dem Playbook auswählen und übernehmen; oben ist dann „Game Week“ markiert","🗑 Game Weeks direkt löschen: Knopf 🗑 oben in der Game Week und im Reiter Game Week (Papierkorb, 30 Tage wiederherstellbar)","☑ Markieren: die Play-Liste springt nicht mehr nach oben","📅 Kalender: neuer Termin per Doppelklick auf den Tag","🪟 Fenster schließen sich nicht mehr, wenn du Text markierst und mit der Maus aus dem Fenster fährst","📅 Kalender: H blau, A grün; Haken „🔒 Coaches only“ – solche Termine sehen Spieler nicht","S: 📅 Kalender (Reiter oben): Spiele, Turniere mit mehreren Gegnern und andere Termine – H/A als Wasserzeichen am Tag. 🗓 Reiter Game Week: pro Termin keinen, einen oder mehrere Game Plans anlegen, für ausgewählte Gegner","S: 🗓 Game Week: Plays und Formationen links mit ☑ Markieren auswählen und als Kopie in eine Game Week für einen Gegner übernehmen – mit Scouting-Notizen, Gegner-Routen, Archiv und Rückspiel","👁 Gegner-Routen: nur sichtbar, wenn eingeschaltet (Knopf neben „Gegner“), nie im Druck. Beim Abspielen bleibt Man am Mann, Zone nimmt Receiver in ihrer Zone auf und übergibt sie","🏈 Gegner-Spieler bekommen jetzt auch Routen und Motion (Vorlagen, selbst zeichnen) – sie laufen beim Abspielen mit","📋 Linke Spalte: Play-Liste zeigt ca. 8 Plays (scrollen für mehr), der Ordner-Hinweis ist jetzt eine schmale Zeile","🌙 Nachtmodus für die ganze App (Knopf 🌙 oben rechts) – das Feld lässt sich wie bisher unabhängig auf Hell, Rasen oder Dunkel stellen","👥 Gegner: „Gegner: aus“ blendet sie nur aus (Man-Zuordnungen bleiben), „🗑 Gegner löschen“ entfernt sie – der doppelte Haken „Gegner anzeigen“ ist weg","S: 🧭 Rechte Spalte neu sortiert: „Linie bearbeiten“ steht oben, Aussehen und Linienfarbe sind eingeklappt (merkt sich offen/zu); Tempo jetzt in Stufen 0,5× bis 2,5×","🎓 „nur wenn … auf meine Seite geht“ erscheint jetzt nur bei Man-Linien, wenn zwei Spieler denselben Gegenspieler covern – und gilt für jeden Gegenspieler, nicht nur den RB","S: 🎓 Lernen Defense: Hat ein Spieler Blitz und eine andere Aufgabe, kommt zufällig die Ansage „mit Blitz“ oder „ohne Blitz“ – danach wird auch die andere Variante abgefragt","🎓 Neu bei „Linie bearbeiten“ (Defense): „nur wenn der RB auf meine Seite geht“ – beim Lernen läuft der RB dann zufällig nach links oder rechts (roter Pfeil)","❓ Hilfe auf den neuesten Stand gebracht","📕 Team Philosophie: Fett, Kursiv und Unterstrichen siehst du jetzt sofort beim Schreiben – kleine Knöpfe wie in Word, auch Strg+B / Strg+I / Strg+U","📕 Playbook (PDF): In der Team Philosophie gibt es jetzt Fett, Kursiv und Unterstrichen (Knöpfe F / K / U über dem Textfeld)","S: 〰 Motion wird jetzt automatisch als Wellenlinie gezeichnet","📏 Hilfslinien gibt es jetzt auch beim gemeinsamen Verschieben mehrerer Spieler – am Spieler, den du anfasst; er rastet an anderen Spielern ein (Alt = frei)","☑ Mehrere: ausgewählte Spieler lassen sich jetzt auch direkt gemeinsam ziehen – kurz antippen ohne Ziehen nimmt einen Spieler wieder aus der Auswahl","🟦 Zonen bleiben jetzt an ihrem Platz, wenn du den Spieler verschiebst – mit gedrückter Shift-Taste (erst nach dem Anfassen drücken) wandert die Zone wie bisher mit","📕 Playbook (PDF): „Deep ⅓“ erscheint jetzt als „Deep 1/3“ statt „Deep ?“","📕 „Playbook-Buch“ heißt jetzt „Playbook“, das bisherige Playbook mit Spalten heißt „Playbook (vereinfacht)“","↕ Line of Scrimmage verschieben: Das ganze Play bewegt sich jetzt mit","S: 🏈 Spielfeld (Flag 5er): Die dicke Linie hinter dem QB ist jetzt die Goal Line der Offense und liegt am Feldrand; die Yard-Zahlen zählen von ihr aus","📏 Hilfslinien: halbe Yards dazwischen, und die Abstands-Striche gibt es jetzt auch links und rechts neben dem Spieler","S: ▶ Abspielen: Steht ein anderer Spieler (z. B. RB) direkt hinter dem C, geht der Snap an ihn und er gibt den Ball an den QB weiter","📏 Hilfslinien: Beim Halten eines Spielers erscheinen eine waagrechte und eine senkrechte Linie – steht er mit einem anderen Spieler in einer Linie, rastet er ein und die Linie wird orange (Alt-Taste = frei setzen)","S: 💬 Fragen: auf eine Antwort direkt nachfragen oder mit 👍 reagieren – Coaches sehen „✓ gelesen“ und bekommen Nachfragen als offene Frage oben angezeigt","💬 Fragen: mehrere Antworten pro Frage, ✎ zum Ausbessern der eigenen Frage oder Antwort; angefangene Antworten bleiben erhalten, das Feld wird beim Reinklicken größer","👥 Freigeben: neuer Knopf „🚫 Nicht mehr teilen“ – beendet Team- und Einzel-Freigaben in einem Schritt","💬 Offene Fragen von Spielern stehen jetzt als roter Knopf oben in der Kopfzeile – antippen zeigt alle und springt zum Play","S: Das Team-Logo steht jetzt oben neben „Playbook Builder“","👥 Team-Liste: Feld „Dein Name“ – Spieler sehen bei geteilten Playbooks deinen Namen statt der E-Mail-Adresse","👤 Der Playbook Builder läuft jetzt nur mit Konto – ohne Anmeldung gibt es nur die Anmeldung. Beim Abmelden bleiben keine Playbooks auf dem Gerät zurück","👥 Spieler (in der Team-Liste nur als Spieler eingetragen) haben keine eigenen Playbooks mehr – nur die geteilten","📁 Der verbundene Ordner gehört zum Konto, das ihn verbunden hat – meldet sich im selben Browser ein anderes Konto an, wird der Ordner nicht benutzt","S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1286,7 +1330,7 @@ function addPickers(){document.querySelectorAll('#insp .sw').forEach(sw=>{if(sw.
   const l=document.createElement('label');l.className='cpick';l.title='Eigene Farbe wählen';l.innerHTML=`<input type="color" data-cpick="${k}">`;sw.appendChild(l)})}
 document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||!t.dataset.cpick)return;const b=document.createElement('button');b.dataset[t.dataset.cpick]=t.value;b.hidden=true;
   t.closest('.sw').appendChild(b);b.click();b.remove()});
-function renderInsp(){renderInsp0();gwSrcBox();addPickers();qBox()}
+function renderInsp(){renderInsp0();gwSrcBox();addPickers();qBox();filmBox()}
 function renderInsp0(){
   {const fa=document.activeElement;if(fa&&fa.closest&&fa.closest('#qbox')){QDraft._fk=fa.dataset.qans?'a:'+fa.dataset.qans:fa.dataset.qeditv?'e':fa.id==='qNew'?'n':'';QDraft._sel=[fa.selectionStart,fa.selectionEnd]}}
   const el=$('#insp');const pb=curPb(),pl=curPlay();
@@ -2195,7 +2239,7 @@ function renderView(){const cp=curPb(),act=(state.view||'pb')==='pb'&&cp&&cp.gw?
   if(v==='pb'||needLogin()){if(el)el.remove();return}
   if(!el){el=document.createElement('div');el.id='viewScreen';document.body.appendChild(el)}
   const hd=document.querySelector('header');if(hd)el.style.top=hd.offsetHeight+'px';
-  el.innerHTML=v==='cal'?calHtml():gwTabHtml()}
+  el.innerHTML=v==='cal'?calHtml():v==='film'?filmHtml():gwTabHtml()}
 document.addEventListener('click',e=>{const b=e.target.closest('#vtabs [data-view]');if(!b)return;const v=b.dataset.view,cp=curPb();
   if(v==='pb'&&cp&&cp.gw){const last=state.pbs.find(p=>p.id===state.lastPb&&!p.gw)||state.pbs.find(p=>!p.gw);state.view='pb';if(last)return selectPb(last.id);return renderView()}
   setView(v)});
@@ -2512,6 +2556,7 @@ function modal(title,body,buttons,opts={}){
         if(bt.validate&&!bt.validate(back))return;close(out)}});
     back.addEventListener('keydown',e=>{if(e.key==='Escape'&&!opts.sticky)close({value:null,el:back})});
     const f=back.querySelector('input,textarea,select');if(f)setTimeout(()=>f.focus({preventScroll:true}),30);
+    if(opts.onOpen)opts.onOpen(back);
   });
 }
 async function confirmBox(title,text,okLabel='Löschen'){
@@ -3430,6 +3475,7 @@ const Sync={user:null,state:'idle',last:0,timer:0,pulling:false,
       if(Team.reconcile())changed=true;this.btn();
       await TP.pull();
       await Cal.pull().catch(e=>console.warn('events',e));
+      await Film.pull().then(()=>{Film.err=''}).catch(e=>{console.warn('films',e);Film.ok=true;Film.err=e.status===403?'rules':e.message;if(state.view==='film')renderView()});
       await Q.pull();
       this.state='ok';this.last=Date.now();
     }catch(e){console.warn('sync pull',e);this.state=e.offline||e.message==='offline'?'offline':'error';if(e.status===401||e.status===403)this.state='error'}
@@ -3486,6 +3532,336 @@ const Q={list:[],fresh:0,seen:null,
   async save(q){q.updated=Date.now();await Sync.req('PATCH',`/questions/${q.id}`,this.enc(q))},
   async del(q){await Sync.req('DELETE',`/questions/${q.id}`);this.list=this.list.filter(x=>x!==q)}
 };
+/* ---------- 🎬 Film: short game clips with markings for the team ----------
+   A clip is stored in Firestore: the doc films/{id} (title, opponent, markings, small poster) and the video itself in parts of ~0.9 MB
+   (films/{id}/parts/0,1,…). Coaches upload; the app makes the video small first (≈480p, no sound). Each device keeps loaded clips
+   (IndexedDB), so nobody downloads a clip twice. Players answer the coach's question or ask their own – one thread per player and clip. */
+const FPART=900000,FMAX=40,FCOL=['#ff3b30','#ffd60a','#ffffff','#0a84ff'];
+function cleanFilm(f){if(!f||typeof f!=='object')return null;
+  const pt=p=>Array.isArray(p)&&p.length===2?[Math.round(cNum(p[0],0,-1,2)*1000)/1000,Math.round(cNum(p[1],0,-1,2)*1000)/1000]:null;
+  const shape=s=>s&&['arrow','line','circle','free','text'].includes(s.k)?{k:s.k,c:FCOL.includes(s.c)?s.c:FCOL[0],p:cArr(s.p,300).map(pt).filter(Boolean),txt:cStr(s.txt,80)}:null;
+  return {id:cStr(f.id,80),team:cStr(f.team,80),by:cStr(f.by,128),co:!!f.co,parts:cNum(f.parts,0,0,60),size:cNum(f.size,0,0,1e9),mime:/^video\/[\w.+-]+$/.test(f.mime||'')?f.mime:'video/mp4',updated:cNum(f.updated,0,0,1e14),
+    title:cStr(f.title,80),opp:cStr(f.opp,60).trim(),kind:f.kind==='prep'?'prep':'post',date:/^\d{4}-\d{2}-\d{2}$/.test(f.date||'')?f.date:'',dur:cNum(f.dur,0,0,600),
+    poster:typeof f.poster==='string'&&/^data:image\/jpeg;base64,/.test(f.poster)&&f.poster.length<80000?f.poster:'',q:cStr(f.q,1000),up:!!f.up,
+    marks:cArr(f.marks,80).map(m=>m&&{id:cStr(m.id,40)||uid('m'),t:cNum(m.t,0,0,600),hold:cNum(m.hold,3,-1,10),shapes:cArr(m.shapes,60).map(shape).filter(Boolean)}).filter(m=>m&&m.shapes.length),
+    links:cArr(f.links,20).map(l=>l&&typeof l.pb==='string'?{pb:l.pb.slice(0,80),pl:cStr(l.pl,80)}:null).filter(Boolean)}}
+const Film={list:[],th:[],ok:false,
+  team(){return Cal.team()},
+  can(){const t=this.team();return !!(Sync.user&&t&&Team.role(t)!=='read')},   // coaches upload and mark
+  vis(){return this.list.filter(f=>!f.up||(Sync.user&&f.by===Sync.user.uid))},
+  get(id){return this.list.find(f=>f.id===id)},
+  b64(u8){let s='';for(let i=0;i<u8.length;i+=0x8000)s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(s)},
+  unb64(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u},
+  dec(doc){const f=doc.fields||{};let d={};try{d=JSON.parse(f.data&&f.data.stringValue||'{}')||{}}catch(e){}
+    const g=k=>f[k]?(f[k].stringValue??f[k].integerValue??f[k].booleanValue):undefined;
+    return cleanFilm({...d,id:doc.name.split('/').pop(),team:g('team')||'',by:g('by')||'',co:!!g('co'),parts:+g('parts')||0,size:+g('size')||0,mime:g('mime')||'',updated:+g('updated')||0})},
+  enc(f){const d={...f};['id','team','by','co','parts','size','mime','updated'].forEach(k=>delete d[k]);
+    return {fields:{team:{stringValue:f.team},by:{stringValue:f.by},co:{booleanValue:!!f.co},data:{stringValue:JSON.stringify(d)},parts:{integerValue:String(f.parts)},size:{integerValue:String(f.size)},mime:{stringValue:f.mime},updated:{integerValue:String(Date.now())}}}},
+  decT(doc){const f=doc.fields||{};const g=k=>f[k]&&(f[k].stringValue??f[k].integerValue);let m=[];try{m=JSON.parse(g('msgs')||'[]')}catch(e){}
+    return {id:doc.name.split('/').pop(),team:g('team')||'',film:g('film')||'',author:g('author')||'',email:g('email')||'',msgs:cArr(m,200).filter(x=>x&&typeof x.text==='string').map(x=>({by:cStr(x.by,200),text:cStr(x.text,2000),t:cNum(x.t,0,0,1e14)})),updated:+g('updated')||0}},
+  encT(t){return {fields:{team:{stringValue:t.team},film:{stringValue:t.film},author:{stringValue:t.author},email:{stringValue:t.email},msgs:{stringValue:JSON.stringify(t.msgs)},updated:{integerValue:String(Date.now())}}}},
+  q(coll,filters){const ff=filters.map(([k,v])=>({fieldFilter:{field:{fieldPath:k},op:'EQUAL',value:typeof v==='boolean'?{booleanValue:v}:{stringValue:v}}}));
+    return Sync.req('POST',':runQuery',{structuredQuery:{from:[{collectionId:coll}],where:ff.length>1?{compositeFilter:{op:'AND',filters:ff}}:ff[0]}})},
+  async pull(){const u=Sync.user;if(!u||!Team.list.length)return;const fs=[],th=[];
+    for(const t of Team.list){const pl=Team.role(t)==='read';
+      const j=await this.q('films',pl?[['team',t.id],['co',false]]:[['team',t.id]]);
+      (Array.isArray(j)?j:[]).filter(x=>x.document).forEach(x=>{const f=this.dec(x.document);if(f)fs.push(f)});
+      const k=await this.q('filmq',pl?[['team',t.id],['author',u.uid]]:[['team',t.id]]);
+      (Array.isArray(k)?k:[]).filter(x=>x.document).forEach(x=>th.push(this.decT(x.document)))}
+    this.list=fs;this.th=th;this.ok=true;
+    if(state.view==='film')renderView();FilmPl.refresh();filmBox()},
+  // the video: from this device if it was loaded before, otherwise from the cloud (part by part)
+  async blob(f,prog){const key='film:'+f.id,ver=f.size+':'+f.mime;
+    try{const c=await IDB.get(key);if(c&&c.v===ver&&c.b)return c.b}catch(e){}
+    const parts=[];for(let i=0;i<f.parts;i++){const j=await Sync.req('GET',`/films/${f.id}/parts/${i}`);parts.push(this.unb64(j.fields&&j.fields.d&&j.fields.d.bytesValue||''));if(prog)prog((i+1)/f.parts)}
+    const b=new Blob(parts,{type:f.mime});try{await IDB.set(key,{v:ver,b})}catch(e){}return b},
+  async upload(meta,b,prog){const t=this.team();if(!t)throw new Error('Kein Team');
+    const n=Math.ceil(b.size/FPART);if(n>40)throw new Error('Clip zu groß');
+    const f=cleanFilm({...meta,id:meta.id||uid('fm'),team:t.id,by:Sync.user.uid,parts:n,size:b.size,mime:(b.type||'video/mp4').split(';')[0],up:true});
+    await Sync.req('PATCH','/films/'+f.id,this.enc(f),'currentDocument.exists=false');
+    for(let i=0;i<n;i++){const u8=new Uint8Array(await b.slice(i*FPART,(i+1)*FPART).arrayBuffer());
+      await Sync.req('PATCH',`/films/${f.id}/parts/${i}`,{fields:{d:{bytesValue:this.b64(u8)}}});if(prog)prog((i+1)/n)}
+    f.up=false;await Sync.req('PATCH','/films/'+f.id,this.enc(f));f.updated=Date.now();
+    try{await IDB.set('film:'+f.id,{v:f.size+':'+f.mime,b:new Blob([b],{type:f.mime})})}catch(e){}
+    this.list.push(f);return f},
+  async save(f){await Sync.req('PATCH','/films/'+f.id,this.enc(f));f.updated=Date.now()},
+  async del(f){for(let i=0;i<f.parts;i++)await Sync.req('DELETE',`/films/${f.id}/parts/${i}`).catch(()=>{});
+    const k=await this.q('filmq',[['team',f.team],['film',f.id]]).catch(()=>[]);
+    for(const x of (Array.isArray(k)?k:[]).filter(x=>x.document))await Sync.req('DELETE','/filmq/'+x.document.name.split('/').pop()).catch(()=>{});
+    await Sync.req('DELETE','/films/'+f.id);this.list=this.list.filter(x=>x!==f);this.th=this.th.filter(t=>t.film!==f.id);IDB.del('film:'+f.id).catch(()=>{})},
+  threads(f){return this.th.filter(t=>t.film===f.id).sort((a,b)=>b.updated-a.updated)},
+  // one thread per player and clip: the player answers the coach's question or asks; coaches reply in it
+  async send(f,t,text){const u=Sync.user;text=String(text||'').trim().slice(0,2000);if(!text)return;
+    if(!t){t=this.th.find(x=>x.film===f.id&&x.author===u.uid);if(!t){t={id:f.id+'_'+u.uid,team:f.team,film:f.id,author:u.uid,email:u.email,msgs:[],updated:0,_new:true};this.th.push(t)}}
+    t.msgs.push({by:u.email,text,t:Date.now()});t.updated=Date.now();
+    await Sync.req('PATCH','/filmq/'+t.id,this.encT(t),t._new?'currentDocument.exists=false':'');delete t._new;
+    Push.notify('fq',t.id)},
+  seen(k,v){try{const o=JSON.parse(localStorage.getItem('pbb-fseen')||'{}');if(v===undefined)return o[k]||0;o[k]=v;localStorage.setItem('pbb-fseen',JSON.stringify(o))}catch(e){return 0}},
+  // new messages for me in the threads of a clip
+  news(f){const u=Sync.user;if(!u)return 0;return this.threads(f).reduce((n,t)=>n+t.msgs.filter(m=>m.by!==u.email&&m.t>this.seen(t.id)).length,0)},
+  usage(){return this.list.reduce((s,f)=>s+f.size,0)}
+};
+const fmT=s=>{s=Math.max(0,s||0);const m=Math.floor(s/60),x=s-m*60;return m+':'+(x<10?'0':'')+x.toFixed(1).replace('.',',')};
+const fmMB=b=>(b/1048576).toFixed(b<10485760?1:0).replace('.',',')+' MB';
+
+/* make the video small: play it into a canvas (≤ 854×480, no sound) and record that */
+async function filmShrink(file,t0,t1,show){
+  const v=document.createElement('video');v.muted=true;v.playsInline=true;v.preload='auto';v.src=URL.createObjectURL(file);
+  v.style.cssText='position:fixed;left:0;top:0;width:2px;height:2px;opacity:.01;pointer-events:none';document.body.appendChild(v);   // in the page, otherwise some browsers don't decode
+  const end=()=>{v.pause();URL.revokeObjectURL(v.src);v.remove()};
+  await new Promise((res,rej)=>{v.onloadedmetadata=res;v.onerror=()=>rej(new Error('Video lässt sich nicht öffnen'))});
+  const sc=Math.min(1,854/v.videoWidth,480/v.videoHeight),W=Math.round(v.videoWidth*sc/2)*2,H=Math.round(v.videoHeight*sc/2)*2;
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');if(show){show.innerHTML='';cv.style.cssText='max-width:100%;border-radius:8px;display:block;margin:8px auto';show.appendChild(cv)}
+  const types=['video/mp4;codecs=avc1.42E01E','video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp8','video/webm'];
+  const mime=window.MediaRecorder&&types.find(t=>MediaRecorder.isTypeSupported(t));
+  const seek=t=>new Promise(r=>{v.onseeked=()=>r();v.currentTime=t});
+  await seek(t0);c.drawImage(v,0,0,W,H);
+  const poster=(()=>{const p=document.createElement('canvas'),w=320,h=Math.round(320*H/W);p.width=w;p.height=h;p.getContext('2d').drawImage(cv,0,0,w,h);return p.toDataURL('image/jpeg',.7)})();
+  if(!mime){end();return {blob:null,poster,W,H}}
+  const st=cv.captureStream(30),rec=new MediaRecorder(st,{mimeType:mime,videoBitsPerSecond:1100000}),ch=[];
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+  const done=new Promise(r=>rec.onstop=r);
+  rec.start(250);await v.play();
+  // copy frames until the end of the cut; stop if the video hangs
+  await new Promise(res=>{let last=-1,still=Date.now();const step=()=>{c.drawImage(v,0,0,W,H);const t=v.currentTime;
+      if(t!==last){last=t;still=Date.now()}if(t>=t1||v.ended||Date.now()-still>4000){v.pause();res();return}setTimeout(step,1000/40)};step()});
+  rec.stop();await done;st.getTracks().forEach(t=>t.stop());end();
+  return {blob:new Blob(ch,{type:mime.split(';')[0]}),poster,W,H}}
+function fmBusy(txt,pct){let el=$('#fmBusy');if(txt===null){if(el)el.remove();return null}
+  if(!el){el=document.createElement('div');el.id='fmBusy';el.innerHTML='<div class="fmbox"><b></b><div class="fmbar"><i></i></div><div class="fmshow"></div></div>';document.body.appendChild(el)}
+  el.querySelector('b').textContent=txt;el.querySelector('i').style.width=pct==null?'0':Math.round(pct*100)+'%';el.querySelector('.fmbar').hidden=pct==null;return el.querySelector('.fmshow')}
+
+/* the 🎬 tab */
+function filmHtml(){const can=Film.can(),all=Film.vis();
+  if(!Sync.user)return '<div class="fmwrap"><p class="hint">Bitte anmelden.</p></div>';
+  if(!Film.team())return '<div class="fmwrap"><h2>🎬 Film</h2><p class="hint">Film gibt es für Teams: lege unter 👤 Konto → 👥 Team-Liste dein Team an.</p></div>';
+  const opps=[...new Set(all.map(f=>f.opp).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'de'));
+  const fk=state.fmK||'',fo=opps.includes(state.fmO)?state.fmO:'';
+  const fs=all.filter(f=>(!fk||f.kind===fk)&&(!fo||f.opp===fo)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||b.updated-a.updated);
+  const groups={};fs.forEach(f=>{const k=f.opp||'Ohne Gegner';(groups[k]=groups[k]||[]).push(f)});
+  const card=f=>{const nw=Film.news(f),nm=f.marks.length;
+    return `<div class="fmcard"><button type="button" class="fmopen" data-fm="${esc(f.id)}">${f.poster?`<img src="${f.poster}" alt="">`:'<div class="fmnopic">🎬</div>'}<span class="fmdur">${fmT(f.dur).replace(/,\d$/,'')}</span>${nw?`<span class="fmnew">💬 ${nw}</span>`:''}</button>
+      <div class="fmtxt"><b>${esc(f.title||'Clip')}</b><span class="hint">${f.kind==='prep'?'🔭 Vorbereitung':'🔁 Nachbesprechung'}${f.date?' · '+dNice(f.date):''}${nm?` · ✎ ${nm}`:''}${f.q?' · ❓':''}${f.co?' · 🔒 Coaches':''}${f.up?' · ⏳ lädt hoch':''}</span></div>
+      ${can?`<button type="button" class="btn sm fmmenu" data-fmedit="${esc(f.id)}" title="Bearbeiten">✎</button>`:''}</div>`};
+  const used=Film.usage();
+  return `<div class="fmwrap"><div class="fmhead"><h2>🎬 Film</h2>
+    <select data-fmf="k"><option value="">Alle Clips</option><option value="post"${fk==='post'?' selected':''}>🔁 Nachbesprechung</option><option value="prep"${fk==='prep'?' selected':''}>🔭 Vorbereitung</option></select>
+    ${opps.length?`<select data-fmf="o"><option value="">Alle Gegner</option>${opps.map(o=>`<option${o===fo?' selected':''}>${esc(o)}</option>`).join('')}</select>`:''}
+    ${can?`<span style="flex:1"></span><button type="button" class="btn primary" data-fma="upload">＋ Clip hochladen</button><button type="button" class="btn" data-fma="more">⋯</button>`:''}</div>
+    ${Film.err==='rules'&&!all.length?`<div class="banner">${can?'Film ist noch nicht freigeschaltet: Die neuen Firestore-Regeln müssen einmal in der Firebase-Konsole eingetragen werden.':'Film ist noch nicht eingerichtet – frag deinen Coach.'}</div>`:''}
+    ${!Film.ok&&!all.length?'<p class="hint">Lädt…</p>':''}
+    ${Film.ok&&!all.length?`<p class="hint">${can?'Noch keine Clips. Lade kurze Szenen vom Handy oder PC hoch – die App macht sie klein, du kannst sie markieren und den Spielern eine Frage dazu stellen.':'Dein Coach hat noch keine Clips hochgeladen.'}</p>`:''}
+    ${Object.keys(groups).map(g=>`<h3 class="fmgrp">${g==='Ohne Gegner'?esc(g):'vs. '+esc(g)} <span class="hint">· ${groups[g].length} Clip${groups[g].length>1?'s':''}</span></h3><div class="fmgrid">${groups[g].map(card).join('')}</div>`).join('')}
+    ${can&&all.length?`<p class="hint" style="margin-top:18px">☁ Belegt: ${fmMB(used)} – kostenlos sind etwa 1000 MB. Nicht mehr gebrauchte Clips mit ⋯ → „💾 Auf Gerät sichern“ herunterladen und dann löschen; zum Rückspiel einfach wieder laden.</p>`:''}</div>`}
+document.addEventListener('change',e=>{const s=e.target.closest('[data-fmf]');if(!s)return;if(s.dataset.fmf==='k')state.fmK=s.value;else state.fmO=s.value;renderView()});
+document.addEventListener('click',e=>{const o=e.target.closest('[data-fm]');if(o){const f=Film.get(o.dataset.fm);if(f)FilmPl.open(f);return}
+  const ed=e.target.closest('[data-fmedit]');if(ed){const f=Film.get(ed.dataset.fmedit);if(f)filmEdit(f);return}
+  const a=e.target.closest('[data-fma]');if(!a)return;
+  if(a.dataset.fma==='upload')return filmPick();
+  if(a.dataset.fma==='more')return filmMore()});
+async function filmMore(){const r=await modal('🎬 Film',`<div style="display:flex;flex-direction:column;gap:8px">
+    <button type="button" class="btn" data-v="push">🔔 Team benachrichtigen <span class="hint">– „Neue Clips zum Ansehen“</span></button>
+    <button type="button" class="btn" data-v="export">💾 Auf Gerät sichern <span class="hint">– Clips mit Markierungen als Datei</span></button>
+    <button type="button" class="btn" data-v="import">📂 Gesicherte Clips laden</button></div>`,[{label:'Schließen',value:null}],{x:true,onOpen:el=>el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{el.closest('.mback').remove();
+      ({push:filmPush,export:filmExport,import:filmImport})[b.dataset.v]()})})}
+async function filmPush(){const f=[...Film.vis()].filter(x=>!x.up).sort((a,b)=>b.updated-a.updated)[0];if(!f)return toast('Noch keine Clips');
+  if(!Push.on())return toast('Benachrichtigungen sind nicht eingerichtet');
+  if(!await confirmBox('Team benachrichtigen?','Alle im Team bekommen eine Nachricht: „Neue Clips zum Ansehen“. Antippen öffnet 🎬 Film.','🔔 Senden'))return;
+  try{const j=await Push.call('/notify',{kind:'film',id:f.id});toast(j.skip?'Gerade eben schon gesendet':j.sent?`🔔 Gesendet an ${j.sent} Gerät${j.sent>1?'e':''}`:'Gesendet – im Team hat aber noch niemand Benachrichtigungen eingeschaltet')}catch(e){toast('Nicht möglich: '+e.message)}}
+
+/* upload: pick → cut → describe → make small → upload */
+function filmPick(){const i=document.createElement('input');i.type='file';i.accept='video/*';i.onchange=()=>{const f=i.files&&i.files[0];if(f)filmEdit(null,f)};i.click()}
+function oppSuggest(){const s=new Set();Cal.vis().forEach(e=>(e.opps||[]).forEach(o=>s.add(o)));state.pbs.forEach(p=>p.gw&&(p.gw.opps||[p.gw.opp]).forEach(o=>o&&s.add(o)));Film.list.forEach(f=>f.opp&&s.add(f.opp));return [...s].sort((a,b)=>a.localeCompare(b,'de'))}
+async function filmEdit(f,file){const isNew=!f;f=f?clone(f):cleanFilm({title:file?file.name.replace(/\.[^.]+$/,'').slice(0,60):'',kind:'post',date:dIso(new Date()),marks:[],links:[]});
+  let url=file?URL.createObjectURL(file):'',t0=0,t1=0,dur=0;
+  const pbOpts=state.pbs.map(p=>`<option value="${esc(p.id)}">${p.gw?'🗓 ':''}${esc(p.name)}</option>`).join('');
+  const linkTxt=l=>{const p=state.pbs.find(x=>x.id===l.pb),pl=p&&l.pl&&p.plays.find(x=>x.id===l.pl);return p?(pl?esc(callName(pl))+' <span class="hint">('+esc(p.name)+')</span>':(p.gw?'🗓 ':'📖 ')+esc(p.name)+' <span class="hint">(ganz)</span>'):'<span class="hint">nicht mehr da</span>'};
+  const links=[...f.links];
+  const r=await modal(isNew?'🎬 Clip hochladen':'✎ Clip bearbeiten',`
+    ${file?`<video id="fmV" src="${url}" controls playsinline muted style="width:100%;max-height:42vh;background:#000;border-radius:8px"></video>
+      <div class="row" style="gap:6px;flex-wrap:wrap;margin:6px 0"><button type="button" class="btn sm" id="fmA">⟦ Anfang hier</button><button type="button" class="btn sm" id="fmE">Ende hier ⟧</button><span class="hint" id="fmCut"></span></div>`:''}
+    <label>Titel</label><input id="fmTi" maxlength="80" value="${esc(f.title)}" placeholder="z. B. 2. Quarter – Slant gegen Blue">
+    <label>Gegner</label><input id="fmOp" maxlength="60" list="fmOpL" value="${esc(f.opp)}" placeholder="z. B. Comets"><datalist id="fmOpL">${oppSuggest().map(o=>`<option value="${esc(o)}">`).join('')}</datalist>
+    <div class="row" style="gap:10px"><div style="flex:1"><label>Wofür</label><select id="fmKi"><option value="post">🔁 Nachbesprechung</option><option value="prep"${f.kind==='prep'?' selected':''}>🔭 Vorbereitung</option></select></div>
+      <div style="flex:1"><label>Datum</label><input type="date" id="fmDa" value="${esc(f.date)}"></div></div>
+    <label>Frage an die Spieler <span class="hint">(freiwillig)</span></label><textarea id="fmQ" maxlength="1000" style="min-height:50px" placeholder="z. B. Wer ist hier frei – und warum?">${esc(f.q)}</textarea>
+    <label>Verbunden mit <span class="hint">(erscheint dort rechts unter „🎬 Clips“)</span></label><div id="fmLk"></div>
+    <div class="row" style="gap:6px;margin-top:4px"><select id="fmLp" style="flex:1"><option value="">Playbook / Game Plan …</option>${pbOpts}</select><select id="fmLl" style="flex:1" disabled><option value="">—</option></select><button type="button" class="btn sm" id="fmLa">＋</button></div>
+    <label style="display:flex;gap:6px;align-items:center;margin-top:10px;color:var(--ink)"><input type="checkbox" id="fmCo"${f.co?' checked':''}> 🔒 Nur für Coaches</label>`,
+    [...(isNew?[]:[{label:'🗑 Löschen',value:'del',cls:'danger'}]),{label:'Abbrechen',value:null},{label:isNew?'Hochladen':'Speichern',value:'ok',cls:'primary',validate:el=>{
+      if(file&&(!(t1>t0)||t1-t0>FMAX+.05)){toast(`Bitte einen Ausschnitt von höchstens ${FMAX} Sekunden wählen`);return false}return true}}],
+    {x:true,onOpen:el=>{
+      const lk=()=>{el.querySelector('#fmLk').innerHTML=links.length?links.map((l,i)=>`<span class="chip">${linkTxt(l)} <button type="button" class="linkbtn" data-rm="${i}">✕</button></span>`).join(' '):'<span class="hint">– noch nichts –</span>';
+        el.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{links.splice(+b.dataset.rm,1);lk()})};lk();
+      const sp=el.querySelector('#fmLp'),sl=el.querySelector('#fmLl');
+      sp.onchange=()=>{const p=state.pbs.find(x=>x.id===sp.value);sl.disabled=!p;sl.innerHTML=p?`<option value="">${p.gw?'ganzer Game Plan':'ganzes Playbook'}</option>`+p.plays.map(x=>`<option value="${esc(x.id)}">${esc(callName(x))}</option>`).join(''):'<option value="">—</option>'};
+      el.querySelector('#fmLa').onclick=()=>{if(!sp.value)return;const l={pb:sp.value,pl:sl.value||''};if(!links.some(x=>x.pb===l.pb&&x.pl===l.pl))links.push(l);lk()};
+      if(file){const v=el.querySelector('#fmV'),cut=el.querySelector('#fmCut');const show=()=>{cut.textContent=(t0<.05&&t1>=dur-.05?`Ganzes Video (${(t1-t0).toFixed(1).replace('.',',')} s) – kürzen nur, wenn nötig`:`Ausschnitt ${fmT(t0)} – ${fmT(t1)} (${(t1-t0).toFixed(1).replace('.',',')} s)`)+(dur>FMAX&&t0<.05&&t1>=FMAX-.05?` – das Video ist länger als ${FMAX} s, bitte den Ausschnitt wählen`:'')};
+        v.onloadedmetadata=()=>{dur=v.duration||0;t0=0;t1=Math.min(dur,FMAX);show()};
+        el.querySelector('#fmA').onclick=()=>{t0=v.currentTime;if(t1<=t0||t1-t0>FMAX)t1=Math.min(dur,t0+Math.min(FMAX,15));show()};
+        el.querySelector('#fmE').onclick=()=>{t1=v.currentTime;if(t1<=t0)t0=Math.max(0,t1-5);if(t1-t0>FMAX)t0=t1-FMAX;show()}}}});
+  const v=r.el&&r.el.querySelector('#fmV');if(v)v.pause();
+  if(r.value==='del'){if(url)URL.revokeObjectURL(url);if(!await confirmBox('Clip löschen?',`„${f.title||'Clip'}“ mit Markierungen und Antworten aus der Cloud löschen? Tipp: vorher mit ⋯ → „💾 Auf Gerät sichern“ herunterladen.`))return;
+    const o=Film.get(f.id);try{await Film.del(o);toast('Gelöscht');renderView()}catch(e){toast('Nicht gelöscht: '+e.message)}return}
+  if(r.value!=='ok'){if(url)URL.revokeObjectURL(url);return}
+  const q=s=>r.el.querySelector(s);
+  Object.assign(f,{title:q('#fmTi').value.trim(),opp:q('#fmOp').value.trim(),kind:q('#fmKi').value,date:q('#fmDa').value,q:q('#fmQ').value.trim(),co:q('#fmCo').checked,links});
+  if(!isNew){const o=Film.get(f.id);if(!o)return;Object.assign(o,cleanFilm({...o,...f}));try{await Film.save(o);toast('Gespeichert');renderView();FilmPl.refresh();filmBox()}catch(e){toast('Nicht gespeichert: '+e.message)}return}
+  try{const show=fmBusy('Clip wird verkleinert… (dauert so lange wie der Ausschnitt)');
+    let {blob,poster}=await filmShrink(file,t0,t1,show);
+    if(!blob){if(file.size>25*1048576)throw new Error('Dieser Browser kann Videos nicht verkleinern – nimm Chrome, Edge oder Safari');blob=file}
+    if(blob.size>36*1048576)throw new Error('Clip zu groß – bitte kürzer schneiden');
+    f.dur=Math.round((t1-t0)*10)/10;f.poster=poster;
+    fmBusy('Wird hochgeladen…',0);const nf=await Film.upload(f,blob,p=>fmBusy('Wird hochgeladen…',p));
+    fmBusy(null);toast(`🎬 Hochgeladen (${fmMB(nf.size)})`);if(state.view==='film')renderView();filmBox()}
+  catch(e){fmBusy(null);toast('Nicht hochgeladen: '+e.message)}
+  finally{URL.revokeObjectURL(url)}}
+
+/* 💾 archive: clips with markings as one file on the device – and back */
+async function filmExport(){const fs=Film.vis().filter(f=>!f.up);if(!fs.length)return toast('Keine Clips');
+  const r=await modal('💾 Auf Gerät sichern',`<p class="hint" style="margin-top:0">Die gewählten Clips kommen mit Markierungen und Frage in <b>eine Datei</b>. Später mit „📂 Gesicherte Clips laden“ wieder hochladen – z. B. zum Rückspiel.</p>
+    <div style="max-height:46vh;overflow:auto">${fs.map(f=>`<label style="display:flex;gap:6px;align-items:center;margin:3px 0;color:var(--ink)"><input type="checkbox" data-x="${esc(f.id)}"${!state.fmO||f.opp===state.fmO?' checked':''}> ${esc(f.title||'Clip')} <span class="hint">· ${esc(f.opp||'–')} · ${fmMB(f.size)}</span></label>`).join('')}</div>
+    <label style="display:flex;gap:6px;align-items:center;margin-top:10px;color:var(--ink)"><input type="checkbox" id="fxDel"> Danach aus der Cloud löschen</label>`,
+    [{label:'Abbrechen',value:null},{label:'💾 Sichern',value:'ok',cls:'primary'}],{x:true});
+  if(r.value!=='ok')return;const ids=[...r.el.querySelectorAll('[data-x]:checked')].map(c=>c.dataset.x),del=r.el.querySelector('#fxDel').checked;
+  const sel=fs.filter(f=>ids.includes(f.id));if(!sel.length)return;
+  try{const out=[];for(let i=0;i<sel.length;i++){const f=sel[i];fmBusy(`Clip ${i+1} von ${sel.length} wird geholt…`,i/sel.length);
+      const b=await Film.blob(f);out.push({...f,video:Film.b64(new Uint8Array(await b.arrayBuffer()))})}
+    fmBusy(null);const opps=[...new Set(sel.map(f=>f.opp).filter(Boolean))];
+    const name=`Film_${(opps.length===1?opps[0]:'Clips').replace(/[^\wäöüÄÖÜß-]+/g,'_')}_${dIso(new Date())}.pbfilm`;
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({fmt:'pbfilm',v:1,films:out})],{type:'application/octet-stream'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
+    toast('💾 Gesichert: '+name);
+    if(del&&await confirmBox('Aus der Cloud löschen?',`Die Datei „${name}“ ist heruntergeladen. Jetzt ${sel.length} Clip${sel.length>1?'s':''} aus der Cloud löschen (Antworten der Spieler gehen dabei verloren)?`)){
+      for(const f of sel)await Film.del(f).catch(()=>{});toast('Gelöscht');renderView()}}
+  catch(e){fmBusy(null);toast('Nicht gesichert: '+e.message)}}
+function filmImport(){const i=document.createElement('input');i.type='file';i.accept='.pbfilm,application/octet-stream,application/json';
+  i.onchange=async()=>{const file=i.files&&i.files[0];if(!file)return;
+    try{fmBusy('Datei wird gelesen…');const d=JSON.parse(await file.text());if(!d||d.fmt!=='pbfilm'||!Array.isArray(d.films))throw new Error('Keine Film-Datei');
+      let n=0,skip=0;for(let k=0;k<d.films.length;k++){const x=d.films[k],f=cleanFilm(x);if(!f||typeof x.video!=='string')continue;
+        if(Film.list.some(o=>o.id===f.id||(o.title===f.title&&o.size===f.size))){skip++;continue}
+        const b=new Blob([Film.unb64(x.video)],{type:f.mime});
+        await Film.upload({...f,id:Film.list.some(o=>o.id===f.id)?'':f.id},b,p=>fmBusy(`Clip ${k+1} von ${d.films.length} wird hochgeladen…`,p));n++}
+      fmBusy(null);toast(`📂 ${n} Clip${n===1?'':'s'} geladen${skip?` · ${skip} waren schon da`:''}`);renderView()}
+    catch(e){fmBusy(null);toast('Nicht geladen: '+e.message)}};i.click()}
+
+/* the player: video + markings on top; coaches mark, everyone answers below */
+const FilmPl={f:null,el:null,v:null,cv:null,url:'',edit:false,cur:null,tool:'arrow',col:FCOL[0],held:null,lastT:0,raf:0,draft:null,thOpen:null,
+  async open(f){this.close();this.f=f;this.edit=false;this.cur=null;this.held=null;
+    const el=this.el=document.createElement('div');el.id='filmPl';document.body.appendChild(el);document.body.classList.add('fmopen');
+    el.innerHTML=`<div class="fptop"><b>${esc(f.title||'Clip')}</b><span class="hint">${f.opp?'vs. '+esc(f.opp)+' · ':''}${f.kind==='prep'?'Vorbereitung':'Nachbesprechung'}</span><span style="flex:1"></span>
+      ${Film.can()?'<button type="button" class="btn sm" data-fp="mark">✎ Markieren</button>':''}<button type="button" class="btn sm" data-fp="close" title="Schließen (Esc)">✕</button></div>
+      <div class="fpmain"><div class="fpstage"><div class="fpbox"><video playsinline muted></video><canvas></canvas><div class="fpload">Lädt…</div><button type="button" class="fpgo" hidden>▶ weiter</button></div></div>
+      <div class="fpside"></div></div>
+      <div class="fptools" hidden></div>
+      <div class="fpctl"><button type="button" class="btn sm" data-fp="play">▶</button><button type="button" class="btn sm" data-fp="back" title="Ein Bild zurück">⏮</button><button type="button" class="btn sm" data-fp="fwd" title="Ein Bild vor">⏭</button>
+        <div class="fpbar"><input type="range" min="0" max="1" step="0.01" value="0"><div class="fpticks"></div></div><span class="fptime">0:00</span>
+        <select data-fp="rate" title="Tempo"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option></select></div>`;
+    this.v=el.querySelector('video');this.cv=el.querySelector('canvas');
+    const v=this.v;v.onloadedmetadata=()=>{this.fit();this.ticks();this.draw()};v.onplay=v.onpause=()=>this.btn();
+    el.querySelector('.fpbar input').oninput=e=>{this.seek(+e.target.value)};
+    el.querySelector('.fpgo').onclick=()=>this.go();
+    this.side();this.bindDraw();
+    try{const b=await Film.blob(f,p=>{const l=el.querySelector('.fpload');if(l)l.textContent=`Lädt… ${Math.round(p*100)} %`});if(this.f!==f)return;
+      this.url=URL.createObjectURL(b);v.src=this.url;el.querySelector('.fpload').remove()}
+    catch(e){const l=el.querySelector('.fpload');if(l)l.textContent='Video nicht geladen: '+e.message}
+    const loop=()=>{if(!this.el)return;this.tick();this.raf=requestAnimationFrame(loop)};loop();
+    Film.threads(f).forEach(t=>Film.seen(t.id,Date.now()))},
+  close(){if(!this.el)return;cancelAnimationFrame(this.raf);if(this.edit)this.done(true);this.el.remove();this.el=null;document.body.classList.remove('fmopen');if(this.url)URL.revokeObjectURL(this.url);this.url='';this.f=null;if(state.view==='film')renderView()},
+  fit(){const v=this.v,b=this.el&&this.el.querySelector('.fpbox'),st=this.el&&this.el.querySelector('.fpstage');if(!v||!b||!v.videoWidth)return;
+    const W=st.clientWidth,H=st.clientHeight,ar=v.videoWidth/v.videoHeight;let w=W,h=W/ar;if(h>H){h=H;w=H*ar}
+    b.style.width=Math.floor(w)+'px';b.style.height=Math.floor(h)+'px';const d=devicePixelRatio||1;this.cv.width=Math.floor(w*d);this.cv.height=Math.floor(h*d);this.draw()},
+  ticks(){const el=this.el&&this.el.querySelector('.fpticks');if(!el||!this.v.duration)return;const D=this.v.duration;el.innerHTML=this.f.marks.map(m=>`<i style="left:${m.t/D*100}%"></i>`).join('');
+    const r=this.el.querySelector('.fpbar input');r.max=D},
+  btn(){const b=this.el&&this.el.querySelector('[data-fp="play"]');if(b)b.textContent=this.v.paused&&!this.held?'▶':'⏸';if(b&&this.held)b.textContent='▶'},
+  seek(t){const v=this.v;if(this.edit)this.commit();this.held=null;this.hideGo();v.pause();v.currentTime=Math.max(0,Math.min(v.duration||0,t));this.lastT=v.currentTime;if(this.edit)this.pick();this.draw()},
+  go(){this.held=null;this.hideGo();const v=this.v;if(v.ended||v.currentTime>=v.duration-.05){v.currentTime=0;this.lastT=0}else this.lastT=v.currentTime+.002;v.play().catch(()=>{})},
+  hideGo(){const g=this.el&&this.el.querySelector('.fpgo');if(g)g.hidden=true},
+  // playing: stop at a marking and show it for its time (or until tapped)
+  tick(){const v=this.v;if(!v||!v.duration)return;const t=v.currentTime,r=this.el.querySelector('.fpbar input');if(document.activeElement!==r)r.value=t;
+    this.el.querySelector('.fptime').textContent=fmT(t);
+    if(this.held){if(this.held.until!==Infinity&&Date.now()>this.held.until){this.go()}return this.draw()}
+    if(!v.paused&&!this.edit){const m=this.f.marks.filter(m=>m.hold!==0&&m.t>this.lastT+.001&&m.t<=t+.03).sort((a,b)=>a.t-b.t)[0];
+      if(m){v.pause();v.currentTime=m.t;this.held={m,until:m.hold<0?Infinity:Date.now()+m.hold*1000};if(m.hold<0)this.el.querySelector('.fpgo').hidden=false;this.btn()}}
+    this.lastT=t;this.draw()},
+  showing(){if(this.edit)return this.cur;if(this.held)return this.held.m;const v=this.v;if(!v.paused)return null;
+    return this.f.marks.filter(m=>Math.abs(m.t-v.currentTime)<.2).sort((a,b)=>Math.abs(a.t-v.currentTime)-Math.abs(b.t-v.currentTime))[0]||null},
+  draw(){const cv=this.cv;if(!cv)return;const c=cv.getContext('2d'),W=cv.width,H=cv.height;c.clearRect(0,0,W,H);const m=this.showing();if(!m)return;
+    const sh=[...m.shapes,...(this.draft?[this.draft]:[])],lw=Math.max(3,W/160);
+    for(const s of sh){const P=s.p.map(([x,y])=>[x*W,y*H]);c.strokeStyle=s.c;c.fillStyle=s.c;c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';
+      c.shadowColor='rgba(0,0,0,.6)';c.shadowBlur=lw*1.2;
+      if(s.k==='text'&&P[0]){const fs=Math.max(14,W/28);c.font=`700 ${fs}px system-ui,sans-serif`;const tw=c.measureText(s.txt).width;c.shadowBlur=0;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(P[0][0]-6,P[0][1]-fs,tw+12,fs*1.35);c.fillStyle=s.c;c.fillText(s.txt,P[0][0],P[0][1]+fs*.1);continue}
+      if(P.length<2)continue;
+      if(s.k==='circle'){const [a,b]=[P[0],P[P.length-1]];c.beginPath();c.ellipse((a[0]+b[0])/2,(a[1]+b[1])/2,Math.abs(b[0]-a[0])/2+1,Math.abs(b[1]-a[1])/2+1,0,0,Math.PI*2);c.stroke();continue}
+      const L=s.k==='free'?P:[P[0],P[P.length-1]];c.beginPath();c.moveTo(L[0][0],L[0][1]);L.slice(1).forEach(p=>c.lineTo(p[0],p[1]));c.stroke();
+      if(s.k==='arrow'){const [a,b]=[L[L.length-2],L[L.length-1]],an=Math.atan2(b[1]-a[1],b[0]-a[0]),hl=lw*4;c.beginPath();c.moveTo(b[0],b[1]);c.lineTo(b[0]-hl*Math.cos(an-.45),b[1]-hl*Math.sin(an-.45));c.lineTo(b[0]-hl*Math.cos(an+.45),b[1]-hl*Math.sin(an+.45));c.closePath();c.fill()}}},
+  // ✎ coaches: drawing on the paused picture
+  mark(){if(!Film.can())return;if(this.edit)return this.done();this.edit=true;this.v.pause();this.held=null;this.hideGo();this.pick();this.tools();this.el.classList.add('editing');this.draw()},
+  pick(){const t=this.v.currentTime;const m=this.f.marks.find(m=>Math.abs(m.t-t)<.2);this.cur=m?clone(m):{id:uid('m'),t:Math.round(t*100)/100,hold:-1,shapes:[]};this.tools()},
+  commit(){const c=this.cur;if(!c)return false;const i=this.f.marks.findIndex(m=>m.id===c.id),old=i>=0?JSON.stringify(this.f.marks[i]):'';
+    if(c.shapes.length){if(i>=0)this.f.marks[i]=c;else this.f.marks.push(c)}else if(i>=0)this.f.marks.splice(i,1);
+    this.f.marks.sort((a,b)=>a.t-b.t);const ch=old!==(c.shapes.length?JSON.stringify(c):'');if(ch)this.dirty=true;return ch},
+  async done(quiet){this.commit();this.edit=false;this.cur=null;this.draft=null;if(this.el){this.el.classList.remove('editing');this.el.querySelector('.fptools').hidden=true;this.ticks();this.draw();this.side()}
+    if(this.dirty){this.dirty=false;try{await Film.save(this.f);if(!quiet)toast('✎ Markierungen gespeichert')}catch(e){toast('Nicht gespeichert: '+e.message)}}},
+  tools(){const el=this.el&&this.el.querySelector('.fptools');if(!el||!this.edit)return;el.hidden=false;const c=this.cur;
+    const T=[['arrow','➜','Pfeil'],['line','／','Linie'],['circle','◯','Kreis'],['free','✏️','Freihand'],['text','T','Text']];
+    el.innerHTML=`<span class="hint">Bei ${fmT(c.t)}:</span>${T.map(([k,i,l])=>`<button type="button" class="btn sm${this.tool===k?' on':''}" data-fpt="${k}" title="${l}">${i}</button>`).join('')}
+      ${FCOL.map(x=>`<button type="button" class="fpcol${this.col===x?' on':''}" data-fpc="${x}" style="background:${x}"></button>`).join('')}
+      <button type="button" class="btn sm" data-fp="undo" title="Letztes zurück">↶</button>
+      <select data-fp="hold" title="Beim Abspielen hier anhalten">${[[0,'kein Stopp'],[2,'2 s Stopp'],[3,'3 s Stopp'],[5,'5 s Stopp'],[-1,'Stopp bis Tippen']].map(([v,l])=>`<option value="${v}"${c.hold===v?' selected':''}>${l}</option>`).join('')}</select>
+      <button type="button" class="btn sm" data-fp="clear" title="Alles bei dieser Stelle löschen">🗑</button><button type="button" class="btn sm primary" data-fp="done">✓ Fertig</button>`;
+    el.querySelectorAll('[data-fpt]').forEach(b=>b.onclick=()=>{this.tool=b.dataset.fpt;this.tools()});
+    el.querySelectorAll('[data-fpc]').forEach(b=>b.onclick=()=>{this.col=b.dataset.fpc;this.tools()});
+    el.querySelector('[data-fp="hold"]').onchange=e=>{c.hold=+e.target.value};},
+  bindDraw(){const cv=this.cv;const P=e=>{const r=cv.getBoundingClientRect();return [Math.round((e.clientX-r.left)/r.width*1000)/1000,Math.round((e.clientY-r.top)/r.height*1000)/1000]};
+    cv.addEventListener('pointerdown',async e=>{if(!this.edit){if(this.held&&this.held.until===Infinity)this.go();else if(this.v.paused)this.go();else this.v.pause();return}
+      e.preventDefault();const p=P(e);
+      if(this.tool==='text'){const r=await modal('Text',`<input id="fpTx" maxlength="80" placeholder="z. B. frei!" style="width:100%">`,[{label:'Abbrechen',value:null},{label:'OK',value:'ok',cls:'primary'}],{x:true,onOpen:el=>setTimeout(()=>el.querySelector('#fpTx').focus(),50)});
+        const t=r.value==='ok'&&r.el.querySelector('#fpTx').value.trim();if(t){this.cur.shapes.push({k:'text',c:this.col,p:[p],txt:t});this.draw()}return}
+      cv.setPointerCapture(e.pointerId);this.draft={k:this.tool,c:this.col,p:[p,p]}});
+    cv.addEventListener('pointermove',e=>{if(!this.draft)return;const p=P(e);if(this.draft.k==='free')this.draft.p.push(p);else this.draft.p[1]=p;this.draw()});
+    const up=()=>{const d=this.draft;if(!d)return;this.draft=null;const [a,b]=[d.p[0],d.p[d.p.length-1]];if(Math.hypot(b[0]-a[0],b[1]-a[1])>.01){if(d.k==='free')d.p=d.p.filter((q,i)=>i%2===0||i===d.p.length-1);this.cur.shapes.push(d)}this.draw()};
+    cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up)},
+  // below / beside the video: the coach's question, the answers and questions of the players
+  side(){const el=this.el&&this.el.querySelector('.fpside');if(!el)return;const f=this.f,u=Sync.user,coach=Film.can();
+    const keep={};el.querySelectorAll('textarea[data-fts]').forEach(t=>{if(t.value)keep[t.dataset.fts]=t.value});
+    const who=e=>esc(Team.nameOf(e)||(e||'').split('@')[0]);
+    const msgs=t=>t.msgs.map(m=>`<div class="fpmsg${m.by===u.email?' me':''}"><b>${m.by===u.email?'Du':who(m.by)}</b> <span class="hint">${new Date(m.t).toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span><br>${esc(m.text).replace(/\n/g,'<br>')}</div>`).join('');
+    const links=f.links.map(l=>{const p=state.pbs.find(x=>x.id===l.pb),pl=p&&l.pl&&p.plays.find(x=>x.id===l.pl);return p?`<button type="button" class="btn sm" data-fpl="${esc(l.pb)}|${esc(l.pl)}">${pl?'🏈 '+esc(callName(pl)):(p.gw?'🗓 ':'📖 ')+esc(p.name)}</button>`:''}).join(' ');
+    let h=`${f.q?`<div class="fpq">❓ <b>Frage vom Coach:</b><br>${esc(f.q).replace(/\n/g,'<br>')}</div>`:''}${links?`<div class="fplinks"><span class="hint">Dazu im Playbook:</span> ${links}</div>`:''}`;
+    if(f.marks.length)h+=`<div class="fpmarks"><span class="hint">Markierungen:</span> ${f.marks.map(m=>`<button type="button" class="btn sm" data-fpm="${m.t}">✎ ${fmT(m.t)}</button>`).join(' ')}</div>`;
+    if(!coach){const t=Film.th.find(x=>x.film===f.id&&x.author===u.uid);
+      h+=`<div class="fpth">${t&&t.msgs.length?msgs(t):''}<textarea data-fts="me" maxlength="2000" placeholder="${f.q?'Deine Antwort …':'Frage an deinen Coach …'}">${esc(keep.me||'')}</textarea><button type="button" class="btn sm primary" data-fps="me">Senden</button></div>`}
+    else{const ts=Film.threads(f).filter(t=>t.msgs.length);
+      h+=`<div class="hint" style="margin:8px 0 4px">💬 ${ts.length?`Antworten und Fragen (${ts.length})`:'Noch keine Antworten von Spielern.'}</div>`+ts.map(t=>{const nw=t.msgs.filter(m=>m.by!==u.email&&m.t>Film.seen(t.id)).length;
+        return `<details class="fpth"${this.thOpen===t.id?' open':''} data-ftid="${esc(t.id)}"><summary><b>${who(t.email)}</b>${nw?` <span class="fmnew" style="position:static">neu</span>`:''} <span class="hint">· ${esc((t.msgs[t.msgs.length-1]||{}).text||'').slice(0,50)}</span></summary>${msgs(t)}
+          <textarea data-fts="${esc(t.id)}" maxlength="2000" placeholder="Antwort an ${who(t.email)} …">${esc(keep[t.id]||'')}</textarea><button type="button" class="btn sm primary" data-fps="${esc(t.id)}">Senden</button></details>`}).join('')}
+    el.innerHTML=h;
+    el.querySelectorAll('details[data-ftid]').forEach(d=>d.ontoggle=()=>{if(d.open){this.thOpen=d.dataset.ftid;Film.seen(d.dataset.ftid,Date.now())}});
+    el.querySelectorAll('[data-fpm]').forEach(b=>b.onclick=()=>this.seek(+b.dataset.fpm));
+    el.querySelectorAll('[data-fpl]').forEach(b=>b.onclick=()=>{const [pb,pl]=b.dataset.fpl.split('|');this.close();state.view='pb';selectPb(pb);state.home=false;if(pl)selectPlay(pl);renderAll();renderView()});
+    el.querySelectorAll('[data-fps]').forEach(b=>b.onclick=async()=>{const k=b.dataset.fps,ta=el.querySelector(`textarea[data-fts="${k}"]`);const txt=ta&&ta.value.trim();if(!txt)return;b.disabled=true;
+      try{await Film.send(f,k==='me'?null:Film.th.find(t=>t.id===k),txt);ta.value='';if(k!=='me'){this.thOpen=k;Film.seen(k,Date.now())}toast('Gesendet');this.side()}catch(e){b.disabled=false;toast('Nicht gesendet: '+e.message)}})},
+  refresh(){if(!this.el||!this.f)return;const f=Film.get(this.f.id);if(!f){this.close();return}
+    if(!this.edit&&f!==this.f){this.f=f;this.ticks()}
+    const a=document.activeElement;if(a&&a.closest&&a.closest('.fpside')&&a.value)return;this.side()}};
+document.addEventListener('click',e=>{const b=e.target.closest('#filmPl [data-fp]');if(!b||b.tagName==='SELECT')return;const P=FilmPl,v=P.v,k=b.dataset.fp;
+  if(k==='close')return P.close();if(k==='mark')return P.mark();if(k==='done')return P.done();
+  if(k==='play'){if(v.paused||P.held)P.go();else v.pause();return}
+  if(k==='back')return P.seek(v.currentTime-1/30);if(k==='fwd')return P.seek(v.currentTime+1/30);
+  if(k==='undo'){if(P.cur){P.cur.shapes.pop();P.draw()}return}
+  if(k==='clear'){if(P.cur){P.cur.shapes=[];P.draw()}return}});
+document.addEventListener('change',e=>{const s=e.target.closest('#filmPl [data-fp="rate"]');if(s&&FilmPl.v)FilmPl.v.playbackRate=+s.value});
+document.addEventListener('keydown',e=>{if(!FilmPl.el||e.target.closest('input,textarea,select'))return;
+  if(e.key==='Escape'){if(FilmPl.edit)FilmPl.done();else FilmPl.close()}else if(e.key===' '){e.preventDefault();FilmPl.el.querySelector('[data-fp="play"]').click()}
+  else if(e.key==='ArrowLeft')FilmPl.seek(FilmPl.v.currentTime-1/30);else if(e.key==='ArrowRight')FilmPl.seek(FilmPl.v.currentTime+1/30)});
+window.addEventListener('resize',()=>FilmPl.fit());
+// right column of a play: clips connected with this play or its playbook / game plan
+function filmBox(){const el=$('#insp');if(!el)return;const old=el.querySelector('#filmbox');const pb=curPb(),pl=curPlay();
+  const fs=pb?Film.vis().filter(f=>!f.up&&f.links.some(l=>l.pb===pb.id&&(!l.pl||(pl&&l.pl===pl.id)))):[];
+  if(!fs.length){if(old)old.remove();return}
+  const h=`<h3 style="margin:14px 0 6px">🎬 Clips</h3>${fs.map(f=>`<button type="button" class="btn sm" data-fm="${esc(f.id)}" style="display:flex;gap:8px;align-items:center;width:100%;margin:0 0 6px;text-align:left">${f.poster?`<img src="${f.poster}" alt="" style="width:64px;border-radius:4px">`:'🎬'}<span>${esc(f.title||'Clip')}<br><span class="hint">${f.opp?'vs. '+esc(f.opp):''}${f.marks.length?' · ✎ '+f.marks.length:''}</span></span></button>`).join('')}`;
+  const box=old||document.createElement('div');box.id='filmbox';box.innerHTML=h;if(!old)el.appendChild(box)}
+
 /* ---------- push notifications: the team's push service (Cloudflare Worker) sends them; it only gets the sign-in token, never data ---------- */
 const Push={
   on(){return !!PUSH_URL&&HOSTED},
@@ -3514,7 +3890,7 @@ async function gwPush(){const pb=curPb();if(!pb||!pb.gw||!Sync.user)return;
   catch(e){toast('Nicht möglich: '+e.message)}}
 async function pushDialog(){
   const u=Sync.user;if(!u||!Push.on())return;
-  let me={prefs:{ev:true,gw:true,q:true},devices:0,here:false},s=null,err='';
+  let me={prefs:{ev:true,gw:true,q:true,fm:true},devices:0,here:false},s=null,err='';
   try{s=await Push.sub();me=await Push.call('/me',{endpoint:s&&s.endpoint})}catch(e){err=e.message}
   const here=!!(s&&me.here&&Notification.permission==='granted');
   const coach=!teamPlayer();
@@ -3524,7 +3900,7 @@ async function pushDialog(){
   const r=await modal('🔔 Benachrichtigungen',`${why}${err?`<p class="hint">Push-Dienst gerade nicht erreichbar (${esc(err)}).</p>`:''}
     <p style="margin-top:0">Auf diesem Gerät: <b>${here?'✓ eingeschaltet':'aus'}</b>${me.devices?` <span class="hint">· insgesamt ${me.devices} Gerät${me.devices>1?'e':''} mit deinem Konto</span>`:''}</p>
     <p class="hint" style="margin-bottom:4px">Wofür (gilt für alle deine Geräte):</p>
-    ${box('ev','📅 Termine – neu, geändert oder abgesagt')}${box('gw','🗓 Game Plans – wenn der Coach sie fertig meldet')}${box('q',coach?'💬 Fragen von Spielern und Nachfragen':'💬 Antworten auf deine Fragen')}
+    ${box('ev','📅 Termine – neu, geändert oder abgesagt')}${box('gw','🗓 Game Plans – wenn der Coach sie fertig meldet')}${box('q',coach?'💬 Fragen von Spielern und Nachfragen':'💬 Antworten auf deine Fragen')}${box('fm',coach?'🎬 Film – Antworten der Spieler zu Clips':'🎬 Film – neue Clips und Antworten')}
     <p class="hint" style="font-size:12px">In der Nachricht steht nur, <i>was</i> passiert ist (z. B. „Neuer Termin – Spiel am Sa., 28.11.“), keine Namen oder Inhalte. Für eigene Einträge bekommst du keine Nachricht.${coach?' Termine und Game Plans melden sich nur, wenn der Coach beim Speichern „🔔 Team benachrichtigen“ wählt.':''}</p>`,
     [{label:'Schließen',value:null},...(here?[{label:'Test senden',value:'test'},{label:'Auf diesem Gerät aus',value:'off'}]:[]),{label:here?'Speichern':'Auf diesem Gerät einschalten',value:here?'save':'on',cls:'primary',validate:el=>{if(!here&&!Push.can()){toast(Push.needInstall()?'Erst zum Home-Bildschirm hinzufügen':'Dieser Browser kann das nicht');return false}return true}}],{x:true});
   if(!r.value)return;
@@ -3542,15 +3918,16 @@ document.addEventListener('click',e=>{if(!e.target.closest('[data-acct="push"]')
 // a tap on a notification opens the right place: #ev=… date, #pb=… game plan, #q=… question at its play
 // (the data may still be loading after the start – so it tries again for a while)
 const Link={h:'',t:0,timer:0,lp:0,
-  set(h){h=String(h||'');if(!/^#(ev|pb|q)=|^#cal$/.test(h))return;this.h=h;this.t=Date.now();clearInterval(this.timer);
+  set(h){h=String(h||'');if(!/^#(ev|pb|q|film)=|^#(cal|film)$/.test(h))return;this.h=h;this.t=Date.now();clearInterval(this.timer);
     if(!this.try()){this.fresh();this.timer=setInterval(()=>{if(this.try()||Date.now()-this.t>30000){clearInterval(this.timer);if(this.h)this.fail()}else this.fresh()},700)}},
   fresh(){if(Sync.user&&!Sync.pulling&&Date.now()-this.lp>3000){this.lp=Date.now();Sync.pull()}},   // fetch the news right away instead of waiting for the next sync
   done(){this.h='';clearInterval(this.timer);try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return true},
-  fail(){const h=this.h;this.done();if(/^#ev=|^#cal$/.test(h)&&Sync.user)setView('cal');else toast('Das ist nicht mehr da oder nicht für dich sichtbar.')},
+  fail(){const h=this.h;this.done();if(/^#film/.test(h)&&Sync.user)setView('film');else if(/^#ev=|^#cal$/.test(h)&&Sync.user)setView('cal');else toast('Das ist nicht mehr da oder nicht für dich sichtbar.')},
   try(){const h=this.h;if(!h)return true;if(!Sync.user||needLogin())return false;
     document.querySelectorAll('.mback').forEach(x=>x.remove());
     const [k,v0]=h.slice(1).split('=');const v=decodeURIComponent(v0||'');
     if(k==='cal'){setView('cal');return this.done()}
+    if(k==='film'){if(state.present)setPresent(false);if(!v){setView('film');return this.done()}const f=Film.get(v);if(!f)return false;setView('film');this.done();FilmPl.open(f);return true}
     if(k==='ev'){const ev=Cal.list.find(x=>x.id===v);if(!ev){if(Cal.ok&&Date.now()-this.t>4000){this.h='#cal';return this.try()}return false}if(state.present)setPresent(false);state.calM=ev.date.slice(0,7);setView('cal');this.done();evDetail(ev);return true}
     if(k==='pb'){if(!state.pbs.some(p=>p.id===v))return false;if(state.present)setPresent(false);state.view='pb';selectPb(v);state.home=false;renderAll();renderView();return this.done()}
     if(k==='q'){const q=Q.list.find(x=>x.id===v);if(!q||!state.pbs.some(p=>p.id===q.pbId))return false;if(state.present)setPresent(false);state.view='pb';
@@ -4318,6 +4695,10 @@ function helpDialog(){
     <details class="hsec"><summary>📅 Kalender &amp; 🗓 Game Week</summary><ul>
     <li><b>📅 Kalender</b> (Reiter oben): alle Spiele, Turniere und Termine deines Teams – H = Heimspiel, A = Auswärts. Antippen zeigt Ort, Zeit und Infos.</li>
     <li><b>🗓 Game Week:</b> Vor einem Spiel legt dein Coach eine Game Week für den Gegner an – mit den wichtigsten Plays und Infos zum Gegner. Du findest sie oben in der Auswahl; alle anderen Playbooks kannst du weiter lernen.</li></ul></details>
+    <details class="hsec"><summary>🎬 Film</summary><ul>
+    <li>Im Reiter <b>🎬</b> oben zeigt dein Coach kurze <b>Spielszenen</b> – zur Nachbesprechung oder zur Vorbereitung auf einen Gegner.</li>
+    <li>Antippen spielt den Clip ab. An den <b>Markierungen</b> des Coaches (Pfeile, Kreise, Text) hält er kurz an – oder bis du „▶ weiter“ tippst. ⏮ ⏭ gehen Bild für Bild, ½× / ¼× spielt langsamer.</li>
+    <li>Steht eine <b>❓ Frage vom Coach</b> dabei, schreibst du deine Antwort darunter. Du kannst dort auch selbst eine Frage stellen – nur du und die Coaches sehen das.</li></ul></details>
     <details class="hsec"><summary>🔔 Benachrichtigungen</summary><ul>
     ${pushHelp(false)}</ul></details>
     <p class="hint" style="text-align:right;font-size:11px;margin-bottom:0">Version ${APP_VERSION}</p>`,
@@ -4349,6 +4730,12 @@ function helpDialog(){
     <details class="hsec"><summary>📅 Kalender &amp; 🗓 Game Week</summary><ul>
     <li><b>📅 Kalender</b> (Reiter oben): Spiele, Turniere (mehrere Gegner) und andere Termine mit Ort und Zeit eintragen; H/A steht als Wasserzeichen am Tag, ein Klick zeigt alle Infos. Mit Team-Liste sieht ihn das ganze Team. Im Reiter <b>🗓 Game Week</b> legst du pro Spiel/Turnier keinen, einen oder mehrere <b>Game Plans</b> an – jeweils für die Gegner, die du auswählst.</li>
     <li><b>🗓 Game Week:</b> Links <b>☑ Markieren</b>, Plays und Formationen antippen, dann <b>🗓 In Game Week</b> – sie kommen als <b>Kopie</b> in eine Game Week für einen Gegner (eigene für Offense und Defense). Dort kannst du Plays anpassen und den Gegnern Routen geben (laufen beim Abspielen mit; Man bleibt am Mann, Zone übernimmt und übergibt). Mit „✎ Gegner-Infos“ Gegner, Spieltag und Scouting-Notizen eintragen – die sehen auch die Spieler und stehen im Playbook-PDF. „↻ Aus Original neu übernehmen“ holt den aktuellen Stand aus dem Playbook. Nach dem Spiel <b>📦 Archivieren</b>; aus dem Archiv lässt sie sich wieder holen oder mit <b>🔁 Rückspiel</b> neu anlegen.</li></ul></details>
+    <details class="hsec"><summary>🎬 Film</summary><ul>
+    <li><b>＋ Clip hochladen</b>: Video vom Handy oder PC wählen, fertige Clips einfach so nehmen – nur bei längeren Videos mit ⟦ / ⟧ den Ausschnitt festlegen (höchstens 40 s), Gegner und „Nachbesprechung“ oder „Vorbereitung“ wählen. Die App macht den Clip klein (ca. 480p, ohne Ton) – dauert so lange wie der Ausschnitt. Am besten in Chrome, Edge oder Safari.</li>
+    <li><b>✎ Markieren</b>: an der gewünschten Stelle anhalten, Pfeil, Linie, Kreis, Freihand oder Text zeichnen – der Clip stoppt dort beim Abspielen, bis man tippt (oder nur 2, 3, 5 s). Mehrere Stellen pro Clip möglich.</li>
+    <li><b>Frage an die Spieler</b> beim Clip (✎ Bearbeiten). Jeder Spieler antwortet für sich, du siehst alle Antworten beim Clip und kannst jedem antworten. Spieler können dort auch selbst fragen. Neue Antworten zeigt der rote 💬-Punkt.</li>
+    <li><b>Verbinden</b>: Beim Bearbeiten einen Clip mit einem Play oder einem ganzen Game Plan verbinden – er erscheint dann dort rechts unter „🎬 Clips“.</li>
+    <li><b>⋯ → 🔔 Team benachrichtigen</b>, wenn neue Clips fertig sind. <b>⋯ → 💾 Auf Gerät sichern</b> lädt Clips mit Markierungen als eine Datei herunter (danach kannst du sie aus der Cloud löschen); <b>📂 Gesicherte Clips laden</b> bringt sie z. B. zum Rückspiel zurück. Kostenlos ist Platz für etwa 1000 MB – pro Sekunde Video braucht ein Clip rund 0,15 MB.</li></ul></details>
     <details class="hsec"><summary>🔔 Benachrichtigungen</summary><ul>
     ${pushHelp(true)}</ul></details>
     <details class="hsec"><summary>🛟 Sicherheit &amp; Speichern</summary><ul>
