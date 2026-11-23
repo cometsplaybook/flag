@@ -31,6 +31,8 @@ self.addEventListener('push', e => {
   let m = {};
   try { m = e.data ? e.data.json() : {}; } catch (err) { m = { title: 'Playbook', body: e.data ? e.data.text() : '' }; }
   const tag = m.tag || 'pb';
+  // an open app fetches the news at once
+  self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(cs => cs.forEach(c => c.postMessage({ pushed: tag }))).catch(() => {});
   e.waitUntil(badge(1).catch(() => {}).then(() => self.registration.getNotifications({ tag })).then(list => {
     const old = list[0], n = ((old && old.data && old.data.n) || (old ? 1 : 0)) + 1;
     const body = n > 1 && m.many ? m.many.replace('{n}', n) : (m.body || '');
