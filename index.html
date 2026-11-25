@@ -439,6 +439,7 @@ html.night select,html.night input[type=text],html.night input[type=email],html.
 html.night .btn,html.night .play,html.night .play.dragging,html.night .picklist,html.night .fbshot,html.night .kindtabs button,html.night .qitem,html.night .qlike,html.night .qopt,
 html.night .shapes button,html.night .chips button,html.night .tpl button,html.night .phed,html.night #homeScreen .hsbig,html.night .rounddone>div,html.night #presNotesBox .pnqi{background:#262b31;color:var(--ink)}
 html.night .btn:hover{background:#2f353c;border-color:#4a525b}
+html.night .btn.on,html.night .btn.on:hover{background:var(--ink);color:#14171a;border-color:var(--ink)}html.night #presentBar .btn.on{color:#14171a}
 html.night .chips button.on,html.night .tpl button.on,html.night .shapes button.on{background:var(--ink);color:#14171a}
 html.night .qopt.on{background:#1d4ed8;color:#fff}
 html.night .plgroup{background:#262b31;color:var(--muted)}
@@ -500,9 +501,9 @@ const HOSTED=!/claude|anthropic/i.test(location.hostname)&&!window.claude;   // 
 if(HOSTED){const m=document.createElement('meta');m.httpEquiv='Content-Security-Policy';
   m.content=`default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com${PUSH_URL?' '+new URL(PUSH_URL).origin:''}; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'`;
   document.head.appendChild(m)}
-const APP_VERSION='2026-11-24.32';
+const APP_VERSION='2026-11-25.39';
 // shown to coaches who still have an older version open – newest first, short and in plain words
-const APP_NOTES=["S: 📋 Practice Plan wie euer Excel-Plan: Coaches als Spalten, Blöcke als TEAM oder GROUP (Gruppen mit ihren Coaches), Farben – teilen als Bild für WhatsApp","S: 📍 Beim Ort eines Termins schlägt die App die bisher benutzten Orte vor","S: 🏃 Training als eigene Termin-Art – auch als Serie (z. B. jeden Mo + Sa für 10 Wochen); einzelne löschen oder auf 🚫 Trainingsfrei stellen","S: 🔔 Tippst du auf eine Benachrichtigung, zeigt die App oben, worum es ging; unter 👤 → 🔔 stehen die letzten Benachrichtigungen","S: 📋 Neu: Practice Plan am Trainingstermin – Blöcke mit Uhrzeiten, Übungs-Bibliothek, Vorlagen, optional Plays; Spieler sehen ihn beim Termin, Teilen per WhatsApp","S: ↻ Handy: oben herunterziehen holt die neuesten Daten (auch in der installierten App)","S: ☁ Mit „Speichern im Ordner“ zeigt die Leiste jetzt auch den Cloud-Stand; was nur auf diesem Gerät liegt, steht im 👤 Konto mit „☁ Jetzt hochladen“","S: 👁 Film: Coaches sehen, welcher Spieler einen Clip wie lange angeschaut hat","S: 🎬 Neu: Film – kurze Spielszenen hochladen (die App macht sie klein), mit Pfeilen/Kreisen/Text markieren, Frage an die Spieler; Spieler antworten oder fragen selbst. Clips mit Plays/Game Plans verbinden, als Datei sichern und wieder laden","S: ❓ Hilfe nach Themen sortiert zum Auf- und Zuklappen – neu mit Schritt-für-Schritt-Anleitung „🔔 Benachrichtigungen einschalten“ für iPhone, Android und PC","S: 📱 Handy: obere Leiste passt wieder auf den Bildschirm – Sync-Status nur als Symbol, 👤 ohne Namen, 🌙 Nachtmodus und ✉ Feedback jetzt im 👤 Konto-Fenster","S: ⚡ Kommt eine Benachrichtigung, holt die offene App die Neuigkeit sofort – Fragen, Termine und Game Plans erscheinen gleich, nicht erst nach einer Minute","S: 🔴 Neuigkeiten als rote Zahl am App-Symbol (iPhone-App vom Home-Bildschirm, Chrome/Edge am PC) – verschwindet beim Öffnen der App","S: 🔔 Antippen einer Benachrichtigung öffnet direkt den Termin, den Game Plan bzw. das Play mit der Frage","S: 🔔 Benachrichtigungen aufs Handy: Konto → „🔔 Benachrichtigungen“ – bei Terminen und Game Plans, wenn der Coach „🔔 Team benachrichtigen“ wählt, und bei Fragen/Antworten zu Plays (iPhone: erst „Zum Home-Bildschirm“)","🔧 Zonen direkt am Spieler (z. B. LB-Zone in Green) verschwinden nicht mehr und stehen im Playbook-PDF mit Aufgabe und Details","📝 Neu beim Spieler: Feld „Details“ – erscheint im Playbook-PDF in der Spalte DETAILS","📍 Kalender: Ort antippen öffnet Google Maps, „🚗 Navigation“ startet auf dem Handy direkt die Route","📥 Import „Mein Playbook aktualisieren“: importierte Plays behalten ihren Zeitstempel – eine spätere Datei wird dadurch zuverlässig übernommen","S: 🎨 Feld Hell / Rasen / Dunkel jetzt auch in Präsentation und Lernen umschaltbar","📥 Game Plan: „Plays importieren“ – Plays und Formationen aus dem Playbook auswählen und übernehmen; oben ist dann „Game Week“ markiert","🗑 Game Weeks direkt löschen: Knopf 🗑 oben in der Game Week und im Reiter Game Week (Papierkorb, 30 Tage wiederherstellbar)","☑ Markieren: die Play-Liste springt nicht mehr nach oben","📅 Kalender: neuer Termin per Doppelklick auf den Tag","🪟 Fenster schließen sich nicht mehr, wenn du Text markierst und mit der Maus aus dem Fenster fährst","📅 Kalender: H blau, A grün; Haken „🔒 Coaches only“ – solche Termine sehen Spieler nicht","S: 📅 Kalender (Reiter oben): Spiele, Turniere mit mehreren Gegnern und andere Termine – H/A als Wasserzeichen am Tag. 🗓 Reiter Game Week: pro Termin keinen, einen oder mehrere Game Plans anlegen, für ausgewählte Gegner","S: 🗓 Game Week: Plays und Formationen links mit ☑ Markieren auswählen und als Kopie in eine Game Week für einen Gegner übernehmen – mit Scouting-Notizen, Gegner-Routen, Archiv und Rückspiel","👁 Gegner-Routen: nur sichtbar, wenn eingeschaltet (Knopf neben „Gegner“), nie im Druck. Beim Abspielen bleibt Man am Mann, Zone nimmt Receiver in ihrer Zone auf und übergibt sie","🏈 Gegner-Spieler bekommen jetzt auch Routen und Motion (Vorlagen, selbst zeichnen) – sie laufen beim Abspielen mit","📋 Linke Spalte: Play-Liste zeigt ca. 8 Plays (scrollen für mehr), der Ordner-Hinweis ist jetzt eine schmale Zeile","🌙 Nachtmodus für die ganze App (Knopf 🌙 oben rechts) – das Feld lässt sich wie bisher unabhängig auf Hell, Rasen oder Dunkel stellen","👥 Gegner: „Gegner: aus“ blendet sie nur aus (Man-Zuordnungen bleiben), „🗑 Gegner löschen“ entfernt sie – der doppelte Haken „Gegner anzeigen“ ist weg","S: 🧭 Rechte Spalte neu sortiert: „Linie bearbeiten“ steht oben, Aussehen und Linienfarbe sind eingeklappt (merkt sich offen/zu); Tempo jetzt in Stufen 0,5× bis 2,5×","🎓 „nur wenn … auf meine Seite geht“ erscheint jetzt nur bei Man-Linien, wenn zwei Spieler denselben Gegenspieler covern – und gilt für jeden Gegenspieler, nicht nur den RB","S: 🎓 Lernen Defense: Hat ein Spieler Blitz und eine andere Aufgabe, kommt zufällig die Ansage „mit Blitz“ oder „ohne Blitz“ – danach wird auch die andere Variante abgefragt","🎓 Neu bei „Linie bearbeiten“ (Defense): „nur wenn der RB auf meine Seite geht“ – beim Lernen läuft der RB dann zufällig nach links oder rechts (roter Pfeil)","❓ Hilfe auf den neuesten Stand gebracht","📕 Team Philosophie: Fett, Kursiv und Unterstrichen siehst du jetzt sofort beim Schreiben – kleine Knöpfe wie in Word, auch Strg+B / Strg+I / Strg+U","📕 Playbook (PDF): In der Team Philosophie gibt es jetzt Fett, Kursiv und Unterstrichen (Knöpfe F / K / U über dem Textfeld)","S: 〰 Motion wird jetzt automatisch als Wellenlinie gezeichnet","📏 Hilfslinien gibt es jetzt auch beim gemeinsamen Verschieben mehrerer Spieler – am Spieler, den du anfasst; er rastet an anderen Spielern ein (Alt = frei)","☑ Mehrere: ausgewählte Spieler lassen sich jetzt auch direkt gemeinsam ziehen – kurz antippen ohne Ziehen nimmt einen Spieler wieder aus der Auswahl","🟦 Zonen bleiben jetzt an ihrem Platz, wenn du den Spieler verschiebst – mit gedrückter Shift-Taste (erst nach dem Anfassen drücken) wandert die Zone wie bisher mit","📕 Playbook (PDF): „Deep ⅓“ erscheint jetzt als „Deep 1/3“ statt „Deep ?“","📕 „Playbook-Buch“ heißt jetzt „Playbook“, das bisherige Playbook mit Spalten heißt „Playbook (vereinfacht)“","↕ Line of Scrimmage verschieben: Das ganze Play bewegt sich jetzt mit","S: 🏈 Spielfeld (Flag 5er): Die dicke Linie hinter dem QB ist jetzt die Goal Line der Offense und liegt am Feldrand; die Yard-Zahlen zählen von ihr aus","📏 Hilfslinien: halbe Yards dazwischen, und die Abstands-Striche gibt es jetzt auch links und rechts neben dem Spieler","S: ▶ Abspielen: Steht ein anderer Spieler (z. B. RB) direkt hinter dem C, geht der Snap an ihn und er gibt den Ball an den QB weiter","📏 Hilfslinien: Beim Halten eines Spielers erscheinen eine waagrechte und eine senkrechte Linie – steht er mit einem anderen Spieler in einer Linie, rastet er ein und die Linie wird orange (Alt-Taste = frei setzen)","S: 💬 Fragen: auf eine Antwort direkt nachfragen oder mit 👍 reagieren – Coaches sehen „✓ gelesen“ und bekommen Nachfragen als offene Frage oben angezeigt","💬 Fragen: mehrere Antworten pro Frage, ✎ zum Ausbessern der eigenen Frage oder Antwort; angefangene Antworten bleiben erhalten, das Feld wird beim Reinklicken größer","👥 Freigeben: neuer Knopf „🚫 Nicht mehr teilen“ – beendet Team- und Einzel-Freigaben in einem Schritt","💬 Offene Fragen von Spielern stehen jetzt als roter Knopf oben in der Kopfzeile – antippen zeigt alle und springt zum Play","S: Das Team-Logo steht jetzt oben neben „Playbook Builder“","👥 Team-Liste: Feld „Dein Name“ – Spieler sehen bei geteilten Playbooks deinen Namen statt der E-Mail-Adresse","👤 Der Playbook Builder läuft jetzt nur mit Konto – ohne Anmeldung gibt es nur die Anmeldung. Beim Abmelden bleiben keine Playbooks auf dem Gerät zurück","👥 Spieler (in der Team-Liste nur als Spieler eingetragen) haben keine eigenen Playbooks mehr – nur die geteilten","📁 Der verbundene Ordner gehört zum Konto, das ihn verbunden hat – meldet sich im selben Browser ein anderes Konto an, wird der Ordner nicht benutzt","S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
+const APP_NOTES=["S: 📄 Neu: „＋ Blatt“ – Nachschlage-Blätter wie Route Tree und Zonen (frei bearbeitbar). Sie stehen in der Liste unter „Blätter“ und kommen ganzseitig ins PDF","S: 🌙 Dunkel-Modus: eingeschaltete Knöpfe (z. B. Einrasten) sind wieder erkennbar","S: 🧲 „Einrasten“ (früher „Raster“) ausschalten = Spieler ganz frei verschieben, ohne Raster und ohne Ausrichten an anderen Spielern","S: 🎓 Lernen fragt jetzt auch die Fake-Reihenfolge ab: Der QB tippt die Spieler an, denen er den Ball antäuscht (Fake 1, 2) – danach kommen die Reads","S: 📋 Practice Plan wie euer Excel-Plan: Coaches als Spalten, Blöcke als TEAM oder GROUP (Gruppen mit ihren Coaches), Farben – teilen als Bild für WhatsApp","S: 📍 Beim Ort eines Termins schlägt die App die bisher benutzten Orte vor","S: 🏃 Training als eigene Termin-Art – auch als Serie (z. B. jeden Mo + Sa für 10 Wochen); einzelne löschen oder auf 🚫 Trainingsfrei stellen","S: 🔔 Tippst du auf eine Benachrichtigung, zeigt die App oben, worum es ging; unter 👤 → 🔔 stehen die letzten Benachrichtigungen","S: 📋 Neu: Practice Plan am Trainingstermin – Blöcke mit Uhrzeiten, Übungs-Bibliothek, Vorlagen, optional Plays; Spieler sehen ihn beim Termin, Teilen per WhatsApp","S: ↻ Handy: oben herunterziehen holt die neuesten Daten (auch in der installierten App)","S: ☁ Mit „Speichern im Ordner“ zeigt die Leiste jetzt auch den Cloud-Stand; was nur auf diesem Gerät liegt, steht im 👤 Konto mit „☁ Jetzt hochladen“","S: 👁 Film: Coaches sehen, welcher Spieler einen Clip wie lange angeschaut hat","S: 🎬 Neu: Film – kurze Spielszenen hochladen (die App macht sie klein), mit Pfeilen/Kreisen/Text markieren, Frage an die Spieler; Spieler antworten oder fragen selbst. Clips mit Plays/Game Plans verbinden, als Datei sichern und wieder laden","S: ❓ Hilfe nach Themen sortiert zum Auf- und Zuklappen – neu mit Schritt-für-Schritt-Anleitung „🔔 Benachrichtigungen einschalten“ für iPhone, Android und PC","S: 📱 Handy: obere Leiste passt wieder auf den Bildschirm – Sync-Status nur als Symbol, 👤 ohne Namen, 🌙 Nachtmodus und ✉ Feedback jetzt im 👤 Konto-Fenster","S: ⚡ Kommt eine Benachrichtigung, holt die offene App die Neuigkeit sofort – Fragen, Termine und Game Plans erscheinen gleich, nicht erst nach einer Minute","S: 🔴 Neuigkeiten als rote Zahl am App-Symbol (iPhone-App vom Home-Bildschirm, Chrome/Edge am PC) – verschwindet beim Öffnen der App","S: 🔔 Antippen einer Benachrichtigung öffnet direkt den Termin, den Game Plan bzw. das Play mit der Frage","S: 🔔 Benachrichtigungen aufs Handy: Konto → „🔔 Benachrichtigungen“ – bei Terminen und Game Plans, wenn der Coach „🔔 Team benachrichtigen“ wählt, und bei Fragen/Antworten zu Plays (iPhone: erst „Zum Home-Bildschirm“)","🔧 Zonen direkt am Spieler (z. B. LB-Zone in Green) verschwinden nicht mehr und stehen im Playbook-PDF mit Aufgabe und Details","📝 Neu beim Spieler: Feld „Details“ – erscheint im Playbook-PDF in der Spalte DETAILS","📍 Kalender: Ort antippen öffnet Google Maps, „🚗 Navigation“ startet auf dem Handy direkt die Route","📥 Import „Mein Playbook aktualisieren“: importierte Plays behalten ihren Zeitstempel – eine spätere Datei wird dadurch zuverlässig übernommen","S: 🎨 Feld Hell / Rasen / Dunkel jetzt auch in Präsentation und Lernen umschaltbar","📥 Game Plan: „Plays importieren“ – Plays und Formationen aus dem Playbook auswählen und übernehmen; oben ist dann „Game Week“ markiert","🗑 Game Weeks direkt löschen: Knopf 🗑 oben in der Game Week und im Reiter Game Week (Papierkorb, 30 Tage wiederherstellbar)","☑ Markieren: die Play-Liste springt nicht mehr nach oben","📅 Kalender: neuer Termin per Doppelklick auf den Tag","🪟 Fenster schließen sich nicht mehr, wenn du Text markierst und mit der Maus aus dem Fenster fährst","📅 Kalender: H blau, A grün; Haken „🔒 Coaches only“ – solche Termine sehen Spieler nicht","S: 📅 Kalender (Reiter oben): Spiele, Turniere mit mehreren Gegnern und andere Termine – H/A als Wasserzeichen am Tag. 🗓 Reiter Game Week: pro Termin keinen, einen oder mehrere Game Plans anlegen, für ausgewählte Gegner","S: 🗓 Game Week: Plays und Formationen links mit ☑ Markieren auswählen und als Kopie in eine Game Week für einen Gegner übernehmen – mit Scouting-Notizen, Gegner-Routen, Archiv und Rückspiel","👁 Gegner-Routen: nur sichtbar, wenn eingeschaltet (Knopf neben „Gegner“), nie im Druck. Beim Abspielen bleibt Man am Mann, Zone nimmt Receiver in ihrer Zone auf und übergibt sie","🏈 Gegner-Spieler bekommen jetzt auch Routen und Motion (Vorlagen, selbst zeichnen) – sie laufen beim Abspielen mit","📋 Linke Spalte: Play-Liste zeigt ca. 8 Plays (scrollen für mehr), der Ordner-Hinweis ist jetzt eine schmale Zeile","🌙 Nachtmodus für die ganze App (Knopf 🌙 oben rechts) – das Feld lässt sich wie bisher unabhängig auf Hell, Rasen oder Dunkel stellen","👥 Gegner: „Gegner: aus“ blendet sie nur aus (Man-Zuordnungen bleiben), „🗑 Gegner löschen“ entfernt sie – der doppelte Haken „Gegner anzeigen“ ist weg","S: 🧭 Rechte Spalte neu sortiert: „Linie bearbeiten“ steht oben, Aussehen und Linienfarbe sind eingeklappt (merkt sich offen/zu); Tempo jetzt in Stufen 0,5× bis 2,5×","🎓 „nur wenn … auf meine Seite geht“ erscheint jetzt nur bei Man-Linien, wenn zwei Spieler denselben Gegenspieler covern – und gilt für jeden Gegenspieler, nicht nur den RB","S: 🎓 Lernen Defense: Hat ein Spieler Blitz und eine andere Aufgabe, kommt zufällig die Ansage „mit Blitz“ oder „ohne Blitz“ – danach wird auch die andere Variante abgefragt","🎓 Neu bei „Linie bearbeiten“ (Defense): „nur wenn der RB auf meine Seite geht“ – beim Lernen läuft der RB dann zufällig nach links oder rechts (roter Pfeil)","❓ Hilfe auf den neuesten Stand gebracht","📕 Team Philosophie: Fett, Kursiv und Unterstrichen siehst du jetzt sofort beim Schreiben – kleine Knöpfe wie in Word, auch Strg+B / Strg+I / Strg+U","📕 Playbook (PDF): In der Team Philosophie gibt es jetzt Fett, Kursiv und Unterstrichen (Knöpfe F / K / U über dem Textfeld)","S: 〰 Motion wird jetzt automatisch als Wellenlinie gezeichnet","📏 Hilfslinien gibt es jetzt auch beim gemeinsamen Verschieben mehrerer Spieler – am Spieler, den du anfasst; er rastet an anderen Spielern ein (Alt = frei)","☑ Mehrere: ausgewählte Spieler lassen sich jetzt auch direkt gemeinsam ziehen – kurz antippen ohne Ziehen nimmt einen Spieler wieder aus der Auswahl","🟦 Zonen bleiben jetzt an ihrem Platz, wenn du den Spieler verschiebst – mit gedrückter Shift-Taste (erst nach dem Anfassen drücken) wandert die Zone wie bisher mit","📕 Playbook (PDF): „Deep ⅓“ erscheint jetzt als „Deep 1/3“ statt „Deep ?“","📕 „Playbook-Buch“ heißt jetzt „Playbook“, das bisherige Playbook mit Spalten heißt „Playbook (vereinfacht)“","↕ Line of Scrimmage verschieben: Das ganze Play bewegt sich jetzt mit","S: 🏈 Spielfeld (Flag 5er): Die dicke Linie hinter dem QB ist jetzt die Goal Line der Offense und liegt am Feldrand; die Yard-Zahlen zählen von ihr aus","📏 Hilfslinien: halbe Yards dazwischen, und die Abstands-Striche gibt es jetzt auch links und rechts neben dem Spieler","S: ▶ Abspielen: Steht ein anderer Spieler (z. B. RB) direkt hinter dem C, geht der Snap an ihn und er gibt den Ball an den QB weiter","📏 Hilfslinien: Beim Halten eines Spielers erscheinen eine waagrechte und eine senkrechte Linie – steht er mit einem anderen Spieler in einer Linie, rastet er ein und die Linie wird orange (Alt-Taste = frei setzen)","S: 💬 Fragen: auf eine Antwort direkt nachfragen oder mit 👍 reagieren – Coaches sehen „✓ gelesen“ und bekommen Nachfragen als offene Frage oben angezeigt","💬 Fragen: mehrere Antworten pro Frage, ✎ zum Ausbessern der eigenen Frage oder Antwort; angefangene Antworten bleiben erhalten, das Feld wird beim Reinklicken größer","👥 Freigeben: neuer Knopf „🚫 Nicht mehr teilen“ – beendet Team- und Einzel-Freigaben in einem Schritt","💬 Offene Fragen von Spielern stehen jetzt als roter Knopf oben in der Kopfzeile – antippen zeigt alle und springt zum Play","S: Das Team-Logo steht jetzt oben neben „Playbook Builder“","👥 Team-Liste: Feld „Dein Name“ – Spieler sehen bei geteilten Playbooks deinen Namen statt der E-Mail-Adresse","👤 Der Playbook Builder läuft jetzt nur mit Konto – ohne Anmeldung gibt es nur die Anmeldung. Beim Abmelden bleiben keine Playbooks auf dem Gerät zurück","👥 Spieler (in der Team-Liste nur als Spieler eingetragen) haben keine eigenen Playbooks mehr – nur die geteilten","📁 Der verbundene Ordner gehört zum Konto, das ihn verbunden hat – meldet sich im selben Browser ein anderes Konto an, wird der Ordner nicht benutzt","S: ▶ Abspielen: Spieler in Motion laufen ohne Stopp direkt in ihre Route weiter","🏈 Neu bei Offense-Plays: „Ball beim Abspielen“ – erst ein oder zwei Fakes, dann Ball an QB (behält), Read 1 oder einen bestimmten Spieler (Handoff, Pitch oder Pass)","S: ▶ Abspielen: Bei Plays der Kategorie „Run“ übergibt der QB den Ball an den RB (Handoff) – oder pitcht ihn, wenn seine Linie die Aufgabe „Pitch“ hat","S: ▶ Abspielen: Hat der QB eine Linie mit der Aufgabe „Pitch“, bleibt er stehen und wirft den Ball zum Runner","🔑 Freischalten nur noch mit Code vom Coach – eine Bestätigungs-Mail schickt nur der Admin (beim 🔑 in der Team-Liste: „📧 Stattdessen Mail“)","📤 „Playbook teilen“ neu: gemeinsam nutzen (Team oder einzelne Personen) oder als Kopie-Datei weitergeben – ohne Textwust","🎓 Lernen: sind alle Aufgaben beantwortet, ist der QB gleich ausgewählt und die Reads lassen sich direkt antippen","👥 Team-Liste: Spieler bekommen nur die Playbooks ihrer Positionen (z. B. nur CB, SS → nur Defense; QB und SS → beide; ohne Position → alle)","👥 Team-Liste: Positionen pro Person (z. B. „QB, SS“) – beim 🎓 Lernen müssen nur Spieler mit QB die Reads eintragen","👥 Team-Liste: zu jeder E-Mail-Adresse lässt sich ein Name eintragen – im 📊 Fortschritt und bei 💬 Fragen steht dann der Name statt der Adresse","✉ Nach dem Registrieren passt der Text jetzt für Coaches und Spieler","🆕 Spieler sehen nach einem Update nur noch Neuerungen, die für sie wichtig sind","📊 Fehler behoben: Der Lern-Fortschritt von Spielern kam beim Coach nicht an","📕 Playbook-Buch: breiterer Rand, damit beim Drucken oben und unten nichts abgeschnitten wird; gegnerische Spieler auf den Zeichnungen dunkler","📕 Playbook-Buch: leere Ränder um Logo und Deckblatt-Bild werden abgeschnitten – das Logo sitzt jetzt genau in der Mitte","📕 Playbook-Buch als PDF: Text, Tabellen und Rahmen sind jetzt echte, scharfe Schrift (durchsuchbar), nur die Zeichnungen sind Bilder – kleinere Datei","📕 Playbook-Buch wird jetzt direkt als PDF-Datei gespeichert – ohne Datum und Web-Adresse vom Browser, auch auf Tablet und Handy","📕 Playbook-Buch: saubere Ecken an allen Rahmen, gleiche Aufgaben stehen in der Tabelle nur einmal (nicht „Man / Man“)","📕 Neu unter „Playbook / Wristband“: „Playbook-Buch (PDF)“ – Deckblatt, Team Philosophie, Formations-Übersicht und eine Seite pro Play mit Tabelle und Notizen. Logo und Deckblatt-Bild lassen sich hochladen","⬆ Eine Alternative lässt sich mit „Zur Hauptroute machen“ zur Hauptroute umwandeln","🔤 Die Aufgaben-Namen stehen überall alphabetisch – auch eigene neue Namen","📱 Auf dem Handy: beim Lernen ist das Feld oben groß, die Fragen kommen von unten – Präsentation, Notizen und Startseite passen besser auf den Bildschirm","🔑 Freischalt-Code statt Bestätigungs-Mail: in der Team-Liste oder bei „Freigeben“ neben der Person auf 🔑 tippen und den Code weitergeben","❌ Am Ende einer Lern-Runde lassen sich die falsch beantworteten Plays oder Formations nochmal separat üben","🎓 Beim Lernen kommen Plays und Formations jetzt immer in zufälliger Reihenfolge – der 🔀-Knopf ist weg","❓ Hilfe neu geschrieben – Spieler bekommen eine eigene, kurze Anleitung","🧹 Spieler sehen links nur noch ihre Plays (ohne Export, Import, ＋ und ⋯)","🏠 Spieler mit Offense- und Defense-Playbook sehen beide auf der Startseite","🏠 Spieler sehen beim Öffnen eine Startseite mit „📖 Playbook“ und „🎓 Lernen“ – und eine aufgeräumte Ansicht ohne Werkzeuge zum Bearbeiten","👁 Aufdecken gibt es jetzt auch bei Formations","🎉 Wer einmal durch alle Plays oder Formations ist, sieht das jetzt groß","Coaches haben jetzt „▣ Präsentation“","Playbook-Menü zeigt Plays und Formationen getrennt, z. B. „37 Plays, 10 Formationen“","🎓 Zwischen „Plays“ und „Formations“ lässt sich immer wechseln, auch wenn in den Plays noch keine Aufgaben stehen – 🔀 gibt es jetzt auch bei Formations","📝 Beim Präsentieren und Lernen ist „Notizen“ immer da – dort kann man auch direkt Fragen zum Play an den Coach stellen","📋 „Aufgaben prüfen“ und „🎓 Aufgaben vorschlagen“ gibt es jetzt auch in Playbooks, die mit dir geteilt sind","🏷 Lern-Modus für Formations: oben „Plays | Formations“ umschalten – bei Formations wählt man den richtigen Namen aus der Liste","🎓 Lern-Modus: 🔀 schaltet zufällige Reihenfolge ein – jedes Play kommt einmal dran, dann neue Runde. „Nächstes Play“ geht nach dem letzten wieder von vorn los","🔐 Abmelden: die Seite zeigt danach nur noch die Anmeldung – deine Playbooks sind sicher in der Cloud und erscheinen nach dem Anmelden wieder","⏎ Anmelden geht jetzt auch mit Enter nach dem Passwort","✕ „Dein Konto“ lässt sich oben rechts schließen","🆕 Nach jedem Update zeigt die App, was neu ist – in Ruhe zum Lesen, bis du OK tippst","📊 Lern-Statistik: pro Play zählt nur der erste Versuch am Tag – Wiederholungen nach dem Aufdecken werden als „geübt“ gezählt","🎓 Lern-Modus: Abspielen geht erst nach dem Aufdecken","↶ Rückgängig funktioniert jetzt auch nach „Kopierte Linie einfügen“ und anderen Aktionen rechts","⠿ Reihenfolge ändern: Plays links am Griff ⠿ einfach an die neue Stelle ziehen","📋 Aufgaben prüfen: Spieler stehen in jedem Play in derselben Reihenfolge, doppelte Positionen heißen nach Seite (z. B. WCB / SCB)","🔄 Die App aktualisiert sich jetzt selbst: beim Öffnen sofort, sonst nach 30 Sekunden Hinweis (einmal um 30 Minuten verschiebbar)","🗄 Neu: tägliche Cloud-Sicherung jedes Playbooks – im Playbook-Menü ⋯ → „🗄 Cloud-Sicherungen“ lässt sich jeder Tag der letzten 3 Wochen als Kopie wiederherstellen","📋 Aufgaben prüfen: verlorene Aufgaben-Namen mit „🕘 Fehlende aus dem Verlauf holen“ zurückholen – und sie gehen nicht mehr verloren, wenn jemand mit einer alten Version speichert","🎓 Lern-Modus: Wer „Man“ wählt, muss jetzt auch den passenden Gegenspieler antippen – vorher geht es nicht weiter","👥 Team-Plays: ein einzelnes Play mit „👥 Mit Team teilen“ für alle Coaches sichtbar machen – Coaches mit Bearbeiten-Recht übernehmen es unter „👥 Team-Plays“ in ein Team-Playbook","👥 Playbooks kommen nur noch über den Button „Mit Team teilen“ (Playbook-Menü ⋯) ins Team","👥 Coaches sehen bei geteilten Playbooks nur noch „Coach“ – und jeder Coach im Team kann eigene Playbooks mit dem Team teilen","👥 Team-Liste (Konto → „👥 Team-Liste“): Coaches und Spieler einmal mit Rolle eintragen – alle Team-Playbooks werden automatisch damit geteilt, auch neue von anderen Coaches","★ Eigene Routen-Vorlagen: Linie zeichnen → „Linie bearbeiten“ → „★ Als Vorlage“, Namen vergeben (z. B. Whip) – die Vorlage erscheint bei den Vorlagen und der Name im 🎓 Lern-Modus","🎓 Beim Aufdecken wird die beantwortete Linie selbst grün bzw. rot – auch Blitz und Alternativen","„Deep Mitte“ heißt jetzt „Deep Middle“","🎓 Bei „Man“ muss jetzt auch der Gegenspieler angetippt werden","⋯ → „📋 Aufgaben prüfen“: alle Aufgaben aller Plays auf einen Blick und direkt änderbar","Neue Rolle beim Freigeben: „Coach – lesen + Fortschritt“","📊 Fortschritt: Coaches sehen über ⋯ Zeit und Lern-Ergebnisse der Spieler mit Lesezugriff","⋯ → „🎓 Aufgaben für Lernen vorschlagen“ trägt Namen wie Deep ½, Flat oder Slant automatisch ein","🎓 Lernen: Spieler antippen, Aufgabe wählen (z. B. Deep ½, Slant), dann aufdecken – QB-Reads werden mit abgefragt","Neu bei jeder Linie: „Aufgabe“ für den Lern-Modus","💬 Fragen zu Plays: Wer ein geteiltes Playbook sieht, kann rechts Fragen stellen – Besitzer und Bearbeiter antworten","Alternativen sind immer gepunktet – auch bei Spielern ganz ohne Hauptroute","Beim Abspielen läuft ein Spieler ohne Hauptroute seine erste Alternative","Neue Linien (Vorlagen, Man, selbst gezeichnet) bekommen die Liniendicke der Layout-Vorlage","Wichtig: Beim ersten Anmelden auf einem Gerät gehen neuere Plays dieses Geräts nicht mehr verloren","Call-Sheet, Playbook, Wristband und Liste zeigen Plays als „Formation + Play“ (z. B. Base Raven)","Hinweis, wenn eine neue Version der App da ist","Hinweis, wenn ein geteiltes Playbook von einem anderen Coach geändert wurde"];
 const S=10; // svg units per yard
 const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);   // finger instead of mouse: bigger grab areas
 
@@ -1184,30 +1185,33 @@ function thumbFor(pb,pl){
 const TAGS=['1st Down','2nd & long','3rd & short','3rd & long','Red Zone','Goal Line','2-Minute','PAT','vs. Man','vs. Zone','vs. Blitz'];
 function usedTags(pb){const set=new Set();pb.plays.forEach(pl=>(pl.tags||[]).forEach(t=>set.add(t)));return [...TAGS.filter(t=>set.has(t)),...[...set].filter(t=>!TAGS.includes(t)).sort()]}
 const isF=pl=>!!pl&&pl.kind==='formation';
+// 📄 sheets ("Blätter"): reference pages such as a route tree or the zones – drawn like a play, printed full page, never quizzed
+const isSh=pl=>!!pl&&pl.kind==='sheet';
+const isPlay=pl=>!!pl&&!isF(pl)&&!isSh(pl);
+const kindOf=pl=>isF(pl)?'f':isSh(pl)?'s':'p';
 // formations are numbered F1, F2 …, plays 1, 2 … – each counted on their own
 // right column: the name of the play / formation (the number stays in the list on the left)
-const inspTitle=(pb,pl)=>esc((pl.name||'').trim()||(isF(pl)?'Formation ':'Play ')+playNo(pb,pl));
-function playNo(pb,pl){if(!pb||!pl)return '';const f=isF(pl);let n=0;for(const x of pb.plays){if(isF(x)===f)n++;if(x===pl)break}return (f?'F':'')+n}
-function sortKinds(list){return [...list.filter(isF),...list.filter(x=>!isF(x))]}
-function playMatches(pl,q){if(state.kindF&&(state.kindF==='f')!==isF(pl))return false;if(state.tagF&&!(pl.tags||[]).includes(state.tagF))return false;if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes,...(pl.tags||[])].some(x=>(x||'').toLowerCase().includes(q))}
+const inspTitle=(pb,pl)=>esc((pl.name||'').trim()||(isF(pl)?'Formation ':isSh(pl)?'Blatt ':'Play ')+playNo(pb,pl));
+function playNo(pb,pl){if(!pb||!pl)return '';const k=kindOf(pl);let n=0;for(const x of pb.plays){if(kindOf(x)===k)n++;if(x===pl)break}return ({f:'F',s:'B',p:''})[k]+n}
+function sortKinds(list){return [...list.filter(isF),...list.filter(isPlay),...list.filter(isSh)]}
+function playMatches(pl,q){if(state.kindF&&state.kindF!==kindOf(pl))return false;if(state.tagF&&!(pl.tags||[]).includes(state.tagF))return false;if(!q)return true;q=q.toLowerCase();return [pl.name,pl.cat,pl.formation,pl.notes,...(pl.tags||[])].some(x=>(x||'').toLowerCase().includes(q))}
 function playListHTML(pb){const r=playItems(pb);return r.items.join('')+r.tail}
 function playItems(pb){
   if(state.tagF&&!usedTags(pb).includes(state.tagF))state.tagF='';
   const q=state.q.trim();const list=sortKinds(pb.plays).map(pl=>[pl,0]).filter(([pl])=>playMatches(pl,q));const filt=q||state.tagF||state.kindF;
-  const nf=list.filter(([pl])=>isF(pl)).length,np=list.length-nf;
-  const out=[],grp=nf&&!state.kindF,col=state.collapsed||{};
+  const cnt={f:0,p:0,s:0};list.forEach(([pl])=>cnt[kindOf(pl)]++);
+  const out=[],grp=(cnt.f||cnt.s)&&!state.kindF,col=state.collapsed||{};let last='';
   const hd=(k,n,c)=>`<button class="plgroup" data-grp="${k}" title="${col[k]?'Aufklappen':'Zuklappen'}"><span>${col[k]?'▸':'▾'}</span> ${n} · ${c}</button>`;
   list.forEach(([pl],k)=>{
-    if(grp&&k===0)out.push(hd('f','Formationen',nf));
-    if(grp&&np&&k===nf)out.push(hd('p','Plays',np));
-    if(grp&&col[isF(pl)?'f':'p'])return;   // group is folded in
+    const kk=kindOf(pl);if(grp&&kk!==last){last=kk;out.push(hd(kk,{f:'Formationen',p:'Plays',s:'📄 Blätter'}[kk],cnt[kk]))}
+    if(grp&&col[kk])return;   // group is folded in
     out.push(playRow(pb,pl,filt))});
   return {items:out,
     tail:(pb.plays.length?(filt?`<div class="hint">${list.length} von ${pb.plays.length} Einträgen${list.length?'':' – nichts gefunden'}</div>`:''):'<div class="hint">Noch keine Plays.</div>')};
 }
 function playRow(pb,pl,filt){
   const pk=state.pick&&state.pick.has(pl.id);
-  return `<div class="play${isF(pl)?' isform':''}${state.pick?' picking':''}${pk?' picked':''}" data-play="${pl.id}">
+  return `<div class="play${isF(pl)?' isform':''}${isSh(pl)?' issheet':''}${state.pick?' picking':''}${pk?' picked':''}" data-play="${pl.id}">
       <div class="num">${state.pick?`<span class="pickbox">${pk?'☑':'☐'}</span>`:playNo(pb,pl)}</div>${thumbFor(pb,pl)}
       <div style="min-width:0"><div class="nm">${isPlayer(pb)?'':`${pl.locked?'🔒 ':''}${pb.layoutPlayId===pl.id?'⭐ ':''}`}${esc(callName(pl)||'Ohne Namen')}${(n=>n?(w=>` <span class="qbadge${w?' wait':''}" title="${n} ${n===1?'Frage':'Fragen'} nicht erledigt${w?` – ${w} ${w===1?'wartet':'warten'} auf Antwort`:''}">💬${n}</span>`)(Q.waiting(pb,pl)):'')(Sync.user?Q.open(pb,pl):0)}</div><div class="ct">${esc(pl.cat||'')}</div></div>
       <div class="mv">${filt||isRO(pb)?'':`<span class="grip" data-grip="${pl.id}" title="Ziehen, um die Reihenfolge zu ändern">⠿</span>`}</div></div>`;
@@ -1237,11 +1241,11 @@ function renderSide(){qBtnUpdate();
     h+=`<div><span class="chip ${pb.type==='defense'?'def':''}">${pb.type==='defense'?'Defense':'Offense'}</span> <span class="chip" style="background:#eee;color:#444">${VAR[pb.variant].name}</span>${shareChip(pb)}</div>`;
     if(pb.gw)h+=gwHead(pb);
     if(!isPlayer(pb)&&pb.plays.length)h+=`<div class="selbar">${state.pick?`<b>${state.pick.size} markiert</b><button class="btn sm" data-a="pickAll">Alle</button><button class="btn sm" data-a="pickNone">Keine</button><button class="btn sm primary" data-a="pickGW"${state.pick.size?'':' disabled'}>🗓 In Game Week</button><button class="btn sm" data-a="pickEnd">Fertig</button>`:`<button class="btn sm" data-a="pickStart" title="Plays und Formationen markieren, z. B. um sie in eine Game Week zu übernehmen">☑ Markieren</button>`}</div>`;
-    if(pb.plays.some(isF))h+=`<div class="kindtabs">${[['','Alle'],['p','Plays'],['f','Formationen']].map(([k,n])=>`<button data-kind="${k}" class="${state.kindF===k?'on':''}">${n}</button>`).join('')}</div>`;
+    if(pb.plays.some(x=>!isPlay(x)))h+=`<div class="kindtabs">${[['','Alle'],['p','Plays'],...(pb.plays.some(isF)?[['f','Formationen']]:[]),...(pb.plays.some(isSh)?[['s','Blätter']]:[])].map(([k,n])=>`<button data-kind="${k}" class="${state.kindF===k?'on':''}">${n}</button>`).join('')}</div>`;
     if(pb.plays.length>4)h+=`<input type="search" id="playSearch" placeholder="🔍 Plays suchen (Name, Kategorie, Formation)…" value="${esc(state.q)}">`;
     {const ut=usedTags(pb);if(ut.length)h+=`<select id="tagFilter" title="Nach Situation filtern"><option value="">Alle Situationen</option>${ut.map(t=>`<option value="${esc(t)}"${state.tagF===t?' selected':''}>${esc(t)}</option>`).join('')}</select>`}
     var LI=playItems(pb);h+=`<div class="plays">\u0001${LI.tail}</div>
-      ${isRO(pb)?'':'<div class="newrow"><button class="btn primary" data-a="newPlay">＋ Neues Play</button><button class="btn" data-a="newForm" title="Reine Formation ohne Routen anlegen">＋ Formation</button></div>'}
+      ${isRO(pb)?'':'<div class="newrow"><button class="btn primary" data-a="newPlay">＋ Neues Play</button><button class="btn" data-a="newForm" title="Reine Formation ohne Routen anlegen">＋ Formation</button><button class="btn" data-a="newSheet" title="Nachschlage-Blatt, z. B. Route Tree oder Zonen – kommt ganzseitig ins PDF">＋ Blatt</button></div>'}
       ${isPlayer(pb)?`<div class="sidefoot">${installBtn()}</div>`:`<div class="sidefoot"><button class="btn sm" data-a="sheet">Playbook / Wristband</button><button class="btn sm" data-a="exportPb">Playbook teilen</button>
       <button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`}`;
   } else h+=`<div class="sidefoot"><button class="btn sm" data-a="import">Importieren</button><button class="btn sm" data-a="backupAll" title="Alle Playbooks in eine Datei sichern">💾 Alles sichern</button>${installBtn()}${folderUI()}${tpSideBtn()}${trashBtn()}</div>`;
@@ -1316,7 +1320,7 @@ function renderCenter(){
     <button class="btn sm"${D} data-a="mirror" title="Horizontal spiegeln (links ↔ rechts)">⇋</button>
     <button class="btn sm ${pl.flipV?'on':''}"${D} data-a="flipV" title="Vertikal spiegeln (oben ↔ unten)">⇅</button>
     <span class="sep"></span>
-    <button class="btn sm ${state.snap?'on':''}" data-a="snap" title="Am ½-Yard-Raster einrasten">Raster</button>
+    <button class="btn sm ${state.snap?'on':''}" data-a="snap" title="Einrasten: am ½-Yard-Raster und an der Linie anderer Spieler. Aus = Spieler ganz frei verschieben">🧲 Einrasten</button>
     <button class="btn sm" data-a="style" title="Feld-Darstellung">${{light:'Feld: Hell',grass:'Feld: Rasen',dark:'Feld: Dunkel'}[state.style]||'Feld: Hell'}</button>
     <label class="zoom" title="Feldgröße">🔍<input type="range" id="zoom" min="25" max="100" step="1" value="${state.zoom}"></label>
   </div>
@@ -1436,11 +1440,20 @@ function renderInsp0(){
   const p=selPlayer();
   if(!p){
     const fl=pb.plays.filter(isF);
+    if(isSh(pl)){el.innerHTML=`<h3 id="inspTitle">${inspTitle(pb,pl)}</h3>
+      <label>Titel des Blatts</label><input type="text" data-f="name" value="${esc(pl.name)}">
+      <p class="hint" style="margin:4px 0 0">📄 Nachschlage-Blatt: Spieler, Routen, Texte und Zonen frei bearbeiten. Im PDF kommt es ganzseitig direkt nach der Team-Philosophie. Im Lern-Modus wird hier nichts abgefragt.</p>
+      <label>Text unter dem Bild</label><textarea data-f="notes" placeholder="Erklärung, Merkhilfe…">${esc(pl.notes)}</textarea>
+      <h4>Zeichnen</h4>
+      <div class="row"><button class="btn sm" data-a="addZone">＋ Zone</button><button class="btn sm" data-a="addText">＋ Text</button></div>
+      <p class="hint" style="margin:4px 0 0">Spieler antippen, um Bezeichnung, Form und Farbe zu ändern oder Routen zu zeichnen. Texte und Zonen zum Verschieben ziehen.</p>
+      <h4>Aktionen</h4><div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="mirror">Spiegeln ⇋</button><button class="btn sm" data-a="flipV">Spiegeln ⇅</button></div>
+      <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="history">🕘 Verlauf</button><button class="btn sm danger" data-a="delPlay">Löschen</button></div>`;return}
     el.innerHTML=isF(pl)?`<h3 id="inspTitle">${inspTitle(pb,pl)}</h3>
       <label>Name der Formation</label><input type="text" data-f="name" value="${esc(pl.name)}">
       <p class="hint" style="margin:4px 0 0">Eine Formation ist nur die Aufstellung – ohne Routen. Sie steht im Playbook auf einer eigenen Seite und taucht oben bei „Formation…“ zur Auswahl auf.</p>
       <button class="btn primary" data-a="playFromForm" style="margin-top:8px;width:100%">＋ Neues Play mit dieser Formation</button>
-      <p class="hint" style="margin:4px 0 0">Plays mit dieser Formation: ${pb.plays.filter(x=>!isF(x)&&(x.formation||'').trim()===pl.name.trim()).length}</p>
+      <p class="hint" style="margin:4px 0 0">Plays mit dieser Formation: ${pb.plays.filter(x=>isPlay(x)&&(x.formation||'').trim()===pl.name.trim()).length}</p>
       <label>Notizen</label><textarea data-f="notes" placeholder="Aufstellung, Splits, Merkhilfe…">${esc(pl.notes)}</textarea>
       <h4>Aktionen</h4><div class="row"><button class="btn sm" data-a="dupPlay">Duplizieren</button><button class="btn sm" data-a="mirrorH">Spiegeln ⇋</button></div>
       <div class="row" style="margin-top:6px"><button class="btn sm" data-a="png">Als PNG</button><button class="btn sm" data-a="toPlay" title="Wieder zu einem normalen Play machen">Ist ein Play</button></div>${tpBtn()}
@@ -1582,7 +1595,7 @@ function ownTplMatch(pb,p,r){const sx=tplSx(p);let best=null;
     let d=0;t.p.forEach(([o,u],k)=>{d=Math.max(d,Math.hypot(o*sx-r.pts[k].x,-u-r.pts[k].y))});if(d<=2.5&&(!best||d<best.d))best={n:t.n,d}});
   return best&&best.n}
 function suggestTasks(pb){const changed=[];
-  pb.plays.forEach(pl=>{if(isF(pl)||pl.locked)return;
+  pb.plays.forEach(pl=>{if(!isPlay(pl)||pl.locked)return;
     const deepCount=pl.players.filter(p=>p.route&&p.route.end==='zone'&&hasLine(p.route)&&-(p.y+p.route.pts[p.route.pts.length-1].y)>=9).length;
     const got=[];
     pl.players.forEach(p=>[p.route,...(p.alts||[])].forEach(r=>{if(!r||r.task||!hasLine(r))return;const n=suggestTask(pb,pl,p,r,deepCount);if(n){r.task=n;got.push(`${p.label} ${n}`)}}));
@@ -1597,14 +1610,14 @@ function sideLabels(pb,pl){const out={};const def=pb.type==='defense'?pl.players
   const by={};def.forEach(p=>{const k=(p.label||'').toUpperCase();(by[k]=by[k]||[]).push(p)});
   Object.values(by).forEach(g=>{if(g.length!==2||Math.sign(g[0].x)===Math.sign(g[1].x))return;g.forEach(p=>{out[p.id]=(Math.sign(p.x)===side?'S':'W')+p.label})});
   return out}
-function taskOrder(pb){const ref=layoutTpl(pb)||pb.plays.find(x=>!isF(x))||pb.plays[0];const rank={};
+function taskOrder(pb){const ref=layoutTpl(pb)||pb.plays.find(x=>isPlay(x))||pb.plays[0];const rank={};
   (ref?ref.players:[]).forEach((p,i)=>{const k=(p.label||'').toUpperCase();if(!(k in rank))rank[k]=i});
   return (pl,lab)=>(a,b)=>{const ka=(a.label||'').toUpperCase(),kb=(b.label||'').toUpperCase();
     const ra=ka in rank?rank[ka]:999,rb=kb in rank?rank[kb]:999;if(ra!==rb)return ra-rb;if(ka!==kb)return ka<kb?-1:1;
     const wa=(lab[a.id]||'')[0]==='W'?0:1,wb=(lab[b.id]||'')[0]==='W'?0:1;return wa-wb||a.x-b.x}}
 async function tasksDialog(){
   const pb=curPb();if(!pb)return;document.querySelectorAll('.mback').forEach(x=>x.remove());
-  const plays=pb.plays.filter(pl=>!isF(pl));const opts=taskOptions(pb);
+  const plays=pb.plays.filter(pl=>isPlay(pl));const opts=taskOptions(pb);
   const cell=(pl,p,r,k)=>{const auto=!r.task?taskOf(pl,{...p,route:r,alts:[]})[0]:null;const mt=(r.task?normTask(r.task)==='man':auto==='Man')?manTarget(pl,{...p,route:r,alts:[]}):null;const o=mt&&(pl.opp||[]).find(x=>x.id===mt);
     return `<span class="tk"><input type="text" list="tkList" data-tk="${pl.id}|${p.id}|${k}" value="${esc(r.task||'')}" placeholder="${auto?esc(auto):'– fehlt –'}" class="${r.task||auto?'':'miss'}"${pl.locked||isRO(pb)?' disabled':''}>${o?`<small>→ ${esc(o.label)}</small>`:''}${auto&&!r.task?'<small title="von der App erkannt">auto</small>':''}${k!=='route'?'<small>Alt.</small>':''}</span>`};
   const ord=taskOrder(pb);
@@ -1673,21 +1686,27 @@ function quizExpect(pl,p,qa){
   if(bl.length&&nb.length)return qa.blitz?[set(bl),set(nb)]:[set(nb),set(bl)];
   return [set(L)]}
 function readsForMe(pb){if(!(pb&&pb.cloud&&pb.cloud.role==='read'&&Sync.user))return true;const ps=Team.posOf(Sync.user.email);return !ps||ps.includes('QB')}
+// fake order of a play (player ids): pl.fake, then pl.fake2 (old values fakePass/fakeKeep = fake to RB)
+function fakeSeq(pl){const fk=pl.fake||((pl.ball==='fakePass'||pl.ball==='fakeKeep')?'RB':''),U=l=>(l||'').toUpperCase(),out=[];
+  for(const l of [fk,fk&&pl.fake2]){const p=l&&pl.players.find(x=>U(x.label)===U(l));if(p&&!out.includes(p.id))out.push(p.id)}return out}
 function quizInfo(pb,pl){
   const isQB=p=>(p.label||'').toUpperCase()==='QB';
+  if(isSh(pl))return {asked:[],missing:[],hasReads:false,hasFakes:false,isQB};
   const hasReads=pb.type==='offense'&&pl.players.some(p=>p.read>0)&&readsForMe(pb);
-  const asked=pl.players.filter(p=>taskOf(pl,p).length||(isQB(p)&&hasReads));
+  const hasFakes=pb.type==='offense'&&pl.players.some(isQB)&&fakeSeq(pl).length>0&&readsForMe(pb);
+  const asked=pl.players.filter(p=>taskOf(pl,p).length||(isQB(p)&&(hasReads||hasFakes)));
   const missing=pl.players.filter(p=>!asked.includes(p)&&(hasLine(p.route)||(p.alts||[]).some(hasLine)));
-  return {asked,missing,hasReads,isQB};
+  return {asked,missing,hasReads,hasFakes,isQB};
 }
-function qaState(){const pl=curPlay();if(!state.qa||state.qa.playId!==(pl&&pl.id)){const c=pl?quizCtx(pl):{};state.qa={playId:pl&&pl.id,pick:null,slot:0,ans:{},man:{},manPick:null,reads:[],readMode:false,blitz:c.blitz?Math.random()<0.5:null,rb:c.cond?(Math.random()<0.5?'L':'R'):null}}return state.qa}
+function qaState(){const pl=curPlay();if(!state.qa||state.qa.playId!==(pl&&pl.id)){const c=pl?quizCtx(pl):{};state.qa={playId:pl&&pl.id,pick:null,slot:0,ans:{},man:{},manPick:null,reads:[],readMode:false,fakes:[],fakeMode:false,blitz:c.blitz?Math.random()<0.5:null,rb:c.cond?(Math.random()<0.5?'L':'R'):null}}return state.qa}
 function quizResult(pb,pl){const qa=qaState(),qi=quizInfo(pb,pl);const res={};let ok=0,n=0;
   qi.asked.forEach(p=>quizExpect(pl,p,qa).forEach((x,slot)=>{const k=qKey(p.id,slot),right=x.tasks;n++;const a=qa.ans[k];const mt=x.mt;
     let good=!!a&&right.some(r=>normTask(r)===normTask(a));const manWrong=good&&normTask(a)==='man'&&mt&&qa.man[k]!==mt;if(manWrong)good=false;
     if(good)ok++;res[k]={good,a,right,mt,manWrong}}));
   let reads=null;if(qi.hasReads){const want=pl.players.filter(p=>p.read>0).sort((a,b)=>a.read-b.read).map(p=>p.id);n++;
     const good=want.length===qa.reads.length&&want.every((id,i)=>qa.reads[i]===id);if(good)ok++;reads={good,want}}
-  return {res,reads,ok,n}}
+  let fakes=null;if(qi.hasFakes){const want=fakeSeq(pl);n++;const good=want.length===qa.fakes.length&&want.every((id,i)=>qa.fakes[i]===id);if(good)ok++;fakes={good,want}}
+  return {res,reads,fakes,ok,n}}
 function quizColors(pb,pl){const R=quizResult(pb,pl),out={};
   pl.players.forEach(p=>{const c={};[R.res[p.id],R.res[p.id+'#2']].forEach(r=>{if(!r)return;const lines=[[p.route,'route'],...(p.alts||[]).map((x,j)=>[x,'alt'+j])].filter(([x])=>hasLine(x));
     const name=x=>taskOf(pl,{...p,route:x,alts:[]})[0];
@@ -1721,6 +1740,10 @@ function quizOverlay(pb,pl,base,flip){
     qa.reads.forEach((id,i)=>{const p=pl.players.find(x=>x.id===id);if(!p)return;const good=shown?R.reads.want[i]===id:null;
       s+=tag(p,'R'+(i+1),shown?(good?'#16a34a':'#dc2626'):'#fde68a',shown?'#fff':'#92400e',-26)});
     if(shown&&!R.reads.good)R.reads.want.forEach((id,i)=>{if(qa.reads[i]===id)return;const p=pl.players.find(x=>x.id===id);if(p)s+=tag(p,'richtig: R'+(i+1),'#fff','#16a34a',-40)})}
+  if(qi.hasFakes){const rd=id=>qi.hasReads&&(qa.reads.includes(id)||(shown&&R.reads.want.includes(id)));   // a read tag already sits there: one row higher
+    qa.fakes.forEach((id,i)=>{const p=pl.players.find(x=>x.id===id);if(!p)return;const good=shown?R.fakes.want[i]===id:null;
+      s+=tag(p,'Fake '+(i+1),shown?(good?'#16a34a':'#dc2626'):'#ede9fe',shown?'#fff':'#6d28d9',rd(id)?-54:-26)});
+    if(shown&&!R.fakes.good)R.fakes.want.forEach((id,i)=>{if(qa.fakes[i]===id)return;const p=pl.players.find(x=>x.id===id);if(p)s+=tag(p,'richtig: Fake '+(i+1),'#fff','#16a34a',rd(id)||qa.fakes.includes(id)?-68:-40)})}
   return s;
 }
 function quizPickOpp(oid){const qa=qaState();if(state.quizShown||!qa.manPick)return;qa.man[qa.manPick]=oid;qa.manPick=null;quizNext();renderField();quizPanel()}
@@ -1742,7 +1765,7 @@ function roundEnd(forms,total,wrong,review){const el=document.createElement('div
     let ids;if(b.dataset.rd==='wrong'){state.quizOnly=new Set(wrong);ids=wrong}else{state.quizOnly=null;ids=quizPoolOf(pb,forms).map(x=>x.id)}
     const c=ids.filter(id=>id!==state.playId),L=c.length?c:ids,pick=L[Math.floor(Math.random()*L.length)];
     if(pick===state.playId){state.qa=null;state.quizShown=false;renderField();renderPresentBar()}else selectPlay(pick)})}
-function quizPoolOf(pb,forms){let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
+function quizPoolOf(pb,forms){let pool=forms?sortKinds(pb.plays).filter(pl=>isF(pl)&&(pl.name||'').trim()):sortKinds(pb.plays).filter(pl=>isPlay(pl)&&quizInfo(pb,pl).asked.length);
   return pool}
 function quizMark(pl,right){state.quizWrong=state.quizWrong||new Set();if(right)state.quizWrong.delete(pl.id);else state.quizWrong.add(pl.id)}
 function quizNextPlay(){const pb=curPb();if(!pb)return;const forms=isF(curPlay());
@@ -1756,24 +1779,25 @@ function quizNextPlay(){const pb=curPb();if(!pb)return;const forms=isF(curPlay()
   selectPlay(next.id)}
 function quizNext(){const qa=qaState(),pl=curPlay(),qi=quizInfo(curPb(),pl);let next=null,slot=0;
   for(const x of qi.asked){if(qi.isQB(x)&&!taskOf(pl,x).length)continue;const n=quizExpect(pl,x,qa).length;for(let i=0;i<n;i++)if(!qa.ans[qKey(x.id,i)]){next=x;slot=i;break}if(next)break}
-  qa.pick=next?next.id:null;qa.slot=slot;qa.readMode=false;
-  // all tasks answered: on to the QB reads right away
-  if(!next&&qi.hasReads&&!qa.reads.length){const qb=pl.players.find(qi.isQB);if(qb){qa.pick=qb.id;qa.readMode=true}}}
+  qa.pick=next?next.id:null;qa.slot=slot;qa.readMode=false;qa.fakeMode=false;
+  // all tasks answered: on to the QB fakes, then the reads right away
+  if(!next){const qb=pl.players.find(qi.isQB);if(qb&&qi.hasFakes&&!qa.fakes.length){qa.pick=qb.id;qa.fakeMode=true}else if(qb&&qi.hasReads&&!qa.reads.length){qa.pick=qb.id;qa.readMode=true}}}
 function quizPick(pid){
   const pb=curPb(),pl=curPlay(),qa=qaState(),qi=quizInfo(pb,pl);if(state.quizShown)return;
   const p=pl.players.find(x=>x.id===pid);if(!p)return;
   const mpid=qa.manPick&&qa.manPick.split('#')[0];
   if(qa.manPick&&pid!==mpid){const mp=pl.players.find(x=>x.id===mpid);toast(`Erst den Gegenspieler antippen, den ${mp?mp.label:'er'} in Man deckt.`);return}
   if(qa.manPick&&mpid===pid){const k=qa.manPick;qa.manPick=null;delete qa.ans[k];delete qa.man[k];qa.pick=pid;qa.slot=k.endsWith('#2')?1:0;renderField();return renderPresentBar()}   // same player again: choose his task anew
+  if(qa.fakeMode){if(qi.isQB(p)){toast('Tippe die Spieler an, denen der QB den Ball antäuscht.');return}const i=qa.fakes.indexOf(pid);if(i>=0)qa.fakes.splice(i,1);else qa.fakes.push(pid);renderField();return renderPresentBar()}
   if(qa.readMode&&!qi.isQB(p)){const i=qa.reads.indexOf(pid);if(i>=0)qa.reads.splice(i,1);else qa.reads.push(pid);renderField();return renderPresentBar()}
   if(!qi.asked.includes(p)){toast('Für diesen Spieler ist keine Aufgabe hinterlegt.');return}
   const n=quizExpect(pl,p,qa).length;let sl=[...Array(n).keys()].find(i=>!qa.ans[qKey(pid,i)]);if(sl==null)sl=qa.pick===pid&&n>1?1-(qa.slot||0):0;   // second tap on a player with two questions switches between them
-  qa.pick=pid;qa.slot=sl;qa.readMode=qi.isQB(p)&&qi.hasReads&&!taskOf(pl,p).length;renderField();renderPresentBar();
+  const qbOnly=qi.isQB(p)&&!taskOf(pl,p).length;qa.pick=pid;qa.slot=sl;qa.fakeMode=qbOnly&&qi.hasFakes&&(!qa.fakes.length||!qi.hasReads);qa.readMode=qbOnly&&qi.hasReads&&!qa.fakeMode;renderField();renderPresentBar();
 }
 function quizPanel(){quizPanel0();const el=$('#quizPanel');if(el&&state.quizOnly&&state.quizOnly.has(state.playId)){const d=document.createElement('div');d.className='qreview';d.textContent=`❌ Wiederholung – nur die falschen (${[...state.quizOnly].filter(id=>!(state.quizDone||new Set()).has(id)).length} übrig)`;el.prepend(d)}}
 function quizPanel0(){
   let el=$('#quizPanel');const pb=curPb(),pl=curPlay();
-  if(!state.present||!state.quiz||!pb||!pl){if(el)el.remove();return}
+  if(!state.present||!state.quiz||!pb||!pl||isSh(pl)){if(el)el.remove();return}
   if(!el){el=document.createElement('div');el.id='quizPanel';document.body.appendChild(el)}
   const qa=qaState(),qi=quizInfo(pb,pl);const p=qa.pick&&pl.players.find(x=>x.id===qa.pick);
   if(isF(pl)){const names=formNames(pb);const nx=`<button class="btn sm primary" data-a="quizNextPlay">Nächste Formation ▶</button>`;
@@ -1788,19 +1812,22 @@ function quizPanel0(){
       <button class="btn sm primary" data-a="quizShow">Nochmal versuchen</button> <button class="btn sm" data-a="quizNextPlay">Nächstes Play ▶</button>`;
     return}
   if(!qi.asked.length){el.innerHTML=isPlayer(curPb())?`<h4>🎓 Lernen</h4><p class="hint">Bei diesem Play gibt es nichts zu lernen.</p><button class="btn sm primary" data-a="quizNextPlay">Nächstes Play ▶</button>`:`<h4>🎓 Lernen</h4><p class="hint">In diesem Play ist noch keine Aufgabe hinterlegt. Coaches tragen sie beim Bearbeiten unter „Linie bearbeiten → Aufgabe“ ein – oder nutzen die Vorlagen.</p>`;return}
-  let total=0,done=0;qi.asked.forEach(x=>{const n=quizExpect(pl,x,qa).length;if(!n){total++;if(qi.isQB(x)&&qa.reads.length)done++;return}
+  let total=0,done=0;qi.asked.forEach(x=>{const n=quizExpect(pl,x,qa).length;if(!n){total++;if(qi.isQB(x)&&(!qi.hasReads||qa.reads.length)&&(!qi.hasFakes||qa.fakes.length))done++;return}
     for(let i=0;i<n;i++){total++;const k=qKey(x.id,i);if(qa.ans[k]&&!manOpen(pl,qa,k))done++}});
   let h=`<h4>🎓 Was macht wer?</h4>`;
   if(qa.blitz!=null||qa.rb)h+=`<div class="qcall">📣 ${qa.blitz!=null?`Ansage: <b>${qa.blitz?'mit Blitz':'ohne Blitz'}</b>`:''}${qa.blitz!=null&&qa.rb?'<br>':''}${qa.rb?`<b>${esc((quizMover(pl)||{label:'RB'}).label)}</b> geht nach <b>${qa.rb==='R'?'rechts ➡':'⬅ links'}</b> (roter Pfeil)`:''}</div>`;
   h+=`<p class="hint" style="margin-top:0">${done} von ${total} beantwortet</p>`;
   if(qa.manPick){const mp=pl.players.find(x=>x.id===qa.manPick.split('#')[0]);h+=`<p><b>${esc(mp?mp.label:'')}</b> spielt Man – tippe jetzt den <b>Gegenspieler</b> an, den er deckt.</p><p class="hint">Andere Aufgabe? ${esc(mp?mp.label:'')} nochmal antippen.</p>`}
   else if(!p)h+=`<p>Tippe zuerst auf einen <b>Spieler</b> auf dem Feld.</p>`;
+  else if(qa.fakeMode)h+=`<p><b>${esc(p.label)}</b>: Wem täuscht der QB den Ball an? Tippe die Spieler in der <b>Reihenfolge der Fakes</b> an (Fake 1, 2 …).</p>
+    <p class="hint">${qa.fakes.length?qa.fakes.map((id,i)=>'Fake '+(i+1)+' '+esc((pl.players.find(x=>x.id===id)||{}).label||'')).join(' · '):'noch keine Fakes'}</p>
+    <button class="btn sm" data-qf="clear">Fakes zurücksetzen</button> <button class="btn sm primary" data-qf="done">Fertig</button>`;
   else if(qa.readMode)h+=`<p><b>${esc(p.label)}</b>: Tippe die Receiver in der Reihenfolge an, in der der QB liest (Read 1, 2, 3 …).</p>
     <p class="hint">${qa.reads.length?qa.reads.map((id,i)=>'R'+(i+1)+' '+esc((pl.players.find(x=>x.id===id)||{}).label||'')).join(' · '):'noch keine Reads'}</p>
     <button class="btn sm" data-qr="clear">Reads zurücksetzen</button> <button class="btn sm primary" data-qr="done">Fertig</button>`;
   else{const k=qKey(p.id,qa.slot||0),two=quizExpect(pl,p,qa).length>1;
     h+=`<p>${two&&qa.slot?`Und <b>${qa.blitz?'ohne':'mit'} Blitz</b> – Aufgabe`:`Aufgabe${two?` (<b>${qa.blitz?'mit':'ohne'} Blitz</b>)`:''}`} von <b>${esc(p.label)}</b>:</p>${qa.man[k]?`<p class="hint" style="margin-top:-4px">Man gegen <b>${esc(((pl.opp||[]).find(x=>x.id===qa.man[k])||{}).label||'?')}</b> – zum Ändern nochmal „Man“ wählen.</p>`:''}<div class="qopts">${taskOptions(pb).map(n=>`<button class="qopt${qa.ans[k]===n?' on':''}" data-qopt="${esc(n)}">${esc(n)}</button>`).join('')}</div>${two?`<p class="hint" style="font-size:11px">${esc(p.label)} nochmal antippen = zur anderen Frage wechseln</p>`:''}`}
-  if(qi.hasReads&&!qa.readMode){const qb=pl.players.find(qi.isQB);if(qb&&taskOf(pl,qb).length)h+=`<p style="margin-top:10px"><button class="btn sm" data-qr="start">QB-Reads festlegen</button></p>`}
+  {const qb=pl.players.find(qi.isQB);if(qb&&!qa.readMode&&!qa.fakeMode&&(taskOf(pl,qb).length||(qi.hasFakes&&qi.hasReads))){const b=[];if(qi.hasFakes)b.push(`<button class="btn sm" data-qf="start">QB-Fakes festlegen</button>`);if(qi.hasReads)b.push(`<button class="btn sm" data-qr="start">QB-Reads festlegen</button>`);if(b.length)h+=`<p style="margin-top:10px">${b.join(' ')}</p>`}}
   if(qi.missing.length)h+=`<p class="hint" style="margin-top:10px;font-size:11px">Nicht abgefragt (keine Aufgabe hinterlegt): ${qi.missing.map(x=>esc(x.label)).join(', ')}</p>`;
   h+=`<button class="btn primary" data-a="quizShow" style="width:100%;margin-top:10px">👁 Aufdecken</button>`;
   if(Prog.on(pb))h+=`<p class="hint" style="font-size:11px;margin-top:8px">Dein Coach sieht deine Lern-Ergebnisse und wie lange du im Playbook warst.</p>`;
@@ -1812,8 +1839,12 @@ document.addEventListener('click',e=>{
   const o=e.target.closest('[data-qopt]');if(o){const qa=qaState();if(!qa.pick)return;const k=qKey(qa.pick,qa.slot||0);qa.ans[k]=o.dataset.qopt;
     if(normTask(o.dataset.qopt)==='man'&&(curPlay().opp||[]).length){delete qa.man[k];qa.manPick=k;renderField();return quizPanel()}   // then: whom?
     delete qa.man[k];quizNext();renderField();return quizPanel()}
+  const f=e.target.closest('[data-qf]');if(f){const qa=qaState(),pl=curPlay(),qi=quizInfo(curPb(),pl);const k=f.dataset.qf;
+    if(k==='clear')qa.fakes=[];if(k==='done'){qa.fakeMode=false;qa.pick=null;const qb=pl.players.find(qi.isQB);if(qb&&qi.hasReads&&!qa.reads.length){qa.pick=qb.id;qa.readMode=true}}
+    if(k==='start'){qa.fakeMode=true;qa.readMode=false;qa.pick=pl.players.find(qi.isQB).id}
+    renderField();return quizPanel()}
   const r=e.target.closest('[data-qr]');if(r){const qa=qaState();const k=r.dataset.qr;
-    if(k==='clear')qa.reads=[];if(k==='done'){qa.readMode=false;qa.pick=null}if(k==='start'){qa.readMode=true;qa.pick=curPlay().players.find(x=>(x.label||'').toUpperCase()==='QB').id}
+    if(k==='clear')qa.reads=[];if(k==='done'){qa.readMode=false;qa.pick=null}if(k==='start'){qa.readMode=true;qa.fakeMode=false;qa.pick=curPlay().players.find(x=>(x.label||'').toUpperCase()==='QB').id}
     renderField();return quizPanel()}
 });
 function renderPresentBar(){saveView();document.body.classList.toggle('quizzing',!!(state.present&&state.quiz));quizPanel();
@@ -1828,7 +1859,7 @@ function renderPresentBar(){saveView();document.body.classList.toggle('quizzing'
     ${state.quiz&&isPlayer(pb)?'':`<button class="btn sm" data-a="presNext" ${pNext?'':'disabled'} title="Nächstes Play (→)">▶</button>`}
     <span class="sep"></span>
     ${animCtl(pl)}
-    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formations lernen: Namen der Formationen">Formations</button></span>`:''}${state.quiz&&isF(pl)&&!qaState().form?`<button class="btn sm primary" data-a="formShow" title="Lösung zeigen (zählt als nicht gewusst)">👁 Aufdecken</button>`:''}${state.quiz&&!isF(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button>`:''}
+    <button class="btn sm ${state.quiz?'on':''}" data-a="quiz" title="Lern-Modus: eigene Aufgaben verdeckt zeigen">🎓 Lernen</button>${state.quiz&&formNames(pb).length>1?`<span class="seg"><button class="btn sm ${isF(pl)?'':'on'}" data-a="quizKind" data-k="plays" title="Plays lernen: Aufgaben der Spieler">Plays</button><button class="btn sm ${isF(pl)?'on':''}" data-a="quizKind" data-k="forms" title="Formations lernen: Namen der Formationen">Formations</button></span>`:''}${state.quiz&&isF(pl)&&!qaState().form?`<button class="btn sm primary" data-a="formShow" title="Lösung zeigen (zählt als nicht gewusst)">👁 Aufdecken</button>`:''}${state.quiz&&isPlay(pl)?`<button class="btn sm primary" data-a="quizShow" title="Taste A">${state.quizShown?'🙈 Verdecken':'👁 Aufdecken'}</button>`:''}
     <button class="btn sm laserbtn ${Laser.on?'on':''}" data-a="laser" title="Laserpointer (L)">🔴 Laser</button>
     <button class="btn sm" data-a="style" title="Feld-Darstellung: Hell, Rasen, Dunkel">${{light:'Feld: Hell',grass:'Feld: Rasen',dark:'Feld: Dunkel'}[state.style]||'Feld: Hell'}</button>
     <button class="btn sm ${state.presNotes?'on':''}" data-a="presNotes" title="Notizen und Fragen ein/aus (N)">📝 Notizen${Q.forPlay(pl.id).some(q=>!q.done)?' 💬':''}</button>
@@ -1849,7 +1880,7 @@ function renderPresentBar(){saveView();document.body.classList.toggle('quizzing'
 // players (read-only accounts) start in learn mode, so a play is never shown with its solution first
 const isPlayer=pb=>!!(pb&&pb.cloud&&pb.cloud.role==='read');
 function startLearn(){const pb=curPb();if(!pb||!pb.plays.length)return;
-  const pool=sortKinds(pb.plays).filter(x=>!isF(x)&&quizInfo(pb,x).asked.length),fp=sortKinds(pb.plays).filter(x=>isF(x)&&(x.name||'').trim());
+  const pool=sortKinds(pb.plays).filter(x=>isPlay(x)&&quizInfo(pb,x).asked.length),fp=sortKinds(pb.plays).filter(x=>isF(x)&&(x.name||'').trim());
   // nothing to learn in the plays yet: formations if there are any, otherwise a clear hint instead of an empty play
   const first=pool[Math.floor(Math.random()*pool.length)]||fp[Math.floor(Math.random()*fp.length)];
   if(!first)return toast(isPlayer(pb)?'In diesem Playbook gibt es noch nichts zu lernen – dein Coach trägt die Aufgaben noch ein.':'Noch nichts zu lernen: Trag bei den Linien Aufgaben ein (⋯ → „🎓 Aufgaben für Lernen vorschlagen“) oder gib Formationen einen Namen.');
@@ -2061,12 +2092,12 @@ function onMove(e){
   if(d.type==='p'){const nx=snapV(x),ny=snapV(y);
     if(d.group){let sx=nx,sy=ny;d.ax=d.ay=false;
       // guides + snapping for the grabbed player, against players outside the group (Alt = freely)
-      if(!(e&&e.altKey)){const pl=curPlay(),ids=d.group.map(g=>g.id),others=[...pl.players,...(pl.showOpp?pl.opp||[]:[])].filter(o=>!ids.includes(o.id));
+      if(state.snap&&!(e&&e.altKey)){const pl=curPlay(),ids=d.group.map(g=>g.id),others=[...pl.players,...(pl.showOpp?pl.opp||[]:[])].filter(o=>!ids.includes(o.id));
         let bx=0.6,by=0.6;others.forEach(o=>{const ex=Math.abs(o.x-x),ey=Math.abs(o.y-y);if(ex<bx){bx=ex;sx=o.x;d.ax=true}if(ey<by){by=ey;sy=o.y;d.ay=true}})}
       const dx=sx-d.ox,dy=sy-d.oy;d.group.forEach(g=>{const o=findP(g.id);if(o){const c=clampYd(g.ox+dx,g.oy+dy);o.x=r1(c[0]);o.y=r1(c[1]);zKeep(g.z,o,g.ox,g.oy,e&&e.shiftKey)}})}
     else{let sx=nx,sy=ny;d.ax=d.ay=false;
       // snap to the line of another player (within half a yard) – hold Alt to place freely
-      if(!(e&&e.altKey)){const pl=curPlay(),others=[...pl.players,...(pl.showOpp?pl.opp||[]:[])].filter(o=>o!==p);
+      if(state.snap&&!(e&&e.altKey)){const pl=curPlay(),others=[...pl.players,...(pl.showOpp?pl.opp||[]:[])].filter(o=>o!==p);
         let bx=0.6,by=0.6;others.forEach(o=>{const dx=Math.abs(o.x-x),dy=Math.abs(o.y-y);if(dx<bx){bx=dx;sx=o.x;d.ax=true}if(dy<by){by=dy;sy=o.y;d.ay=true}})}
       p.x=sx;p.y=sy;zKeep(d.z||[],p,d.ox,d.oy,e&&e.shiftKey)}}
   else{const r=d.k==='alt'?(p.alts||[])[d.j]:p[d.k];const arr=r&&r.pts;if(arr&&arr[d.i]){arr[d.i]={x:r1(snapV(x)-p.x),y:r1(snapV(y)-p.y)}}}
@@ -2456,7 +2487,7 @@ async function gwAddDialog(){const pb=curPb();if(!pb||!state.pick||!state.pick.s
     state.pbs.push(gw);fresh=true}
   const have=new Set(gw.plays.map(x=>x.src&&x.src.pl));let n=0,skip=0;
   // formations used by the chosen plays come along, so the playbook pages stay complete
-  const forms=new Set(sel.filter(x=>!isF(x)).map(x=>(x.formation||'').trim()).filter(Boolean));
+  const forms=new Set(sel.filter(x=>isPlay(x)).map(x=>(x.formation||'').trim()).filter(Boolean));
   const extra=pb.plays.filter(x=>isF(x)&&forms.has((x.name||'').trim())&&!state.pick.has(x.id)&&!gw.plays.some(y=>isF(y)&&(y.name||'').trim()===(x.name||'').trim()));
   [...extra,...sel].forEach(pl=>{const key=pb.gw&&pl.src?pl.src.pl:pl.id;if(have.has(key)){skip++;return}const c=gwCopy(pb,pl);gw.plays.push(c);have.add(key);n++});
   Store.savePb(gw);gw.plays.forEach(pl=>Store.savePlay(gw,pl));
@@ -2495,7 +2526,7 @@ async function gwImportDialog(src0){const gw=curPb();if(!gw||!gw.gw||isRO(gw))re
     [{label:'Abbrechen',value:null},{label:'Importieren',value:'ok',cls:'primary'}]);
   if(r.value!=='ok')return;const sid=(r.el.querySelector('#impSrc')||{}).value;if(sid)src=state.pbs.find(p=>p.id===sid)||src;
   const ids=new Set([...r.el.querySelectorAll('[name=imp]:checked')].map(x=>x.value));if(!ids.size)return toast('Nichts ausgewählt.');
-  const sel=sortKinds(src.plays).filter(pl=>ids.has(pl.id));const forms=new Set(sel.filter(x=>!isF(x)).map(x=>(x.formation||'').trim()).filter(Boolean));
+  const sel=sortKinds(src.plays).filter(pl=>ids.has(pl.id));const forms=new Set(sel.filter(x=>isPlay(x)).map(x=>(x.formation||'').trim()).filter(Boolean));
   const extra=src.plays.filter(x=>isF(x)&&forms.has((x.name||'').trim())&&!ids.has(x.id)&&!have.has(x.id)&&!gw.plays.some(y=>isF(y)&&(y.name||'').trim()===(x.name||'').trim()));
   let n=0;[...extra,...sel].forEach(pl=>{if(have.has(pl.id))return;const c=gwCopy(src,pl);gw.plays.push(c);have.add(pl.id);Store.savePlay(gw,c);n++});
   if(!gw.gw.src){gw.gw.src=src.id;gw.gw.t=Date.now()}Store.savePb(gw);
@@ -2722,6 +2753,32 @@ function addForm(){const pb=curPb();const pl=newPlay(pb);pl.kind='formation';
   const t=layoutTpl(pb);if(t)applyLayout(t,pl);pl.players.forEach(p=>{p.route=null;p.motion=null;delete p.alts});
   const last=pb.plays.map(isF).lastIndexOf(true);pb.plays.splice(last+1,0,pl);Store.savePlay(pb,pl);Store.savePb(pb);state.kindF=state.kindF==='p'?'':state.kindF;selectPlay(pl.id);
   toast('Formation angelegt – Spieler aufstellen und oben rechts benennen')}
+// 📄 sheet templates – everything in them is a normal player / route / text / zone, so it can all be edited afterwards
+function sheetTpl(kind){const T=(x,y,t,sz)=>({id:uid('m'),type:'text',x,y,text:t,size:sz||1.4,color:INK});
+  const Rt=(pts)=>({pts:pts.map(([x,y])=>({x,y})),style:'solid',end:'arrow',curve:false,color:INK,w:3});
+  const L=(t,sz)=>t.length*(sz||1.4)*0.6;   // rough text width (yards) to put labels left of a line end or centred
+  if(kind==='routes'){const rt=[
+      ['Arrow',[[0,-2.5],[9,-3.5]],'r'],['Five Out',[[0,-6],[11,-6]],'r'],['Comeback',[[0,-13],[3,-10.8]],'r'],['Corner',[[0,-9],[10,-19]],'r'],
+      ['Go',[[0,-22]],'r'],['Post',[[0,-9],[-10,-19]],'l'],['Ten In',[[0,-11],[-12,-11]],'l'],['Hitch',[[0,-9],[-1.8,-7.5]],'l'],['Slant',[[0,-3],[-12,-8]],'l']];
+    const rx=0,ry=1,marks=rt.map(([n,pts,side])=>{const [ex,ey]=pts[pts.length-1];const x=rx+ex,y=ry+ey;return n==='Hitch'?T(0.7,y-0.7,n):T(side==='r'?x+0.8:x-0.8-L(n),n==='Go'?y-0.6:y,n)});
+    marks.push(T(-0.8-L('← innen',1.1)-1.5,ry+2.4,'← innen',1.1),T(2.3,ry+2.4,'außen →',1.1));
+    const routes=rt.map(r=>Rt(r[1]));
+    return {name:'Route Tree',notes:'Außen = Richtung Seitenlinie, innen = Richtung Feldmitte. Five Out / Ten In: Break nach 5 bzw. 10 Yards.',
+      players:[{id:uid('p'),label:'WR',x:rx,y:ry,shape:'circle',color:INK,fill:'#1d4ed8',read:0,route:routes[0],motion:null,alts:routes.slice(1)}],marks}}
+  if(kind==='zones'){const W=53.3/2-0.3,G=0.8,marks=[];
+    const row=(y,names)=>{const n=names.length,w=(2*W-G*(n-1))/n;names.forEach((t,i)=>{const x=-W+i*(w+G);
+      marks.push({id:uid('m'),type:'zone',x:r1(x),y,w:r1(w),h:4,rx:2,color:'#9ca3af',opacity:0.3,bcolor:'#475569',bw:1.2,dashed:false,border:true});
+      marks.push(T(r1(x+w/2-L(t,1.5)/2),y+2,t,1.5))})};
+    row(-4.5,['Flat','Flat Mitte','Flat']);row(-9.5,['Deep Middle']);row(-14.5,['Deep ½','Deep ½']);row(-19.5,['Deep ⅓','Deep ⅓','Deep ⅓']);row(-24.5,['Deep ¼','Deep ¼','Deep ¼','Deep ¼']);
+    return {name:'Zonen',notes:'Cover 1: Deep Middle · Cover 2: Deep ½ · Cover 3: Deep ⅓ · Cover 4: Deep ¼ · Flat = kurze Zonen vorne.\nDie Reihen zeigen die Zonen-Arten übereinander – nicht die genaue Tiefe.',players:[],marks}}
+  return {name:'Blatt',notes:'',players:[],marks:[]}}
+async function addSheet(){const pb=curPb();if(!pb||isRO(pb))return;
+  const k=await modal('Neues Blatt',`<p>Was soll auf das Blatt? Du kannst danach alles ändern – Namen, Positionen, Formen, Routen, Texte und Zonen.</p>`,
+    [{label:'Route Tree',value:'routes',cls:'primary'},{label:'Zonen',value:'zones',cls:'primary'},{label:'Leer',value:'empty'},{label:'Abbrechen',value:null}]);
+  if(!k||!k.value)return;const t=sheetTpl(k.value);const n=pb.plays.filter(isSh).length+1;
+  const pl={id:uid('pl'),kind:'sheet',name:t.name+(pb.plays.some(x=>isSh(x)&&x.name===t.name)?' '+n:''),cat:'',formation:'',notes:t.notes,players:t.players,opp:[],oppForm:'',showOpp:false,
+    flipV:k.value==='zones'&&pb.type==='defense',losShift:0,marks:t.marks,tags:[],updated:Date.now()};
+  pb.plays.push(pl);Store.savePlay(pb,pl);Store.savePb(pb);if(state.kindF&&state.kindF!=='s')state.kindF='';selectPlay(pl.id);toast('Blatt angelegt – alles lässt sich frei bearbeiten')}
 function playFromForm(){const pb=curPb(),f=curPlay();if(!isF(f))return;const pl=clone(f);
   pl.id=uid('pl');delete pl.kind;delete pl.locked;delete pl.tags;pl.formation=f.name;pl.name=f.name+' – neues Play';pl.notes='';pl.updated=Date.now();
   pl.players.forEach(p=>{p.id=uid('p');p.route=null;p.motion=null;delete p.alts;p.read=0});pl.opp.forEach(p=>{p.id=uid('p')});pl.marks=[];
@@ -2760,8 +2817,8 @@ function mirror(){
 // drag the ⠿ grip to move a play (formations among formations, plays among plays)
 document.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-grip]');if(!g||e.button>0)return;
   const pb=curPb(),row=g.closest('.play'),list=row&&row.parentElement;const pl=pb&&pb.plays.find(x=>x.id===g.dataset.grip);if(!pl||isRO(pb)||!list)return;
-  e.preventDefault();e.stopPropagation();const kind=isF(pl);
-  const rows=[...list.querySelectorAll('.play')].filter(r=>{const p=pb.plays.find(x=>x.id===r.dataset.play);return p&&isF(p)===kind});
+  e.preventDefault();e.stopPropagation();const kind=kindOf(pl);
+  const rows=[...list.querySelectorAll('.play')].filter(r=>{const p=pb.plays.find(x=>x.id===r.dataset.play);return p&&kindOf(p)===kind});
   const top0=rows[0]&&rows[0].getBoundingClientRect().top,grid=rows.some(r=>r!==rows[0]&&Math.abs(r.getBoundingClientRect().top-top0)<2);
   const sx=e.clientX,sy=e.clientY,st=list.scrollTop;let tgt=null,after=false,moved=false,auto=0,lx=sx,ly=sy;
   row.classList.add('dragging');try{g.setPointerCapture(e.pointerId)}catch(err){}
@@ -2778,7 +2835,7 @@ document.addEventListener('pointerdown',e=>{const g=e.target.closest('[data-grip
   g.addEventListener('pointermove',mv);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up)},true);
 function movePlay(id,dir){
   const pb=curPb();const i=pb.plays.findIndex(p=>p.id===id);if(i<0)return;let j=i+dir;
-  while(j>=0&&j<pb.plays.length&&isF(pb.plays[j])!==isF(pb.plays[i]))j+=dir;if(j<0||j>=pb.plays.length)return;
+  while(j>=0&&j<pb.plays.length&&kindOf(pb.plays[j])!==kindOf(pb.plays[i]))j+=dir;if(j<0||j>=pb.plays.length)return;
   [pb.plays[i],pb.plays[j]]=[pb.plays[j],pb.plays[i]];Store.savePb(pb);renderSide();renderInsp();
 }
 // formations the coach already uses in this playbook (play field "Formation"), first play wins
@@ -3080,6 +3137,11 @@ async function pdfPlayPage(doc,pb,pl,bk){const {L,R,NAVY,TXT}=BK;const w=R-L;con
   p.rect(L,NY,w,29,{fill:BK.HEAD});p.text((L+R)/2,NY+21.5,'Notizen',20,BK.LT,{mid:true});
   p.path(`${pdfN(L+.3)} ${pdfN(NY+29)} m ${pdfN(L+.3)} ${pdfN(NY+29+bh-.3)} l ${pdfN(R-.3)} ${pdfN(NY+29+bh-.3)} l ${pdfN(R-.3)} ${pdfN(NY+29)} l`,{stroke:'#000000',lw:.6});
   lines.slice(0,Math.floor((bh-8)/14.5)).forEach((ln,i)=>p.text(L+6,NY+29+16+i*14.5,ln,11,'#000000'))}
+// 📄 a sheet: title, the drawing as wide as the page, the text below
+async function pdfSheetPage(doc,pb,pl,bk){const {L,R,NAVY,TXT}=BK;const w=R-L;const p=doc.page();await pdfHead(doc,p,bk,(pl.name||'Blatt').trim());
+  const {fw,fh}=dims(VAR[pb.variant]);const ih=w*fh/fw,y=58;p.img(await pdfField(doc,pb,pl,'s'+pl.id,1600),L,y,w,ih);
+  p.rect(L,y,w,ih,{stroke:NAVY,lw:1.3});
+  let ty=y+ih+26;for(const ln of pdfWrap(pl.notes||'',12,w-20)){if(ty>BK.H-25)break;p.text(L+10,ty,ln,12,'#000000');ty+=16}}
 async function pdfFormPages(doc,pb,list,bk,step){const {L,R,NAVY,TXT}=BK;const X=[L,(L+R)/2],CW=(R-L)/2,RH=175.8,SH=19.9,NB=42,Y0=58.8;
   const blank={...(pb.plays[0]||{}),id:'_blank',players:[],marks:[],opp:[],showOpp:false};let no=0;
   for(let i=0;i<Math.max(1,list.length);i+=8){step();const p=doc.page();await pdfHead(doc,p,bk,'Formations');
@@ -3117,13 +3179,15 @@ async function pdfCover(doc,bk){const p=doc.page();const url=bk.cover||bk.logo;
   const t=bk.title;p.text(BK.W/2,url?480:300,t,pdfFit(t,28,BK.W-60,true),'#000000',{mid:true,bold:true});
   if(bk.sub)p.text(BK.W/2,(url?480:300)+30,bk.sub,pdfFit(bk.sub,16,BK.W-60,false),'#333333',{mid:true})}
 async function bookPDF(pb,sel,onStep){const bk=bookOf(pb);if(pb.gw)bk.sub=`Game Week vs. ${pb.gw.opp||'Gegner'}${pb.gw.date?' · '+gwDate(pb.gw.date):''}`;const doc=new PdfDoc();
-  const plays=sel.filter(x=>!isF(x));const fs=[],seen=new Set();
+  const plays=sel.filter(x=>isPlay(x));const fs=[],seen=new Set();
   sel.forEach(pl=>{const n=(isF(pl)?pl.name:pl.formation||'').trim();if(!n||seen.has(n.toLowerCase()))return;seen.add(n.toLowerCase());
     fs.push({name:n,pl:pb.plays.find(x=>isF(x)&&(x.name||'').trim().toLowerCase()===n.toLowerCase())||pl})});
-  const total=1+(fs.length?Math.ceil(fs.length/8):0)+plays.length;let done=0;const step=()=>{done++;if(onStep)onStep(done,total)};
+  const sheets=pb.plays.filter(isSh);
+  const total=1+sheets.length+(fs.length?Math.ceil(fs.length/8):0)+plays.length;let done=0;const step=()=>{done++;if(onStep)onStep(done,total)};
   step();await pdfCover(doc,bk);
   if(bk.philo.trim())await pdfPhilo(doc,bk);
   if(pb.gw&&pb.gw.scout&&pb.gw.scout.trim())await pdfPhilo(doc,{...bk,philo:pb.gw.scout},'Scouting: vs. '+(pb.gw.opp||'Gegner'));
+  for(const sh of sheets){step();await pdfSheetPage(doc,pb,sh,bk)}
   if(fs.length)await pdfFormPages(doc,pb,fs,bk,step);
   for(const pl of plays){step();await pdfPlayPage(doc,pb,pl,bk)}
   return doc.blob()}
@@ -3163,13 +3227,13 @@ async function sheetDialog(){
     <label>Format</label><div class="choice"><label><input type="radio" name="fmt" value="png" checked><span>PNG</span></label><label><input type="radio" name="fmt" value="svg"><span>SVG<small>verlustfrei skalierbar</small></span></label><label style="grid-column:1/-1"><input type="radio" name="fmt" value="print"><span>Drucken / als PDF speichern<small>A4, mehrere Seiten</small></span></label></div></div>
     <label style="display:flex;justify-content:space-between;align-items:center">Welche Plays? <span><button type="button" class="btn sm" data-pick="all">Alle</button> <button type="button" class="btn sm" data-pick="none">Keine</button></span></label>
     ${pb.plays.some(isF)?`<p style="margin:4px 0"><button type="button" class="btn sm" data-pick="plays">Nur Plays</button> <button type="button" class="btn sm" data-pick="forms">Nur Formationen</button> <span class="hint">Formationen kommen im Playbook auf eine eigene Seite.</span></p>`:''}
-    <div class="picklist">${sortKinds(pb.plays).map(pl=>`<label><input type="checkbox" name="pick" value="${pl.id}" data-kind="${isF(pl)?'f':'p'}" checked> <b>${playNo(pb,pl)}.</b> ${esc(callName(pl)||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
+    <div class="picklist">${sortKinds(pb.plays).filter(x=>!isSh(x)).map(pl=>`<label><input type="checkbox" name="pick" value="${pl.id}" data-kind="${isF(pl)?'f':'p'}" checked> <b>${playNo(pb,pl)}.</b> ${esc(callName(pl)||'Ohne Namen')}${pl.cat?` <small>${esc(pl.cat)}</small>`:''}</label>`).join('')}</div>
     <p class="hint" id="pickCount" style="margin:4px 0 0">${pb.plays.length} von ${pb.plays.length} ausgewählt</p>`,
     [{label:'Abbrechen',value:null},{label:'Erstellen',value:'ok',cls:'primary',validate:el=>{if(!el.querySelector('[name=pick]:checked')){toast('Bitte mindestens ein Play auswählen.');return false}return true}}]);
   if(r.value!=='ok')return;
   const lay=r.el.querySelector('[name=lay]:checked').value,sty=r.el.querySelector('[name=sty]:checked').value,fmt=r.el.querySelector('[name=fmt]:checked').value;
   const ids=[...r.el.querySelectorAll('[name=pick]:checked')].map(x=>x.value);const sel=sortKinds(pb.plays.filter(x=>ids.includes(x.id)));
-  const selF=sel.filter(isF),selP=sel.filter(x=>!isF(x));
+  const selF=sel.filter(isF),selP=sel.filter(x=>isPlay(x));
   const so={cols:+r.el.querySelector('#sCols').value,meta:r.el.querySelector('#sMeta').checked,notes:r.el.querySelector('#sNotes').checked,over:r.el.querySelector('#sOver').checked,land:r.el.querySelector('#sLand').checked};
   if(lay==='sheet'){SO=so;try{localStorage.setItem('pbb-sheet',JSON.stringify(so))}catch(e){}}
   const num=id=>parseFloat(String(r.el.querySelector(id).value).replace(',','.'));
@@ -3262,7 +3326,7 @@ function cleanPlay(pl,keep){
   return {id:cId(pl.id,'pl',keep),name:cStr(pl.name,80)||'Play',cat:cStr(pl.cat,40),formation:cStr(pl.formation,40),notes:cStr(pl.notes,4000),
     players:cArr(pl.players,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),opp:cArr(pl.opp,24).map(p=>cleanPlayer(p,keep)).filter(Boolean),
     oppForm:cStr(pl.oppForm,40),showOpp:pl.showOpp!==false,flipV:!!pl.flipV,losShift:cNum(pl.losShift,0,-30,30),locked:!!pl.locked,
-    kind:pl.kind==='formation'?'formation':undefined,ball:/^(keep|read1|fakePass|fakeKeep|to:[A-Za-z0-9]{1,3})$/.test(pl.ball||'')?pl.ball:undefined,fake:/^[A-Za-z0-9]{1,3}$/.test(pl.fake||'')?pl.fake:undefined,fake2:/^[A-Za-z0-9]{1,3}$/.test(pl.fake2||'')?pl.fake2:undefined,
+    kind:pl.kind==='formation'||pl.kind==='sheet'?pl.kind:undefined,ball:/^(keep|read1|fakePass|fakeKeep|to:[A-Za-z0-9]{1,3})$/.test(pl.ball||'')?pl.ball:undefined,fake:/^[A-Za-z0-9]{1,3}$/.test(pl.fake||'')?pl.fake:undefined,fake2:/^[A-Za-z0-9]{1,3}$/.test(pl.fake2||'')?pl.fake2:undefined,
     tags:[...new Set(cArr(pl.tags,12).map(t=>cStr(t,24).trim()).filter(Boolean))],
     marks:cArr(pl.marks,80).map(m=>cleanMark(m,keep)).filter(Boolean),updated:cNum(pl.updated,Date.now(),0,1e14),
     src:pl.src&&typeof pl.src==='object'&&typeof pl.src.pb==='string'&&typeof pl.src.pl==='string'?{pb:pl.src.pb.slice(0,80),pl:pl.src.pl.slice(0,80),n:cStr(pl.src.n,80)}:undefined};
@@ -4452,7 +4516,7 @@ async function progressDialog(pb){
   document.querySelectorAll('.mback').forEach(x=>x.remove());
   if(!Sync.user||!pb.cloud||!pb.cloud.ut)return toast('Fortschritt gibt es nur bei geteilten Playbooks mit Konto.');
   let list;try{list=await Prog.forPb(pb)}catch(e){return toast(e.status===403?'Keine Berechtigung – sind die neuen Firebase-Regeln veröffentlicht?':'Laden nicht möglich – bist du online?')}
-  const quiz=pb.plays.filter(pl=>!isF(pl)&&quizInfo(pb,pl).asked.length);
+  const quiz=pb.plays.filter(pl=>isPlay(pl)&&quizInfo(pb,pl).asked.length);
   const row=(d,i)=>{const r=Object.entries(d.res).filter(([pid])=>pb.plays.some(x=>x.id===pid));
     const learned=r.filter(([,x])=>x.best>=1).length,avg=r.length?Math.round(r.reduce((a,[,x])=>{const[o,n]=String(x.last).split('/').map(Number);return a+(n?o/n:0)},0)/r.length*100):null;
     return `<details class="prow"><summary><b title="${esc(d.email||'')}">${esc(Team.nameOf(d.email)||(d.email||'?').split('@')[0])}${(Team.posOf(d.email)||[]).length?` <small class="hint">${esc(Team.posOf(d.email).join(', '))}</small>`:''}</b><span>${fmtMin(d.seconds)}</span><span>${d.last?new Date(d.last).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}):'–'}</span><span>${learned}/${quiz.length} gelernt${avg!=null?` · Ø ${avg} %`:''}</span></summary>
@@ -4743,7 +4807,7 @@ async function playToTeam(){const pb=curPb(),pl=curPlay();const u=Sync.user;if(!
   if(!r||!r.value)return;
   if(r.value==='del'){try{await Sync.req('DELETE','/teamplays/'+encodeURIComponent(ex.id));TP.list=TP.list.filter(x=>x!==ex);renderAll();toast('Nicht mehr mit dem Team geteilt')}catch(e){toast('Nicht möglich: '+e.message)}return}
   const sel=r.el.querySelector('#tpTeam');const team=sel?teams.find(x=>x.id===sel.value)||t:t;
-  const play=clone(pl);delete play.locked;const fm=!isF(pl)&&(pl.formation||'').trim()?pb.plays.find(x=>isF(x)&&x.name.trim()===pl.formation.trim()):null;
+  const play=clone(pl);delete play.locked;const fm=isPlay(pl)&&(pl.formation||'').trim()?pb.plays.find(x=>isF(x)&&x.name.trim()===pl.formation.trim()):null;
   const x={id:ex?ex.id:uid('tp'),team:team.id,author:u.uid,authorEmail:u.email,name:callName(pl),type:pb.type,variant:pb.variant,members:TP.members(team),updated:Date.now(),
     d:{src:pl.id,pbName:pb.name,play,form:fm?clone(fm):null}};
   try{await Sync.req('PATCH','/teamplays/'+encodeURIComponent(x.id),TP.enc(x),ex?'':'currentDocument.exists=false');TP.list=[x,...TP.list.filter(y=>y.id!==x.id)];renderAll();
@@ -5250,6 +5314,7 @@ document.addEventListener('click',async e=>{
   switch(act){
     case 'newPb':return newPbDialog();
     case 'newForm':return touchAsk('Neue Formation anlegen?').then(ok=>ok&&addForm());
+    case 'newSheet':return addSheet();
     case 'playFromForm':return playFromForm();
     case 'toForm':return setKind(true);
     case 'toPlay':return setKind(false);
@@ -5365,7 +5430,7 @@ document.addEventListener('click',async e=>{
     case 'video':return exportAnim('video');
     case 'gif':return exportAnim('gif');
     case 'quiz':if(state.anim)stopAnim();state.quiz=!state.quiz;state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;
-      if(state.quiz){const pb=curPb(),pool=sortKinds(pb.plays).filter(x=>isF(curPlay())?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);if(pool.length){selectPlay(pool[Math.floor(Math.random()*pool.length)].id);state.quiz=true}}state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
+      if(state.quiz){const pb=curPb(),pool=sortKinds(pb.plays).filter(x=>isF(curPlay())?isF(x)&&(x.name||'').trim():isPlay(x)&&quizInfo(pb,x).asked.length);if(pool.length){selectPlay(pool[Math.floor(Math.random()*pool.length)].id);state.quiz=true}}state.quizShown=false;state.qa=null;renderField();return renderPresentBar();
     case 'quizShow':if(state.quizShown&&state.anim)stopAnim();if(!state.quizShown){const pl=curPlay(),qa=qaState();const open=pl&&pl.players.find(p=>manOpen(pl,qa,p.id));
       if(open){qa.pick=open.id;qa.manPick=open.id;renderField();quizPanel();return toast(`${open.label} spielt Man – erst den Gegenspieler antippen.`)}}
     if(state.quizShown)state.qa=null;else{(state.quizDone=state.quizDone||new Set()).add(state.playId);const R=quizResult(curPb(),curPlay());quizMark(curPlay(),R.ok===R.n);state.quizCounted=Prog.result(curPb(),curPlay(),R.ok,R.n)}state.quizShown=!state.quizShown;renderField();return renderPresentBar();
@@ -5373,8 +5438,8 @@ document.addEventListener('click',async e=>{
     case 'formShow':{const pb=curPb(),pl=curPlay(),qa=qaState();if(!pl||!isF(pl)||qa.form)return;qa.form='\u0000';   // revealed without an answer
       (state.quizDone=state.quizDone||new Set()).add(pl.id);quizMark(pl,false);state.quizCounted=Prog.result(pb,pl,0,1);return renderPresentBar()}
     case 'quizKind':{const pb=curPb(),want=a.dataset.k==='forms';if(isF(curPlay())===want)return;
-      let pool=sortKinds(pb.plays).filter(x=>want?isF(x)&&(x.name||'').trim():!isF(x)&&quizInfo(pb,x).asked.length);
-      if(!pool.length&&!want){pool=sortKinds(pb.plays).filter(x=>!isF(x));if(pool.length)toast('In den Plays sind noch keine Aufgaben eingetragen – Coaches können sie über ⋯ → „🎓 Aufgaben vorschlagen“ ergänzen.')}
+      let pool=sortKinds(pb.plays).filter(x=>want?isF(x)&&(x.name||'').trim():isPlay(x)&&quizInfo(pb,x).asked.length);
+      if(!pool.length&&!want){pool=sortKinds(pb.plays).filter(x=>isPlay(x));if(pool.length)toast('In den Plays sind noch keine Aufgaben eingetragen – Coaches können sie über ⋯ → „🎓 Aufgaben vorschlagen“ ergänzen.')}
       if(!pool.length)return toast(want?'Keine Formations mit Namen.':'Keine Plays vorhanden.');
       state.quizDone=new Set();state.quizWrong=new Set();state.quizOnly=null;selectPlay(pool[Math.floor(Math.random()*pool.length)].id);return}
     case 'install':return installApp();
@@ -5444,7 +5509,7 @@ document.addEventListener('input',e=>{
     const v=t.value.slice(0,120);if(v.trim())p.det=v;else delete p.det;return changed({field:false});}
   if(t.dataset.f||t.dataset.pf==='label'){
     if(state.editSnap){state.undo.push(state.editSnap);state.redo=[];state.editSnap=null;}
-    if(t.dataset.f){const old=pl.name;if((t.dataset.f==='ball'||t.dataset.f==='fake'||t.dataset.f==='fake2')&&(pl.ball==='fakePass'||pl.ball==='fakeKeep')){pl.fake=pl.fake||'RB';pl.ball=pl.ball==='fakePass'?'read1':'keep'}pl[t.dataset.f]=t.value;if(isF(pl)&&t.dataset.f==='name'){pl.formation=t.value;const pb=curPb();pb.plays.forEach(x=>{if(!isF(x)&&x.formation&&x.formation.trim()===old.trim()){x.formation=t.value;Store.savePlay(pb,x)}})}}else{const p=selPlayer();if(p)p.label=t.value.toUpperCase().slice(0,3)}
+    if(t.dataset.f){const old=pl.name;if((t.dataset.f==='ball'||t.dataset.f==='fake'||t.dataset.f==='fake2')&&(pl.ball==='fakePass'||pl.ball==='fakeKeep')){pl.fake=pl.fake||'RB';pl.ball=pl.ball==='fakePass'?'read1':'keep'}pl[t.dataset.f]=t.value;if(isF(pl)&&t.dataset.f==='name'){pl.formation=t.value;const pb=curPb();pb.plays.forEach(x=>{if(isPlay(x)&&x.formation&&x.formation.trim()===old.trim()){x.formation=t.value;Store.savePlay(pb,x)}})}}else{const p=selPlayer();if(p)p.label=t.value.toUpperCase().slice(0,3)}
     changed({field:!!t.dataset.pf});if(t.dataset.f==='fake')renderInsp();if(t.dataset.f==='name'){const h=$('#inspTitle');if(h)h.innerHTML=inspTitle(curPb(),pl)}
   }
 });
